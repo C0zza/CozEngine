@@ -147,6 +147,14 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Rendering\Shader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Rendering\Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
+    <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
