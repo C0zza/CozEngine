@@ -148,13 +148,20 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
+    <ClCompile Include="Engine\Rendering\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
+    <ClInclude Include="Engine\Rendering\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
     <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

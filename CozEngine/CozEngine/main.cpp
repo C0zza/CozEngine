@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Engine/Rendering/Shader.h"
+#include "Engine/Rendering/Texture.h"
 
 // Temp input function. Should eventually setup input system.
 void ProcessInput(GLFWwindow* Window)
@@ -49,18 +50,12 @@ int main()
 			glViewport(0, 0, width, height);
 		});
 
-	float Vertices[2][9] =
-	{
-		{
-			-0.9f, -0.5f, 0.0f,  // left 
-			-0.0f, -0.5f, 0.0f,  // right
-			-0.45f, 0.5f, 0.0f,  // top 
-		},
-		{
-			0.0f, -0.5f, 0.0f,  // left
-			0.9f, -0.5f, 0.0f,  // right
-			0.45f, 0.5f, 0.0f   // top 
-		}
+	float Vertices[] = {
+		// positions          // colors           // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
 
 	unsigned int Indices[] = 
@@ -69,17 +64,21 @@ int main()
 		1, 2, 3    // second triangle
 	};  
 
-	unsigned int VAOs[2];
-	unsigned int VBOs[2];
-	for (int i = 0; i < 2; ++i)
+	unsigned int VAOs[1];
+	unsigned int VBOs[1];
+	for (int i = 0; i < sizeof(VAOs) / sizeof(VAOs[0]); ++i)
 	{
 		glGenVertexArrays(1, &VAOs[i]);
 		glBindVertexArray(VAOs[i]);
 		glGenBuffers(1, &VBOs[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, VBOs[i]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices[i]), Vertices[i], GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 	}
 
 	unsigned int EBO;
@@ -87,8 +86,12 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 
+	std::unique_ptr<Texture> SomeTexture(new Texture("container.jpg"));
+	SomeTexture->Use();
+
 	std::unique_ptr<Shader> DefaultShader(new Shader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs"));
 	DefaultShader->Use();
+
 
 	while (!glfwWindowShouldClose(Window))
 	{
@@ -97,18 +100,22 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < sizeof(VAOs) / sizeof(VAOs[0]); ++i)
 		{
 			glBindVertexArray(VAOs[i]);
 			for (int j = 0; j < 9; ++j)
 			{
-				glDrawArrays(GL_TRIANGLES, 0, 3);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			}
 		}
 
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
 	}
+
+	glDeleteVertexArrays(1, VAOs);
+	glDeleteBuffers(1, VBOs);
+	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();
 

@@ -24,14 +24,27 @@
     <ClCompile Include="Engine\Rendering\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\include\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
     <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
   </ItemGroup>
 </Project>
