@@ -4,8 +4,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Engine/Rendering/Shader.h"
 #include "Engine/Rendering/Texture.h"
+#include "Engine/Transform.h"
 
 // Temp input function. Should eventually setup input system.
 void ProcessInput(GLFWwindow* Window)
@@ -51,11 +56,11 @@ int main()
 		});
 
 	float Vertices[] = {
-		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   2.0f, 2.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   2.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 2.0f    // top left 
+		// positions          // texture coords
+		 0.5f,  0.5f, 0.0f,   2.0f, 2.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   2.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   0.0f, 2.0f    // top left 
 	};
 
 	unsigned int Indices[] = 
@@ -73,12 +78,12 @@ int main()
 		glGenBuffers(1, &VBOs[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, VBOs[i]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);*/
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-		glEnableVertexAttribArray(2);
 	}
 
 	unsigned int EBO;
@@ -95,17 +100,31 @@ int main()
 	SomeTexture->Use(0);
 	SmileyTexture->Use(1);
 
+	std::unique_ptr<Transform> SomeTransform(new Transform());
+	std::unique_ptr<Transform> ScalingTransform(new Transform());
+
 	DefaultShader->Use();
 	DefaultShader->SetInt("Texture1", 0);
 	DefaultShader->SetInt("Texture2", 1);
 	DefaultShader->SetFloat("Mix", 0.6f);
 
+	glm::mat4 Transformation;
+
 	while (!glfwWindowShouldClose(Window))
 	{
 		ProcessInput(Window);
 
+		SomeTransform->Rotate(glm::vec3(0, 0, 0.03));
+		ScalingTransform->SetScale(glm::vec3(glm::sin(glfwGetTime()), glm::sin(glfwGetTime()), 1.0f));
+
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		Transformation = glm::mat4(1.f);
+		Transformation = glm::translate(Transformation, SomeTransform->GetPosition());
+		Transformation = glm::scale(Transformation, SomeTransform->GetScale());
+		Transformation = glm::rotate(Transformation, SomeTransform->GetRotation().z, glm::vec3(0.f, 0.f, 1.f));
+		DefaultShader->SetMat("Transform", Transformation);
 
 		for (int i = 0; i < sizeof(VAOs) / sizeof(VAOs[0]); ++i)
 		{
@@ -115,6 +134,12 @@ int main()
 				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			}
 		}
+
+		Transformation = glm::mat4(1.f);
+		Transformation = glm::translate(Transformation, ScalingTransform->GetPosition());
+		Transformation = glm::scale(Transformation, ScalingTransform->GetScale());
+		DefaultShader->SetMat("Transform", Transformation);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
