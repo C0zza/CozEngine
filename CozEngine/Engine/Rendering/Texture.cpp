@@ -8,7 +8,7 @@
 
 const char* Texture::TextureDirectory = "Game/Assets/";
 
-Texture::Texture(const char* TexturePath)
+Texture::Texture(const char* TexturePath, const bool HasAlpha)
 	: Width{ 0 }, Height{ 0 }, TextureID{ 0 }
 {
 	glGenTextures(1, &TextureID);
@@ -27,7 +27,8 @@ Texture::Texture(const char* TexturePath)
 
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		int Format = HasAlpha ? GL_RGBA : GL_RGB;
+		glTexImage2D(GL_TEXTURE_2D, 0, Format, Width, Height, 0, Format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -38,7 +39,13 @@ Texture::Texture(const char* TexturePath)
 	stbi_image_free(data);
 }
 
-void Texture::Use() const
+void Texture::Use(const unsigned int TextureUnit /* = 0 */) const
 {
+	glActiveTexture(GL_TEXTURE0 + TextureUnit);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
+}
+
+void Texture::SetFlipVerticallyOnLoad(const bool Flip)
+{
+	stbi_set_flip_vertically_on_load(Flip);
 }

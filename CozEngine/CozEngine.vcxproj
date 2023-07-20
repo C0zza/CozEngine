@@ -162,6 +162,7 @@
   <ItemGroup>
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -52,10 +52,10 @@ int main()
 
 	float Vertices[] = {
 		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   2.0f, 2.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   2.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 2.0f    // top left 
 	};
 
 	unsigned int Indices[] = 
@@ -86,12 +86,19 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 
-	std::unique_ptr<Texture> SomeTexture(new Texture("container.jpg"));
-	SomeTexture->Use();
+	std::unique_ptr<Shader> DefaultShader(new Shader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader_2Textures.fs"));
 
-	std::unique_ptr<Shader> DefaultShader(new Shader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs"));
+	Texture::SetFlipVerticallyOnLoad(true);
+	std::unique_ptr<Texture> SomeTexture(new Texture("container.jpg", false));
+	std::unique_ptr<Texture> SmileyTexture(new Texture("awesomeface.png", true));
+
+	SomeTexture->Use(0);
+	SmileyTexture->Use(1);
+
 	DefaultShader->Use();
-
+	DefaultShader->SetInt("Texture1", 0);
+	DefaultShader->SetInt("Texture2", 1);
+	DefaultShader->SetFloat("Mix", 0.6f);
 
 	while (!glfwWindowShouldClose(Window))
 	{

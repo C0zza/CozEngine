@@ -3,9 +3,11 @@
 class Texture
 {
 public:
-	Texture(const char* TexturePath);
+	Texture(const char* TexturePath, const bool HasAlpha);
 
-	void Use() const;
+	void Use(const unsigned int TextureUnit = 0) const;
+
+	static void SetFlipVerticallyOnLoad(const bool Flip);
 
 private:
 	unsigned int TextureID;
