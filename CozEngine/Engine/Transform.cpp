@@ -19,6 +19,13 @@ Transform::Transform()
 {
 }
 
+void Transform::Move(const glm::vec3& Movement)
+{
+	Position.x += Movement.x;
+	Position.y += Movement.y;
+	Position.z += Movement.z;
+}
+
 void Transform::Rotate(const glm::vec3& Rotate)
 {
 	Rotation += Rotate;

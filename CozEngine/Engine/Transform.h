@@ -15,7 +15,7 @@ public:
 	void SetRotation(const glm::vec3& NewRotation) { Rotation = NewRotation; }
 	void SetScale(const glm::vec3& NewScale) { Scale = NewScale; }
 
-	void Move(const glm::vec3& Movement) { Position += Movement; }
+	void Move(const glm::vec3& Movement);
 	void Rotate(const glm::vec3& Rotate);
 
 private:
