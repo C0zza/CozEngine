@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Camera.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Transform.h"
@@ -140,25 +141,14 @@ void System::SetupGame()
 	SomeTexture->Use(0);
 	SmileyTexture->Use(1);
 
-	SomeTransform = std::make_unique<Transform>(Transform());
-	SomeTransform->Rotate(glm::vec3(-20.f, 0.f, 0.f));
-
 	DefaultShader = std::make_unique<Shader>(Shader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader_2Textures.fs"));
 	DefaultShader->Use();
 	DefaultShader->SetInt("Texture1", 0);
 	DefaultShader->SetInt("Texture2", 1);
 	DefaultShader->SetFloat("Mix", 0.2f);
 
-	CameraTransform = std::make_unique<Transform>(Transform());
-	CameraTransform->Move(glm::vec3(0.f, 0.f, -5.f));
-
-	CameraPosition = glm::vec3(0.f, 0.f, 3.f);
-	CameraTarget = glm::vec3(0.f, 0.f, 0.f);
-	CameraDirection = glm::normalize(CameraPosition - CameraTarget);
-	Up = glm::vec3(0.f, 1.0f, 0.0f);
-	CameraRight = glm::normalize(glm::cross(Up, CameraDirection));
-	CameraUp = glm::cross(CameraDirection, CameraRight);
-	CameraUp = glm::cross(CameraDirection, CameraRight);
+	SomeCamera = std::make_unique<Camera>();
+	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 6.f));
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -182,7 +172,8 @@ void System::Run()
 
 		float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
-		View = glm::lookAt(glm::vec3(camX, 0.0, camZ), CameraTarget, Up);
+
+		View = SomeCamera->GetViewMatrix();
 
 		DefaultShader->SetMat("View", View);
 		DefaultShader->SetMat("Projection", Projection);

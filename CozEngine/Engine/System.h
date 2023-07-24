@@ -2,8 +2,9 @@
 
 #include <memory>
 #include <vector>
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 
+class Camera;
 class Shader;
 class Texture;
 class Transform;
@@ -33,14 +34,7 @@ private:
 	std::unique_ptr<Shader> DefaultShader;
 	std::unique_ptr<Texture> SomeTexture;
 	std::unique_ptr<Texture> SmileyTexture;
-	std::unique_ptr<Transform> SomeTransform;
-	std::unique_ptr<Transform> CameraTransform;
 
-	glm::vec3 CameraPosition;
-	glm::vec3 CameraTarget;
-	glm::vec3 CameraDirection;
-	glm::vec3 Up;
-	glm::vec3 CameraRight;
-	glm::vec3 CameraUp;
+	std::unique_ptr<Camera> SomeCamera;
 };
 
