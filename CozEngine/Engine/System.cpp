@@ -14,7 +14,6 @@
 #include <iostream>
 
 System::System()
-	: Window{ nullptr }
 {
 }
 
@@ -24,42 +23,18 @@ System::~System()
 	glDeleteBuffers(1, VBOs);
 	// glDeleteBuffers(1, &EBO);
 
-	glfwTerminate();
+	//glfwTerminate();
 }
 
 void System::Init()
 {
-	glfwInit();
+	m_Renderer.Init();
+	m_InputManager.Init(m_Renderer.GetWindow());
+}
 
-	// Window config info: http://www.glfw.org/docs/latest/window.html#window_hints
-
-	// >= Open GL 3.3 required
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	Window = glfwCreateWindow(800, 600, "CozEngine - GLFW Window", NULL, NULL);
-	if (!Window)
-	{
-		std::cout << "Failed to create GLFW window\n";
-		glfwTerminate();
-		return;
-	}
-
-	glfwMakeContextCurrent(Window);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD\n";
-		return;
-	}
-
-	glViewport(0, 0, 800, 600);
-	glfwSetFramebufferSizeCallback(Window, [](GLFWwindow* Window, int width, int height)
-		{
-			glViewport(0, 0, width, height);
-		});
+void System::Shutdown()
+{
+	m_Renderer.Shutdown();
 }
 
 void System::SetupGame()
@@ -147,36 +122,34 @@ void System::SetupGame()
 	DefaultShader->SetInt("Texture2", 1);
 	DefaultShader->SetFloat("Mix", 0.2f);
 
-	SomeCamera = std::make_unique<Camera>();
-	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 6.f));
+	LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	DefaultShader->SetVec3("LightColor", LightColor);
 
-	glEnable(GL_DEPTH_TEST);
+	SomeCamera = std::make_shared<Camera>();
+	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 6.f));
+	m_Renderer.SetActiveCamera(SomeCamera);
 }
 
 void System::Run()
 {
 	// Temp setup while we don't have systems
 	static glm::mat4 Transformation;
-	static glm::mat4 View = glm::mat4(1.0f);
-	static glm::mat4 Projection = glm::mat4(1.0f);
-	Projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.f);
 
 	static float radius = 10.0f;
 
-	while (!glfwWindowShouldClose(Window))
+	assert(m_Renderer.GetWindow());
+	while (!m_Renderer.GetWindow()->ShouldClose())
 	{
-		ProcessInput(Window);
+		m_InputManager.ProcessInput();
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_Renderer.Tick();
 
 		float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
+		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));
 
-		View = SomeCamera->GetViewMatrix();
-
-		DefaultShader->SetMat("View", View);
-		DefaultShader->SetMat("Projection", Projection);
+		DefaultShader->SetMat("View", m_Renderer.GetViewMatrix());
+		DefaultShader->SetMat("Projection", m_Renderer.GetProjectionMatrix());
 
 		glBindVertexArray(VAOs[0]);
 
@@ -190,15 +163,6 @@ void System::Run()
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
-		glfwSwapBuffers(Window);
-		glfwPollEvents();
-	}
-}
-
-void System::ProcessInput(GLFWwindow* Window)
-{
-	if (glfwGetKey(Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(Window, true);
+		m_Renderer.PostTick();
 	}
 }

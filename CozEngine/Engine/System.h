@@ -4,6 +4,10 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "Input/InputManager.h"
+#include "Rendering/Renderer.h"
+#include "Rendering/Window.h"
+
 class Camera;
 class Shader;
 class Texture;
@@ -17,17 +21,17 @@ public:
 	~System();
 
 	void Init();
+	void Shutdown();
 	void SetupGame();
 	void Run();
 
 private:
-	GLFWwindow* Window;
-
-	void ProcessInput(GLFWwindow* Window);
+	Renderer m_Renderer;
+	InputManager m_InputManager;
 
 	// Temp stuff while we don't have systems setup
-	unsigned int VAOs[1];
-	unsigned int VBOs[1];
+	unsigned int VAOs[1]{ 0 };
+	unsigned int VBOs[1]{ 0 };
 
 	std::vector<glm::vec3> CubePositions;
 
@@ -35,6 +39,8 @@ private:
 	std::unique_ptr<Texture> SomeTexture;
 	std::unique_ptr<Texture> SmileyTexture;
 
-	std::unique_ptr<Camera> SomeCamera;
+	std::shared_ptr<Camera> SomeCamera;
+
+	glm::vec3 LightColor = glm::vec3(0);
 };
 
