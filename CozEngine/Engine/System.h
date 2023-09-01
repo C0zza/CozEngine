@@ -8,6 +8,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Window.h"
 
+class CObject;
 class Camera;
 class Shader;
 class Texture;
@@ -38,6 +39,8 @@ private:
 	std::unique_ptr<Shader> DefaultShader;
 	std::unique_ptr<Texture> SomeTexture;
 	std::unique_ptr<Texture> SmileyTexture;
+
+	CObject* TestObject = nullptr;
 
 	std::shared_ptr<Camera> SomeCamera;
 

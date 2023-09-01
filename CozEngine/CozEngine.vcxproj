@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\Engine\include;$(ProjectDir)\Engine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\Engine\include;$(ProjectDir)\Engine\;$(ProjectDir)\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Engine\lib\GLFW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -81,7 +81,7 @@
     <IncludePath>$(ProjectDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)\Engine\include;$(ProjectDir)\Engine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\Engine\include;$(ProjectDir)\Engine\;$(ProjectDir)\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Engine\lib\GLFW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
@@ -155,8 +156,11 @@
     <ClCompile Include="Engine\System.cpp" />
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\Rendering\Window.cpp" />
+    <ClCompile Include="Engine\Object.cpp" />
+    <ClCompile Include="Game\Components\TestComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
@@ -166,6 +170,8 @@
     <ClInclude Include="Engine\Rendering\Renderer.h" />
     <ClInclude Include="Engine\Rendering\Window.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
+    <ClInclude Include="Engine\Object.h" />
+    <ClInclude Include="Game\Components\TestComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

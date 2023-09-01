@@ -6,10 +6,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Object.h"
 #include "Camera.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Transform.h"
+#include "Game/Components/TestComponent.h"
 
 #include <iostream>
 
@@ -128,6 +130,9 @@ void System::SetupGame()
 	SomeCamera = std::make_shared<Camera>();
 	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 6.f));
 	m_Renderer.SetActiveCamera(SomeCamera);
+
+	TestObject = new CObject();
+	TestObject->AddComponent<CTestComponent>(1, 2);
 }
 
 void System::Run()
