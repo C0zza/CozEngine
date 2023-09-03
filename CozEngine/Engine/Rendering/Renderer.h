@@ -2,8 +2,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
+#include <vector>
 
 class Camera;
+class CModelComponent;
 class Window;
 
 class Renderer

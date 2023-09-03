@@ -145,7 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Component.cpp" />
+    <ClCompile Include="Engine\Components\ComponentList.cpp" />
+    <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
@@ -158,9 +159,13 @@
     <ClCompile Include="Engine\Rendering\Window.cpp" />
     <ClCompile Include="Engine\Object.cpp" />
     <ClCompile Include="Game\Components\TestComponent.cpp" />
+    <ClCompile Include="Engine\Components\ModelComponent.cpp" />
+    <ClCompile Include="Engine\Rendering\Mesh.cpp" />
+    <ClCompile Include="Engine\Rendering\Material.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Component.h" />
+    <ClInclude Include="Engine\Components\ComponentList.h" />
+    <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
@@ -172,6 +177,9 @@
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\Object.h" />
     <ClInclude Include="Game\Components\TestComponent.h" />
+    <ClInclude Include="Engine\Components\ModelComponent.h" />
+    <ClInclude Include="Engine\Rendering\Mesh.h" />
+    <ClInclude Include="Engine\Rendering\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

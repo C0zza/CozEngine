@@ -2,11 +2,12 @@
 
 #include <glm/mat4x4.hpp>
 #include <string>
-
-class Shader
+#include <vector>
+class LShader
 {
 public:
-	Shader(const char* VertexPath, const char* FragmentPath);
+	LShader(const char* VertexPath, const char* FragmentPath);
+	~LShader();
 
 	unsigned int GetID() { return ID; }
 
@@ -17,7 +18,11 @@ public:
 	void SetFloat(const std::string& name, float value) const;
 	void SetVec3(const std::string& name, const glm::vec3& vec) const;
 	void SetMat(const std::string& name, const glm::mat4& mat) const;
+
+	// Temp
+	static void SetGlobalMat(const std::string& name, const glm::mat4& mat);
 private:
-	
 	unsigned int ID;
+
+	static std::vector<LShader*> Shaders;
 };

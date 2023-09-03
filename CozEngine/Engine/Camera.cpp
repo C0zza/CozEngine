@@ -4,7 +4,7 @@
 
 Camera::Camera()
 {
-	CameraTransform = std::make_unique<Transform>();
+	CameraTransform = std::make_unique<LTransform>();
 }
 
 glm::mat4 Camera::GetViewMatrix() const

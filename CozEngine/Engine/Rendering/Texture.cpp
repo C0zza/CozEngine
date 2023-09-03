@@ -6,11 +6,13 @@
 #include "stb/stb_image.h"
 #include <string>
 
-const char* Texture::TextureDirectory = "Game/Assets/";
+const char* LTexture::TextureDirectory = "Game/Assets/";
 
-Texture::Texture(const char* TexturePath, const bool HasAlpha)
+LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType)
 	: Width{ 0 }, Height{ 0 }, TextureID{ 0 }
 {
+	TextureType = i_TextureType;
+
 	glGenTextures(1, &TextureID);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 
@@ -39,13 +41,13 @@ Texture::Texture(const char* TexturePath, const bool HasAlpha)
 	stbi_image_free(data);
 }
 
-void Texture::Use(const unsigned int TextureUnit /* = 0 */) const
+void LTexture::Use(const unsigned int TextureUnit /* = 0 */) const
 {
 	glActiveTexture(GL_TEXTURE0 + TextureUnit);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 }
 
-void Texture::SetFlipVerticallyOnLoad(const bool Flip)
+void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
 {
 	stbi_set_flip_vertically_on_load(Flip);
 }

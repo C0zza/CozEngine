@@ -14,19 +14,19 @@ void Clamp(float& Value, const float Min, const float Max)
 	}
 }
 
-Transform::Transform()
+LTransform::LTransform()
 	: Position{ glm::vec3(0.f, 0.f, 0.f) }, Rotation{ glm::vec3(0.f, 0.f, 0.f) }, Scale{ glm::vec3(1.f, 1.f, 1.f) }
 {
 }
 
-void Transform::Move(const glm::vec3& Movement)
+void LTransform::Move(const glm::vec3& Movement)
 {
 	Position.x += Movement.x;
 	Position.y += Movement.y;
 	Position.z += Movement.z;
 }
 
-void Transform::Rotate(const glm::vec3& Rotate)
+void LTransform::Rotate(const glm::vec3& Rotate)
 {
 	Rotation += Rotate;
 

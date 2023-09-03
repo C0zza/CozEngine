@@ -1,9 +1,17 @@
 #include "Renderer.h"
 
-#include "Camera.h"
 #include <cassert>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <string>
+#include <vector>
+
+#include "Camera.h"
+#include "Components/ModelComponent.h"
+#include "Material.h"
+#include "Mesh.h"
+#include "Shader.h"
+#include "Texture.h"
 #include "Window.h"
 
 void Renderer::Init()
@@ -25,7 +33,7 @@ void Renderer::Shutdown()
 
 void Renderer::Tick()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	std::shared_ptr<Camera> ActiveCamera = m_ActiveCamera.lock();
@@ -35,12 +43,6 @@ void Renderer::Tick()
 	}
 
 	ViewMatrix = ActiveCamera->GetViewMatrix();
-
-	// Drawing stuff
-
-	/*assert(m_Window->m_Window);
-	glfwSwapBuffers(m_Window->m_Window);
-	glfwPollEvents();*/
 }
 
 void Renderer::PostTick()

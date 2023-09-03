@@ -1,11 +1,18 @@
 #pragma once
 
-class Texture
+enum class ETextureType
+{
+	Diffuse
+};
+
+class LTexture
 {
 public:
-	Texture(const char* TexturePath, const bool HasAlpha);
+	LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType);
 
 	void Use(const unsigned int TextureUnit = 0) const;
+
+	ETextureType GetTextureType() const { return TextureType; }
 
 	static void SetFlipVerticallyOnLoad(const bool Flip);
 
@@ -14,6 +21,8 @@ private:
 
 	int Width;
 	int Height;
+
+	ETextureType TextureType;
 
 	static const char* TextureDirectory;
 };

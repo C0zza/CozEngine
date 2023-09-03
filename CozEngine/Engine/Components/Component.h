@@ -10,6 +10,8 @@ public:
 	CComponent() {};
 	virtual ~CComponent() {};
 
+	virtual void Tick() = 0;
+
 	void SetParent(CObject* Object) { Parent = Object; }
 
 protected:

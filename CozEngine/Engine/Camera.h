@@ -3,7 +3,7 @@
 #include <glm/mat4x4.hpp>
 #include <memory>
 
-class Transform;
+class LTransform;
 
 class Camera
 {
@@ -12,5 +12,5 @@ public:
 
 	glm::mat4 GetViewMatrix() const;
 
-	std::unique_ptr<Transform> CameraTransform;
+	std::unique_ptr<LTransform> CameraTransform;
 };

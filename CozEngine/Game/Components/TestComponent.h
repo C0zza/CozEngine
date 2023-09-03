@@ -1,18 +1,12 @@
 #pragma once
-#include "Engine/Component.h"
+#include "Engine/Components/Component.h"
 
 class CTestComponent : public CComponent
 {
 public:
-	CTestComponent(int i_x, int i_y) 
-	{
-		x = i_x; y = i_y;
-	}
-
+	CTestComponent() {}
 	virtual ~CTestComponent() {};
 
-private:
-	int x;
-	int y;
+	virtual void Tick() override;
 };
 

@@ -2,10 +2,12 @@
 
 #include <glm/vec3.hpp>
 
-class Transform
+// TODO: Convert this to a component?
+
+class LTransform
 {
 public:
-	Transform();
+	LTransform();
 
 	const glm::vec3& GetPosition() const { return Position; }
 	const glm::vec3& GetRotation() const { return Rotation; }
