@@ -21,6 +21,7 @@ public:
 
 	// Temp
 	static void SetGlobalMat(const std::string& name, const glm::mat4& mat);
+	static void SetGlobalVec(const std::string& name, const glm::vec3& vec);
 private:
 	unsigned int ID;
 

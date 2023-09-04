@@ -143,3 +143,13 @@ void LShader::SetGlobalMat(const std::string& name, const glm::mat4& mat)
 		Shader->SetMat(name, mat);
 	}
 }
+
+void LShader::SetGlobalVec(const std::string& name, const glm::vec3& vec)
+{
+	for (LShader* Shader : Shaders)
+	{
+		assert(Shader);
+		Shader->Use();
+		Shader->SetVec3(name, vec);
+	}
+}
