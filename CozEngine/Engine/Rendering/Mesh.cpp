@@ -89,7 +89,10 @@ void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform)
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().x, glm::vec3(1.0, 0.f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().y, glm::vec3(0.f, 1.0f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().z, glm::vec3(0.f, 0.f, 1.0f));
-	CurrentShader->SetMat("Model", Transformation);
+	CurrentShader->SetMat4("Model", Transformation);
+
+	glm::mat3 NormalMatrix = glm::transpose(glm::inverse(Transformation));
+	CurrentShader->SetMat3("NormalMatrix", NormalMatrix);
 
 	for (unsigned int i = 0; i < Mat.Textures.size(); i++)
 	{

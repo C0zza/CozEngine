@@ -10,12 +10,12 @@ out vec3 Normal;
 uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
+uniform mat3 NormalMatrix;
 
 void main() 
 { 
 	gl_Position = Projection * View * Model * vec4(aPos, 1.0);
 	TexCoord = aTexCoord;
 	FragPos = vec3(Model * vec4(aPos, 1.0));
-	// Costly calculation. See https://learnopengl.com/Lighting/Basic-Lighting - "One last thing".
-	Normal = mat3(transpose(inverse(Model))) * aNormal;  
+	Normal = NormalMatrix * aNormal;
 }

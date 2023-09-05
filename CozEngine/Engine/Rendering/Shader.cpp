@@ -129,18 +129,23 @@ void LShader::SetVec3(const std::string& name, const glm::vec3& vec) const
 	glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &vec[0]);
 }
 
-void LShader::SetMat(const std::string& name, const glm::mat4& mat) const
+void LShader::SetMat3(const std::string& name, const glm::mat3& mat) const
+{
+	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void LShader::SetMat4(const std::string& name, const glm::mat4& mat) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void LShader::SetGlobalMat(const std::string& name, const glm::mat4& mat)
+void LShader::SetGlobalMat4(const std::string& name, const glm::mat4& mat)
 {
 	for (LShader* Shader : Shaders)
 	{
 		assert(Shader);
 		Shader->Use();
-		Shader->SetMat(name, mat);
+		Shader->SetMat4(name, mat);
 	}
 }
 

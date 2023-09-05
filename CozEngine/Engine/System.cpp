@@ -80,12 +80,12 @@ void System::Run()
 
 		m_Renderer.Tick();
 
-		float camX = sin(glfwGetTime()) * radius;
+		/*float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
-		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));
+		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));*/
 
-		LShader::SetGlobalMat("View", m_Renderer.GetViewMatrix());
-		LShader::SetGlobalMat("Projection", m_Renderer.GetProjectionMatrix());
+		LShader::SetGlobalMat4("View", m_Renderer.GetViewMatrix());
+		LShader::SetGlobalMat4("Projection", m_Renderer.GetProjectionMatrix());
 
 		// under current setup mesh drawing can be out of sync
 		for (std::unique_ptr<CObject>& Object : Objects)

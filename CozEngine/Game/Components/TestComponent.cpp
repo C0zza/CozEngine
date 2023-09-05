@@ -6,5 +6,5 @@
 void CTestComponent::Tick()
 {
 	assert(Parent);
-	Parent->Transform.Rotate(glm::vec3(0.f, .01f, 0.f));
+	Parent->Transform.Rotate(glm::vec3(0.01f, .01f, 0.01f));
 }
