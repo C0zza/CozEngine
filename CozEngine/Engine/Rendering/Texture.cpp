@@ -8,11 +8,31 @@
 
 const char* LTexture::TextureDirectory = "Game/Assets/";
 
-LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType)
-	: Width{ 0 }, Height{ 0 }, TextureID{ 0 }
+LTexture::LTexture(const unsigned int ID, const ETextureType Type, const char* Path)
+	: TextureID{ ID }, TextureType{ Type }, Width{ 0 }, Height{ 0 }
 {
-	TextureType = i_TextureType;
+	Init(Path, false);
+}
 
+LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType)
+	: Width{ 0 }, Height{ 0 }, TextureID{ 0 }, TextureType{ i_TextureType }
+{
+	Init(TexturePath, HasAlpha);
+}
+
+void LTexture::Use(const unsigned int TextureUnit /* = 0 */) const
+{
+	glActiveTexture(GL_TEXTURE0 + TextureUnit);
+	glBindTexture(GL_TEXTURE_2D, TextureID);
+}
+
+void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
+{
+	stbi_set_flip_vertically_on_load(Flip);
+}
+
+void LTexture::Init(const char* TexturePath, const bool HasAlpha)
+{
 	glGenTextures(1, &TextureID);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 
@@ -39,15 +59,4 @@ LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureT
 	}
 
 	stbi_image_free(data);
-}
-
-void LTexture::Use(const unsigned int TextureUnit /* = 0 */) const
-{
-	glActiveTexture(GL_TEXTURE0 + TextureUnit);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
-}
-
-void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
-{
-	stbi_set_flip_vertically_on_load(Flip);
 }

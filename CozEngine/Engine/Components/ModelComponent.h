@@ -4,7 +4,7 @@
 
 #include "Component.h"
 
-class LMesh;
+class LModel;
 class LTransform;
 struct LMaterial;
 
@@ -14,11 +14,11 @@ class CModelComponent : public CComponent
 public:
 	virtual void Tick() override;
 
-	void SetMesh(std::shared_ptr<LMesh>& i_Mesh) { Mesh = i_Mesh; }
+	void SetModel(std::shared_ptr<LModel> i_Model) { Model = i_Model; }
 	void SetMaterial(std::shared_ptr<LMaterial>& i_Material) { Material = i_Material; }
 
 private:
-	std::shared_ptr<LMesh> Mesh;
+	std::shared_ptr<LModel> Model;
 	std::shared_ptr<LMaterial> Material;
 };
 

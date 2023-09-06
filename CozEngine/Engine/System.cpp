@@ -13,8 +13,8 @@
 #include "Transform.h"
 #include "Game/Components/TestComponent.h"
 #include "Rendering/Material.h"
-#include "Rendering/Mesh.h"
 #include "Components/ModelComponent.h"
+#include "Rendering/Model.h"
 
 System::System()
 {
@@ -48,11 +48,13 @@ void System::SetupGame()
 	TestObject->Components.AddComponent<CTestComponent>(TestObject);
 	TestObject->Transform.Move(glm::vec3(0.f, 0.f, 0.f));
 
+	LModel* pModel = new LModel("Game/Assets/backpack/backpack.obj");
+	std::shared_ptr<LModel> Model = std::shared_ptr<LModel>(pModel);
+
 	CModelComponent* TestModelComponent = TestObject->Components.AddComponent<CModelComponent>(TestObject);
 	Objects.emplace_back(TestObject);
 
-	std::shared_ptr<LMesh> BoxMesh = std::make_shared<LMesh>();
-	TestModelComponent->SetMesh(BoxMesh);
+	TestModelComponent->SetModel(Model);
 
 	LShader* TestShader = new LShader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
 	std::shared_ptr<LShader> DefaultShader = std::shared_ptr<LShader>(TestShader);
@@ -61,7 +63,7 @@ void System::SetupGame()
 
 	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>();
 	DefaultMaterial->Shader = std::shared_ptr<LShader>(DefaultShader);
-	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>(LTexture("container.jpg", false, ETextureType::Diffuse));
+	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>(LTexture("backpack/diffuse.jpg", false, ETextureType::Diffuse));
 	DefaultMaterial->Textures.emplace_back(BoxTexture);
 
 	TestModelComponent->SetMaterial(DefaultMaterial);

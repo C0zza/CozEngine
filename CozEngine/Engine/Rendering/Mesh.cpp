@@ -65,7 +65,15 @@ LMesh::LMesh(/*const std::vector<Vertex>& i_Vertices , const std::vector<unsigne
 	SetupMesh();
 }
 
-void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform)
+LMesh::LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices)
+{
+	 Vertices = i_Vertices;
+	 Indices = i_Indices;
+
+	 SetupMesh();
+}
+
+void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
 {
 	std::string TextureString;
 	unsigned int DiffuseCount = 0;

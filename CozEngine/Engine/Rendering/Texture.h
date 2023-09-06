@@ -2,12 +2,14 @@
 
 enum class ETextureType
 {
-	Diffuse
+	Diffuse,
+	Specular
 };
 
 class LTexture
 {
 public:
+	LTexture(const unsigned int ID, const ETextureType Type, const char* Path);
 	LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType);
 
 	void Use(const unsigned int TextureUnit = 0) const;
@@ -17,6 +19,8 @@ public:
 	static void SetFlipVerticallyOnLoad(const bool Flip);
 
 private:
+	void Init(const char* TexturePath, const bool HasAlpha);
+
 	unsigned int TextureID;
 
 	int Width;

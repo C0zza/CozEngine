@@ -17,12 +17,13 @@ struct LMaterial;
 class LMesh
 {
 public:
-	LMesh(/*const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices*/);
+	LMesh();
+	LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices);
 
-	void Draw(const LMaterial& Mat, const LTransform& Transform);
+	void Draw(const LMaterial& Mat, const LTransform& Transform) const;
 
 	std::vector<Vertex> Vertices;
-	// std::vector<unsigned int> Indices;
+	std::vector<unsigned int> Indices;
 private:
 	void SetupMesh();
 

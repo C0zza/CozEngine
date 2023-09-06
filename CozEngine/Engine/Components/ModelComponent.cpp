@@ -1,14 +1,14 @@
 #include "ModelComponent.h"
 
-#include "Rendering/Mesh.h"
+#include "Rendering/Model.h"
 #include "Object.h"
 #include "Transform.h"
 
 void CModelComponent::Tick()
 {
-	if (Mesh.get() && Material.get())
+	if (Model.get() && Material.get())
 	{
 		assert(Parent);
-		Mesh->Draw(*Material.get(), Parent->Transform);
+		Model->Draw(*Material.get(), Parent->Transform);
 	}
 }
