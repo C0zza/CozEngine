@@ -41,7 +41,7 @@ void System::SetupGame()
 	//std::shared_ptr<LTexture> SmileyTexture = std::make_shared<LTexture>(LTexture("awesomeface.png", true, ETextureType::Diffuse));
 
 	SomeCamera = std::make_shared<Camera>();
-	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 6.f));
+	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 10.f));
 	m_Renderer.SetActiveCamera(SomeCamera);
 
 	CObject* TestObject = new CObject();
@@ -65,6 +65,8 @@ void System::SetupGame()
 	DefaultMaterial->Shader = std::shared_ptr<LShader>(DefaultShader);
 	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>(LTexture("backpack/diffuse.jpg", false, ETextureType::Diffuse));
 	DefaultMaterial->Textures.emplace_back(BoxTexture);
+	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>(LTexture("backpack/specular.jpg", false, ETextureType::Specular));
+	DefaultMaterial->Textures.emplace_back(SpecularBoxTexture);
 
 	TestModelComponent->SetMaterial(DefaultMaterial);
 }
@@ -86,6 +88,7 @@ void System::Run()
 		float camZ = cos(glfwGetTime()) * radius;
 		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));*/
 
+		LShader::SetGlobalVec("ViewPos", SomeCamera->CameraTransform->GetPosition());
 		LShader::SetGlobalMat4("View", m_Renderer.GetViewMatrix());
 		LShader::SetGlobalMat4("Projection", m_Renderer.GetProjectionMatrix());
 

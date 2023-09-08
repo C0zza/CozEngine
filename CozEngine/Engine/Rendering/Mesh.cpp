@@ -77,6 +77,7 @@ void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
 {
 	std::string TextureString;
 	unsigned int DiffuseCount = 0;
+	unsigned int SpecularCount = 0;
 
 	// Temp save on setting shader each mesh draw
 	static LShader* CurrentShader = nullptr;
@@ -111,6 +112,9 @@ void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
 		{
 		case ETextureType::Diffuse:
 			TextureString = "DiffuseTexture" + std::to_string(++DiffuseCount);
+			break;
+		case ETextureType::Specular:
+			TextureString = "SpecularTexture" + std::to_string(++SpecularCount);
 			break;
 		}
 
