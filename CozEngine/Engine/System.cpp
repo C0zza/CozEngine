@@ -57,7 +57,9 @@ void System::SetupGame()
 
 	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
 	DefaultShader->Use();
-	DefaultShader->SetVec3("LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+	DefaultShader->SetVec3("Light.Ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+	DefaultShader->SetVec3("Light.Diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	DefaultShader->SetVec3("Light.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
 	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
@@ -75,7 +77,7 @@ void System::Run()
 {
 	float radius = 10.0f;
 
-	LShader::SetGlobalVec("LightPos", glm::vec3(10.f, 0.f, 0.f));
+	LShader::SetGlobalVec("Light.Position", glm::vec3(10.f, 0.f, 0.f));
 
 	assert(m_Renderer.GetWindow());
 	while (!m_Renderer.GetWindow()->ShouldClose())
