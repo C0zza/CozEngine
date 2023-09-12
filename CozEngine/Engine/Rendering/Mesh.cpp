@@ -3,11 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <string>
 
 #include "Material.h"
 #include "Shader.h"
-#include "Texture.h"
 
 // Dummy cube data
 std::vector<Vertex> TestVertices = 
@@ -57,9 +55,6 @@ std::vector<Vertex> TestVertices =
 
 LMesh::LMesh(/*const std::vector<Vertex>& i_Vertices , const std::vector<unsigned int> i_Indices*/)
 {
-	// Vertices = i_Vertices;
-	// Indices = i_Indices;
-
 	Vertices = TestVertices;
 
 	SetupMesh();
@@ -75,22 +70,9 @@ LMesh::LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned i
 
 void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
 {
-	std::string TextureString;
-	unsigned int DiffuseCount = 0;
-	unsigned int SpecularCount = 0;
-
-	// Temp save on setting shader each mesh draw
-	static LShader* CurrentShader = nullptr;
-	if (!CurrentShader)
-	{
-		CurrentShader = Mat.Shader.get();
-		assert(CurrentShader);
-		CurrentShader->Use();
-	}
-	else
-	{
-		assert(CurrentShader);
-	}
+	Mat.Use();
+	const LShader* Shader = Mat.GetShader();
+	assert(Shader);
 
 	glm::mat4 Transformation = glm::mat4(1.f);
 	Transformation = glm::translate(Transformation, Transform.GetPosition());
@@ -98,30 +80,10 @@ void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().x, glm::vec3(1.0, 0.f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().y, glm::vec3(0.f, 1.0f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().z, glm::vec3(0.f, 0.f, 1.0f));
-	CurrentShader->SetMat4("Model", Transformation);
+	Shader->SetMat4("Model", Transformation);
 
 	glm::mat3 NormalMatrix = glm::transpose(glm::inverse(Transformation));
-	CurrentShader->SetMat3("NormalMatrix", NormalMatrix);
-
-	for (unsigned int i = 0; i < Mat.Textures.size(); i++)
-	{
-		LTexture* Tex = Mat.Textures[i].get();
-		assert(Tex);
-
-		switch (Tex->GetTextureType())
-		{
-		case ETextureType::Diffuse:
-			TextureString = "DiffuseTexture" + std::to_string(++DiffuseCount);
-			break;
-		case ETextureType::Specular:
-			TextureString = "SpecularTexture" + std::to_string(++SpecularCount);
-			break;
-		}
-
-		CurrentShader->SetInt(TextureString.c_str(), i);
-		Tex->Use(i);
-	}
-	glActiveTexture(GL_TEXTURE0);
+	Shader->SetMat3("NormalMatrix", NormalMatrix);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);

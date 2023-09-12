@@ -47,26 +47,26 @@ void System::SetupGame()
 	CObject* TestObject = new CObject();
 	TestObject->Components.AddComponent<CTestComponent>(TestObject);
 	TestObject->Transform.Move(glm::vec3(0.f, 0.f, 0.f));
+	Objects.emplace_back(TestObject);
 
-	LModel* pModel = new LModel("Game/Assets/backpack/backpack.obj");
-	std::shared_ptr<LModel> Model = std::shared_ptr<LModel>(pModel);
+	std::shared_ptr<LModel> Model = std::make_shared<LModel>("Game/Assets/backpack/backpack.obj");
 
 	CModelComponent* TestModelComponent = TestObject->Components.AddComponent<CModelComponent>(TestObject);
-	Objects.emplace_back(TestObject);
 
 	TestModelComponent->SetModel(Model);
 
-	LShader* TestShader = new LShader("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
-	std::shared_ptr<LShader> DefaultShader = std::shared_ptr<LShader>(TestShader);
+	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
 	DefaultShader->Use();
 	DefaultShader->SetVec3("LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
-	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>();
-	DefaultMaterial->Shader = std::shared_ptr<LShader>(DefaultShader);
-	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>(LTexture("backpack/diffuse.jpg", false, ETextureType::Diffuse));
-	DefaultMaterial->Textures.emplace_back(BoxTexture);
-	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>(LTexture("backpack/specular.jpg", false, ETextureType::Specular));
-	DefaultMaterial->Textures.emplace_back(SpecularBoxTexture);
+	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
+	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
+	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
+
+	DefaultMaterial->Ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+	DefaultMaterial->Diffuse = BoxTexture;
+	DefaultMaterial->Specular = SpecularBoxTexture;
+	DefaultMaterial->SpecularShininess = 32.f;
 
 	TestModelComponent->SetMaterial(DefaultMaterial);
 }

@@ -20,7 +20,7 @@ LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureT
 	Init(TexturePath, HasAlpha);
 }
 
-void LTexture::Use(const unsigned int TextureUnit /* = 0 */) const
+void LTexture::Use(const unsigned int TextureUnit) const
 {
 	glActiveTexture(GL_TEXTURE0 + TextureUnit);
 	glBindTexture(GL_TEXTURE_2D, TextureID);

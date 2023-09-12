@@ -8,6 +8,7 @@
 std::vector<LShader*> LShader::Shaders = {};
 
 LShader::LShader(const char* VertexPath, const char* FragmentPath)
+	: ID{ 0 }
 {
 	std::ifstream VertexFile;
 	std::ifstream FragmentFile;

@@ -12,7 +12,7 @@ struct Vertex
 	glm::vec2 TexCoords;
 };
 
-struct LMaterial;
+class LMaterial;
 
 class LMesh
 {

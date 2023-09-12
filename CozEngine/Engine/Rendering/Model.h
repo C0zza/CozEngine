@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+#include "Material.h"
 #include "Mesh.h"
 #include "Texture.h"
 
@@ -12,7 +13,6 @@ struct aiMesh;
 struct aiNode;
 struct aiScene;
 
-struct LMaterial;
 // class LTexture;
 
 class LModel

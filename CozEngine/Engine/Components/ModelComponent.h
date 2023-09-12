@@ -6,7 +6,7 @@
 
 class LModel;
 class LTransform;
-struct LMaterial;
+class LMaterial;
 
 class CModelComponent : public CComponent
 {

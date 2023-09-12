@@ -12,7 +12,7 @@ public:
 	LTexture(const unsigned int ID, const ETextureType Type, const char* Path);
 	LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType);
 
-	void Use(const unsigned int TextureUnit = 0) const;
+	void Use(const unsigned int TextureUnit) const;
 
 	ETextureType GetTextureType() const { return TextureType; }
 
