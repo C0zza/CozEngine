@@ -13,13 +13,14 @@ struct aiMesh;
 struct aiNode;
 struct aiScene;
 
+class LShader;
 // class LTexture;
 
 class LModel
 {
 public:
 	LModel(char const* Path);
-	void Draw(const LMaterial& Material, const LTransform& Transform) const;
+	void Draw(const LShader& Shader, const LTransform& Transform) const;
 
 private:
 	std::vector<LMesh> Meshes;

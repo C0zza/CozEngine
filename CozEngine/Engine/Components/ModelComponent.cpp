@@ -8,7 +8,10 @@ void CModelComponent::Tick()
 {
 	if (Model.get() && Material.get())
 	{
+		// Only need the one Material->Use call while we have 1 mat per CModelComponent
+		Material->Use();
 		assert(Parent);
-		Model->Draw(*Material.get(), Parent->Transform);
+		assert(Material->GetShader());
+		Model->Draw(*Material->GetShader(), Parent->Transform);
 	}
 }

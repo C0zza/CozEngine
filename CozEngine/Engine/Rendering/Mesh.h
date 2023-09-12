@@ -12,7 +12,7 @@ struct Vertex
 	glm::vec2 TexCoords;
 };
 
-class LMaterial;
+class LShader;
 
 class LMesh
 {
@@ -20,7 +20,7 @@ public:
 	LMesh();
 	LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices);
 
-	void Draw(const LMaterial& Mat, const LTransform& Transform) const;
+	void Draw(const LShader& Mat, const LTransform& Transform) const;
 
 	std::vector<Vertex> Vertices;
 	std::vector<unsigned int> Indices;

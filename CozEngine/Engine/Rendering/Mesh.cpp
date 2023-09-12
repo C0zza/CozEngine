@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Material.h"
 #include "Shader.h"
 
 // Dummy cube data
@@ -68,22 +67,18 @@ LMesh::LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned i
 	 SetupMesh();
 }
 
-void LMesh::Draw(const LMaterial& Mat, const LTransform& Transform) const
+void LMesh::Draw(const LShader& Shader, const LTransform& Transform) const
 {
-	Mat.Use();
-	const LShader* Shader = Mat.GetShader();
-	assert(Shader);
-
 	glm::mat4 Transformation = glm::mat4(1.f);
 	Transformation = glm::translate(Transformation, Transform.GetPosition());
 	Transformation = glm::scale(Transformation, Transform.GetScale());
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().x, glm::vec3(1.0, 0.f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().y, glm::vec3(0.f, 1.0f, 0.f));
 	Transformation = glm::rotate(Transformation, Transform.GetRotation().z, glm::vec3(0.f, 0.f, 1.0f));
-	Shader->SetMat4("Model", Transformation);
+	Shader.SetMat4("Model", Transformation);
 
 	glm::mat3 NormalMatrix = glm::transpose(glm::inverse(Transformation));
-	Shader->SetMat3("NormalMatrix", NormalMatrix);
+	Shader.SetMat3("NormalMatrix", NormalMatrix);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
