@@ -15,7 +15,8 @@ struct LMaterial
 
 struct LLight
 {
-	vec3 Position;
+	vec3 Direction; // Directional Light;
+	//vec3 Position;
 	vec3 Ambient;
 	vec3 Diffuse;
 	vec3 Specular;
@@ -30,7 +31,9 @@ void main()
 	vec3 Ambient = Light.Ambient * Material.Ambient;
 
 	vec3 Norm = normalize(Normal);
-	vec3 LightDir = normalize(Light.Position - FragPos);
+	// vec3 LightDir = normalize(Light.Position - FragPos);
+	vec3 LightDir = normalize(-Light.Direction);
+
 
 	vec3 ViewDir = normalize(ViewPos - FragPos);
 	vec3 ReflectDir = reflect(-LightDir, Norm);

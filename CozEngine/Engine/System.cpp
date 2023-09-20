@@ -77,7 +77,8 @@ void System::Run()
 {
 	float radius = 10.0f;
 
-	LShader::SetGlobalVec("Light.Position", glm::vec3(10.f, 0.f, 0.f));
+	// LShader::SetGlobalVec("Light.Position", glm::vec3(10.f, 0.f, 0.f));
+	LShader::SetGlobalVec("Light.Direction", glm::vec3(-1.f, 0.f, 0.f));
 
 	assert(m_Renderer.GetWindow());
 	while (!m_Renderer.GetWindow()->ShouldClose())
