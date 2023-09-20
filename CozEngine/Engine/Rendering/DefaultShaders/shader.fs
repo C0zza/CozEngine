@@ -13,17 +13,28 @@ struct LMaterial
 	float Shininess;
 };
 
-struct LLight
+struct LDirectionalLight
 {
-	vec3 Direction; // Directional Light;
-	//vec3 Position;
+	vec3 Direction;
 	vec3 Ambient;
 	vec3 Diffuse;
 	vec3 Specular;
 };
 
+struct LPointLight
+{
+	vec3 Position;
+	vec3 Ambient;
+	vec3 Diffuse;
+	vec3 Specular;
+
+	float Constant;
+	float Linear;
+	float Quadratic;
+};
+
 uniform LMaterial Material;
-uniform LLight Light;
+uniform LPointLight Light;
 uniform vec3 ViewPos;
 
 void main()
@@ -31,9 +42,12 @@ void main()
 	vec3 Ambient = Light.Ambient * Material.Ambient;
 
 	vec3 Norm = normalize(Normal);
-	// vec3 LightDir = normalize(Light.Position - FragPos);
-	vec3 LightDir = normalize(-Light.Direction);
+	
+	vec3 LightDir = Light.Position - FragPos;
+	float LightDistance = length(LightDir);
+	LightDir = normalize(LightDir);
 
+	float Attenuation = 1.0 / (Light.Constant + Light.Linear * LightDistance + Light.Quadratic * (LightDistance * LightDistance));
 
 	vec3 ViewDir = normalize(ViewPos - FragPos);
 	vec3 ReflectDir = reflect(-LightDir, Norm);
@@ -43,6 +57,6 @@ void main()
 
 	vec3 Diffuse = max(dot(Norm, LightDir), 0.0) * Light.Diffuse;
 
-	vec3 Result = Ambient + Diffuse + Specular;
+	vec3 Result = (Ambient + Diffuse + Specular) * Attenuation;
 	FragColor = texture(Material.Diffuse, TexCoord) * vec4(Result, 1.0);
 }
