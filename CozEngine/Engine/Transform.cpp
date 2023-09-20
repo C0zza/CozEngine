@@ -1,6 +1,7 @@
 #include "Transform.h"
 
 #include <glm/common.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 void Clamp(float& Value, const float Min, const float Max)
 {
@@ -34,4 +35,13 @@ void LTransform::Rotate(const glm::vec3& Rotate)
 	Clamp(Position.x, Min, Max);
 	Clamp(Position.y, Min, Max);
 	Clamp(Position.z, Min, Max);
+}
+
+glm::vec3 LTransform::GetForward() const
+{
+	glm::vec3 Result = glm::vec3(0.f, 0.f, -1.f);
+	Result = glm::rotateX(Result, Rotation.x);
+	Result = glm::rotateY(Result, Rotation.y);
+	Result = glm::rotateZ(Result, Rotation.z);
+	return glm::normalize(Result);
 }

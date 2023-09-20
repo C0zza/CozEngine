@@ -20,6 +20,8 @@ public:
 	void Move(const glm::vec3& Movement);
 	void Rotate(const glm::vec3& Rotate);
 
+	glm::vec3 GetForward() const;
+
 private:
 	glm::vec3 Position;
 	glm::vec3 Rotation;
