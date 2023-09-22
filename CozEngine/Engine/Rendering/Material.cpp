@@ -26,7 +26,7 @@ void LMaterial::Use() const
 		assert(CurrentShader);
 	}
 
-	Shader->SetVec3("Material.Ambient", Ambient);
+	// Shader->SetVec3("Material.Ambient", Ambient);
 
 	if (Diffuse.get())
 	{

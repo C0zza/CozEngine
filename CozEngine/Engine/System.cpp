@@ -45,7 +45,7 @@ void System::SetupGame()
 	m_Renderer.SetActiveCamera(SomeCamera);
 
 	CObject* TestObject = new CObject();
-	TestObject->Components.AddComponent<CTestComponent>(TestObject);
+	// TestObject->Components.AddComponent<CTestComponent>(TestObject);
 	TestObject->Transform.Move(glm::vec3(0.f, 0.f, 0.f));
 	Objects.emplace_back(TestObject);
 
@@ -57,23 +57,31 @@ void System::SetupGame()
 
 	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
 	DefaultShader->Use();
-	DefaultShader->SetVec3("Light.Ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-	DefaultShader->SetVec3("Light.Diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-	DefaultShader->SetVec3("Light.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
-	
-	// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
-	/*DefaultShader->SetFloat("Light.Constant", 1.0f);
-	DefaultShader->SetFloat("Light.Linear", 0.022f);
-	DefaultShader->SetFloat("Light.Quadratic", 0.0019f);*/
 
-	DefaultShader->SetFloat("Light.CutOff", glm::cos(glm::radians(12.5f)));
-	DefaultShader->SetFloat("Light.OuterCutOff", glm::cos(glm::radians(17.5f)));
+	DefaultShader->SetVec3("DirectionalLight.Ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+	DefaultShader->SetVec3("DirectionalLight.Diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	DefaultShader->SetVec3("DirectionalLight.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
+	DefaultShader->SetVec3("DirectionalLight.Direction", glm::vec3(0.f, -1.f, -1.f));
+
+	DefaultShader->SetVec3("PointLights[0].Ambient", glm::vec3(0.2f, 0.f, 0.f));
+	DefaultShader->SetVec3("PointLights[0].Diffuse", glm::vec3(0.5f, 0.f, 0.f));
+	DefaultShader->SetVec3("PointLights[0].Specular", glm::vec3(1.0f, 0.f, 0.f));
+	DefaultShader->SetVec3("PointLights[0].Direction", SomeCamera->CameraTransform->GetForward());
+	// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
+	DefaultShader->SetFloat("PointLights[0].Constant", 1.0f);
+	DefaultShader->SetFloat("PointLights[0].Linear", 0.09f);
+	DefaultShader->SetFloat("PointLights[0].Quadratic", 0.032f);
+
+	DefaultShader->SetInt("ActivePointLights", 1);
+
+	//DefaultShader->SetFloat("Light.CutOff", glm::cos(glm::radians(12.5f)));
+	//DefaultShader->SetFloat("Light.OuterCutOff", glm::cos(glm::radians(17.5f)));
 
 	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
 	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
 	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
 
-	DefaultMaterial->Ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+	// DefaultMaterial->Ambient = glm::vec3(0.3f, 0.3f, 0.3f);
 	DefaultMaterial->Diffuse = BoxTexture;
 	DefaultMaterial->Specular = SpecularBoxTexture;
 	DefaultMaterial->SpecularShininess = 32.f;
@@ -85,10 +93,6 @@ void System::Run()
 {
 	float radius = 10.0f;
 
-	LShader::SetGlobalVec("Light.Position", SomeCamera->CameraTransform->GetPosition());
-	LShader::SetGlobalVec("Light.Direction", SomeCamera->CameraTransform->GetForward());
-	// LShader::SetGlobalVec("Light.Direction", glm::vec3(-1.f, 0.f, 0.f));
-
 	assert(m_Renderer.GetWindow());
 	while (!m_Renderer.GetWindow()->ShouldClose())
 	{
@@ -97,7 +101,7 @@ void System::Run()
 		m_Renderer.Tick();
 
 		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
-		LShader::SetGlobalVec("Light.Position", glm::vec3(sin(glfwGetTime()) * 2.5f, CameraPos.y, CameraPos.z));
+		LShader::SetGlobalVec("PointLights[0].Position", glm::vec3(sin(glfwGetTime()) * 10.f, CameraPos.y, CameraPos.z));
 
 		/*float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;

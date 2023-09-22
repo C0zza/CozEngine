@@ -15,7 +15,7 @@ public:
 	void Use() const;
 	const LShader* GetShader() const { return Shader.get(); }
 
-	glm::vec3 Ambient = glm::vec3(0.f, 0.f, 0.f);
+	// glm::vec3 Ambient = glm::vec3(0.f, 0.f, 0.f);
 	std::shared_ptr<LTexture> Diffuse = nullptr;
 	std::shared_ptr<LTexture> Specular = nullptr;
 	float SpecularShininess = 0.f;
