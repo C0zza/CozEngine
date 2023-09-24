@@ -12,6 +12,9 @@ class CObject;
 class Camera;
 struct GLFWwindow;
 
+// TEMP
+class LTransform;
+
 class System
 {
 public:
@@ -30,5 +33,8 @@ private:
 	std::vector<std::unique_ptr<CObject>> Objects;
 
 	std::shared_ptr<Camera> SomeCamera;
+	
+	// TEMP
+	LTransform* PointLightTransform;
 };
 

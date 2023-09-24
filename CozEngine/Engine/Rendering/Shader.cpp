@@ -140,6 +140,26 @@ void LShader::SetMat4(const std::string& name, const glm::mat4& mat) const
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
+void LShader::SetGlobalInt(const std::string& name, const int i)
+{
+	for (LShader* Shader : Shaders)
+	{
+		assert(Shader);
+		Shader->Use();
+		Shader->SetInt(name, i);
+	}
+}
+
+void LShader::SetGlobalFloat(const std::string& name, const float f)
+{
+	for (LShader* Shader : Shaders)
+	{
+		assert(Shader);
+		Shader->Use();
+		Shader->SetFloat(name, f);
+	}
+}
+
 void LShader::SetGlobalMat4(const std::string& name, const glm::mat4& mat)
 {
 	for (LShader* Shader : Shaders)

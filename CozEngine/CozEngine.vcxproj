@@ -163,6 +163,7 @@
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Model.cpp" />
+    <ClCompile Include="Engine\Components\Lighting\PointLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Components\ComponentList.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Engine\Rendering\Mesh.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Model.h" />
+    <ClInclude Include="Engine\Components\Lighting\PointLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

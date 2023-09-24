@@ -12,6 +12,7 @@
 #include "Rendering/Texture.h"
 #include "Transform.h"
 #include "Game/Components/TestComponent.h"
+#include "Components/Lighting/PointLightComponent.h"
 #include "Rendering/Material.h"
 #include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
@@ -63,16 +64,20 @@ void System::SetupGame()
 	DefaultShader->SetVec3("DirectionalLight.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
 	DefaultShader->SetVec3("DirectionalLight.Direction", glm::vec3(0.f, -1.f, -1.f));
 
-	DefaultShader->SetVec3("PointLights[0].Ambient", glm::vec3(0.2f, 0.f, 0.f));
-	DefaultShader->SetVec3("PointLights[0].Diffuse", glm::vec3(0.5f, 0.f, 0.f));
-	DefaultShader->SetVec3("PointLights[0].Specular", glm::vec3(1.0f, 0.f, 0.f));
-	DefaultShader->SetVec3("PointLights[0].Direction", SomeCamera->CameraTransform->GetForward());
-	// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
-	DefaultShader->SetFloat("PointLights[0].Constant", 1.0f);
-	DefaultShader->SetFloat("PointLights[0].Linear", 0.09f);
-	DefaultShader->SetFloat("PointLights[0].Quadratic", 0.032f);
+	CObject* PointLightObject = new CObject();
+	Objects.emplace_back(PointLightObject);
 
-	DefaultShader->SetInt("ActivePointLights", 1);
+	CPointLightComponent* TestPointLight = PointLightObject->Components.AddComponent<CPointLightComponent>(PointLightObject);
+	//// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
+	TestPointLight->SetAmbient(glm::vec3(0.2f, 0.f, 0.f));
+	TestPointLight->SetDiffuse(glm::vec3(0.5f, 0.f, 0.f));
+	TestPointLight->SetSpecular(glm::vec3(1.0f, 0.f, 0.f));
+	TestPointLight->SetConstant(1.0f);
+	TestPointLight->SetLinear(0.09f);
+	TestPointLight->SetQuadratic(0.032f);
+
+	// TEMP
+	PointLightTransform = &PointLightObject->Transform;
 
 	//DefaultShader->SetFloat("Light.CutOff", glm::cos(glm::radians(12.5f)));
 	//DefaultShader->SetFloat("Light.OuterCutOff", glm::cos(glm::radians(17.5f)));
@@ -101,8 +106,8 @@ void System::Run()
 		m_Renderer.Tick();
 
 		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
-		LShader::SetGlobalVec("PointLights[0].Position", glm::vec3(sin(glfwGetTime()) * 10.f, CameraPos.y, CameraPos.z));
-
+		PointLightTransform->SetPosition(glm::vec3(sin(glfwGetTime()) * 10.f, CameraPos.y, CameraPos.z));
+		CPointLightComponent::UpdatePointLights();
 		/*float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
 		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));*/

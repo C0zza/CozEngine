@@ -21,6 +21,8 @@ public:
 	void SetMat4(const std::string& name, const glm::mat4& mat) const;
 
 	// Temp
+	static void SetGlobalInt(const std::string& name, const int i);
+	static void SetGlobalFloat(const std::string& name, const float f);
 	static void SetGlobalMat4(const std::string& name, const glm::mat4& mat);
 	static void SetGlobalVec(const std::string& name, const glm::vec3& vec);
 private:
