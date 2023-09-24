@@ -20,7 +20,7 @@ class LModel
 {
 public:
 	LModel(char const* Path);
-	void Draw(const LShader& Shader, const LTransform& Transform) const;
+	void Draw(const LShader& Shader, const glm::mat4& Transform) const;
 
 private:
 	std::vector<LMesh> Meshes;

@@ -12,7 +12,7 @@ LModel::LModel(char const* Path)
 	LoadModel(Path);
 }
 
-void LModel::Draw(const LShader& Shader, const LTransform& Transform) const
+void LModel::Draw(const LShader& Shader, const glm::mat4& Transform) const
 {
 	for (const LMesh& Mesh : Meshes)
 	{

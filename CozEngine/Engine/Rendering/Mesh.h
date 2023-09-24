@@ -20,7 +20,7 @@ public:
 	LMesh();
 	LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices);
 
-	void Draw(const LShader& Mat, const LTransform& Transform) const;
+	void Draw(const LShader& Mat, const glm::mat4& Transform) const;
 
 	std::vector<Vertex> Vertices;
 	std::vector<unsigned int> Indices;

@@ -12,6 +12,12 @@ void CModelComponent::Tick()
 		Material->Use();
 		assert(Parent);
 		assert(Material->GetShader());
-		Model->Draw(*Material->GetShader(), Parent->Transform);
+
+		if (Parent->Transform.GetIsDirty())
+		{
+			Parent->Transform.UpdateTransformationMatrix();
+		}
+
+		Model->Draw(*Material->GetShader(), Parent->Transform.GetTransformationMatrix());
 	}
 }

@@ -50,6 +50,7 @@ vec3 CalcPointLight(LPointLight Light, vec3 Normal, vec3 FragPos, vec3 ViewDir);
 
 uniform LDirectionalLight DirectionalLight;
 
+// Should match number in PointLightComponent.h
 #define MAX_NUM_POINT_LIGHT 4
 uniform int ActivePointLights;
 uniform LPointLight PointLights[MAX_NUM_POINT_LIGHT];
