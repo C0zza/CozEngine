@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Components\ComponentList.cpp" />
     <ClCompile Include="Engine\Components\Component.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -166,6 +167,8 @@
     <ClCompile Include="Engine\Components\Lighting\PointLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\Lighting\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\DirtyFlag.h" />
     <ClInclude Include="Engine\Components\ComponentList.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Camera.h" />

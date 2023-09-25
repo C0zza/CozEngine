@@ -12,6 +12,7 @@
 #include "Rendering/Texture.h"
 #include "Transform.h"
 #include "Game/Components/TestComponent.h"
+#include "Components/Lighting/DirectionalLightComponent.h"
 #include "Components/Lighting/PointLightComponent.h"
 #include "Rendering/Material.h"
 #include "Components/ModelComponent.h"
@@ -57,16 +58,17 @@ void System::SetupGame()
 	TestModelComponent->SetModel(Model);
 
 	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
-	DefaultShader->Use();
 
-	DefaultShader->SetVec3("DirectionalLight.Ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-	DefaultShader->SetVec3("DirectionalLight.Diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-	DefaultShader->SetVec3("DirectionalLight.Specular", glm::vec3(1.0f, 1.0f, 1.0f));
-	DefaultShader->SetVec3("DirectionalLight.Direction", glm::vec3(0.f, -1.f, -1.f));
+	CObject* DirectionalLightObject = new CObject();
+	DirectionalLightObject->Transform.SetRotation(glm::vec3(0.f, 45.f, 0.f));
+	Objects.emplace_back(DirectionalLightObject);
+	CDirectionalLightComponent* DirectionalLight = DirectionalLightObject->Components.AddComponent<CDirectionalLightComponent>(DirectionalLightObject);
+	DirectionalLight->SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
+	DirectionalLight->SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
+	DirectionalLight->SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	CObject* PointLightObject = new CObject();
 	Objects.emplace_back(PointLightObject);
-
 	CPointLightComponent* TestPointLight = PointLightObject->Components.AddComponent<CPointLightComponent>(PointLightObject);
 	//// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
 	TestPointLight->SetAmbient(glm::vec3(0.2f, 0.f, 0.f));
@@ -108,6 +110,7 @@ void System::Run()
 		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
 		PointLightTransform->SetPosition(glm::vec3(sin(glfwGetTime()) * 10.f, CameraPos.y, CameraPos.z));
 		CPointLightComponent::UpdatePointLights();
+		CDirectionalLightComponent::UpdateDirectionalLight();
 		/*float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
 		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));*/

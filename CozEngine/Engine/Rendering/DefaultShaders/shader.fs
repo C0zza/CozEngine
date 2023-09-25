@@ -15,6 +15,7 @@ struct LMaterial
 
 struct LDirectionalLight
 {
+	bool IsActive;
 	vec3 Direction;
 	vec3 Ambient;
 	vec3 Diffuse;
@@ -64,7 +65,12 @@ void main()
 	vec3 Norm = normalize(Normal);
 	vec3 ViewDir = normalize(ViewPos - FragPos);
 
-	vec3 Result = CalcDirectionalLight(DirectionalLight, Norm, ViewDir);
+	vec3 Result = vec3(0.0, 0.0, 0.0);
+
+	if(DirectionalLight.IsActive)
+	{
+		Result += CalcDirectionalLight(DirectionalLight, Norm, ViewDir);
+	}
 
 	for(int i = 0; i < ActivePointLights; i++)
 	{
