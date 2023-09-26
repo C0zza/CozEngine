@@ -22,6 +22,10 @@ public:
 	void SetCutOff(const float i_CutOff) { SetDirtyMember(CutOff, i_CutOff); }
 	void SetOuterCutOff(const float i_OuterCutOff) { SetDirtyMember(OuterCutOff, i_OuterCutOff); }
 
+	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); }
+	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
+	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
+
 	// TODO: Separate tickable and non-tickable components
 	virtual void Tick() override {};
 
@@ -36,6 +40,10 @@ private:
 
 	float CutOff;
 	float OuterCutOff;
+
+	float Constant;
+	float Linear;
+	float Quadratic;
 
 public:
 	static void UpdateSpotLights();

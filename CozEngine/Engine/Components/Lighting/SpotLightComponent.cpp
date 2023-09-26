@@ -10,7 +10,7 @@ unsigned int CSpotLightComponent::SpotLightCount = 0;
 bool CSpotLightComponent::IsCountDirty = true;
 
 CSpotLightComponent::CSpotLightComponent()
-	: CutOff{ 0.f }, OuterCutOff{ 0.f }
+	: CutOff{ 0.f }, OuterCutOff{ 0.f }, Constant{ 0.f }, Linear{ 0.f }, Quadratic{ 0.f }
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
 
@@ -99,8 +99,14 @@ void CSpotLightComponent::Update(const int Index)
 		LShader::SetGlobalVec(SpotLightElement.str() + "Ambient", Ambient);
 		LShader::SetGlobalVec(SpotLightElement.str() + "Diffuse", Diffuse);
 		LShader::SetGlobalVec(SpotLightElement.str() + "Specular", Specular);
+		
 		LShader::SetGlobalFloat(SpotLightElement.str() + "CutOff", CutOff);
 		LShader::SetGlobalFloat(SpotLightElement.str() + "OuterCutOff", OuterCutOff);
+
+		LShader::SetGlobalFloat(SpotLightElement.str() + "Constant", Constant);
+		LShader::SetGlobalFloat(SpotLightElement.str() + "Linear", Linear);
+		LShader::SetGlobalFloat(SpotLightElement.str() + "Quadratic", Quadratic);
+
 		IsDirty = false;
 	}
 }

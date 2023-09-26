@@ -43,6 +43,10 @@ struct LSpotLight
 	vec3 Direction;
 	float CutOff;
 	float OuterCutOff;
+
+	float Constant;
+	float Linear;
+	float Quadratic;
 };
 
 vec3 CalcDirectionalLight(LDirectionalLight Light, vec3 Normal, vec3 ViewDir, vec3 DiffuseSample, vec3 SpecularSample);
@@ -133,6 +137,11 @@ vec3 CalcSpotLight(LSpotLight Light, vec3 Normal, vec3 FragPos, vec3 ViewDir, ve
 	float Theta = dot(LightDir, normalize(-Light.Direction));
 	float Epsilon = Light.CutOff - Light.OuterCutOff;
 	float Intensity = clamp((Theta - Light.OuterCutOff) / Epsilon, 0.0, 1.0);
+
+	float Distance = length(Light.Position - FragPos);
+	float Attenuation = 1.0 / (Light.Constant + Light.Linear * Distance + Light.Quadratic * (Distance * Distance));
+
+	Intensity *= Attenuation;
 
 	vec3 ReflectDir = reflect(-LightDir, Normal);
 	float Spec = pow(max(dot(ViewDir, ReflectDir), 0.0), Material.Shininess);

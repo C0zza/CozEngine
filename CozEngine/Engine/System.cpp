@@ -76,6 +76,9 @@ void System::SetupGame()
 	SpotLight->SetSpecular(glm::vec3(0.f, 0.7f, 0.f));
 	SpotLight->SetCutOff(glm::cos(glm::radians(12.5f)));
 	SpotLight->SetOuterCutOff(glm::cos(glm::radians(17.5f)));
+	SpotLight->SetConstant(1.0f);
+	SpotLight->SetLinear(0.09f);
+	SpotLight->SetQuadratic(0.032f);
 
 	// TEMP
 	PointLightTransform = &SpotLightObject->Transform;
@@ -103,7 +106,7 @@ void System::Run()
 		m_Renderer.Tick();
 
 		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
-		PointLightTransform->SetPosition(glm::vec3(sin(glfwGetTime()) * 5.f, CameraPos.y, CameraPos.z / 2));
+		PointLightTransform->SetPosition(glm::vec3(0.f, CameraPos.y, sin(glfwGetTime()) * 10.f + 10.f));
 
 		CPointLightComponent::UpdatePointLights();
 		CSpotLightComponent::UpdateSpotLights();
