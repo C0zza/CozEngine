@@ -92,7 +92,7 @@ void CSpotLightComponent::SetSpecular(const glm::vec3& i_Specular)
 	SetDirtyMember(Specular, i_Specular);
 }
 
-void CSpotLightComponent::Update(const int Index)
+void CSpotLightComponent::Update(const unsigned int Index)
 {
 	assert(Index >= 0 && Index <= CSpotLightComponent::SpotLightCount);
 	assert(Parent);

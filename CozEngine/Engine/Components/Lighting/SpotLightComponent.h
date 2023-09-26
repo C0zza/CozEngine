@@ -30,7 +30,7 @@ public:
 	virtual void Tick() override {};
 
 private:
-	void Update(const int Index);
+	void Update(const unsigned int Index);
 
 	glm::vec3 Position;
 	glm::vec3 Direction;
