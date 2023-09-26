@@ -96,8 +96,6 @@ void System::SetupGame()
 
 void System::Run()
 {
-	float radius = 10.0f;
-
 	assert(m_Renderer.GetWindow());
 	while (!m_Renderer.GetWindow()->ShouldClose())
 	{

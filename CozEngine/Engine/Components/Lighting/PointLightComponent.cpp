@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "Object.h"
+#include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
 std::vector<CPointLightComponent*> CPointLightComponent::PointLights = {};
@@ -10,7 +11,7 @@ unsigned int CPointLightComponent::PointLightCount = 0;
 bool CPointLightComponent::IsCountDirty = true;
 
 CPointLightComponent::CPointLightComponent()
-	: Constant{ 1.f }, Linear{ 0.f }, Quadratic{ 0.f }, IsDirty{ true }
+	: Constant{ 1.f }, Linear{ 0.f }, Quadratic{ 0.f }
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
 
@@ -69,6 +70,24 @@ CPointLightComponent::~CPointLightComponent()
 			PointLights.pop_back();
 		}
 	}
+}
+
+void CPointLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+{
+	LLighting::AssertRGBVec(i_Ambient);
+	SetDirtyMember(Ambient, i_Ambient);
+}
+
+void CPointLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
+{
+	LLighting::AssertRGBVec(i_Diffuse);
+	SetDirtyMember(Diffuse, i_Diffuse);
+}
+
+void CPointLightComponent::SetSpecular(const glm::vec3& i_Specular)
+{
+	LLighting::AssertRGBVec(i_Specular);
+	SetDirtyMember(Specular, i_Specular);
 }
 
 void CPointLightComponent::Update(const int Index)

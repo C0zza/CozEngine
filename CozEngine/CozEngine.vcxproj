@@ -151,6 +151,7 @@
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
+    <ClCompile Include="Engine\Rendering\Lighting\Lighting.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Engine\Rendering\Model.h" />
     <ClInclude Include="Engine\Components\Lighting\PointLightComponent.h" />
     <ClInclude Include="Engine\Components\Lighting\SpotLightComponent.h" />
+    <ClInclude Include="Engine\Rendering\Lighting\Lighting.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

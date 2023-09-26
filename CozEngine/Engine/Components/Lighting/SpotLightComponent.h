@@ -15,9 +15,9 @@ public:
 	CSpotLightComponent();
 	~CSpotLightComponent();
 
-	void SetAmbient(const glm::vec3& i_Ambient) { SetDirtyMember(Ambient, i_Ambient); }
-	void SetDiffuse(const glm::vec3& i_Diffuse) { SetDirtyMember(Diffuse, i_Diffuse); }
-	void SetSpecular(const glm::vec3& i_Specular) { SetDirtyMember(Specular, i_Specular); }
+	void SetAmbient(const glm::vec3& i_Ambient);
+	void SetDiffuse(const glm::vec3& i_Diffuse);
+	void SetSpecular(const glm::vec3& i_Specular);
 
 	void SetCutOff(const float i_CutOff) { SetDirtyMember(CutOff, i_CutOff); }
 	void SetOuterCutOff(const float i_OuterCutOff) { SetDirtyMember(OuterCutOff, i_OuterCutOff); }

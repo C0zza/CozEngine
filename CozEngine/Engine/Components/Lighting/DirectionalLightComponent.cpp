@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "Object.h"
+#include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
 CDirectionalLightComponent* CDirectionalLightComponent::ActiveDirectionalLight = nullptr;
@@ -32,6 +33,24 @@ CDirectionalLightComponent::~CDirectionalLightComponent()
 		ActiveDirectionalLight = nullptr;
 		LShader::SetGlobalBool("DirectionalLight.IsActive", false);
 	}
+}
+
+void CDirectionalLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+{
+	LLighting::AssertRGBVec(i_Ambient);
+	SetDirtyMember(Ambient, i_Ambient);
+}
+
+void CDirectionalLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
+{
+	LLighting::AssertRGBVec(i_Diffuse);
+	SetDirtyMember(Diffuse, i_Diffuse);
+}
+
+void CDirectionalLightComponent::SetSpecular(const glm::vec3& i_Specular)
+{
+	LLighting::AssertRGBVec(i_Specular);
+	SetDirtyMember(Specular, i_Specular);
 }
 
 void CDirectionalLightComponent::Update()

@@ -5,39 +5,31 @@
 
 #include "Components/Component.h"
 
+#include "DirtyFlag.h"
+
 // Should match number in shader.fs
 #define MAX_NUM_POINT_LIGHT 4
 
-class CPointLightComponent : public CComponent
+class CPointLightComponent : public CComponent, public LDirtyFlag
 {
 public:
 	CPointLightComponent();
 	~CPointLightComponent();
 
-	void SetAmbient(const glm::vec3& i_Ambient) { UpdateMember(Ambient, i_Ambient); }
-	void SetDiffuse(const glm::vec3& i_Diffuse) { UpdateMember(Diffuse, i_Diffuse); }
-	void SetSpecular(const glm::vec3& i_Specular) { UpdateMember(Specular, i_Specular); }
+	void SetAmbient(const glm::vec3& i_Ambient);
+	void SetDiffuse(const glm::vec3& i_Diffuse);
+	void SetSpecular(const glm::vec3& i_Specular);
 
 	// See https://learnopengl.com/Lighting/Light-casters for general point light values
-	void SetConstant(const float i_Constant) { UpdateMember(Quadratic, i_Constant); }
-	void SetLinear(const float i_Linear) { UpdateMember(Quadratic, i_Linear); }
-	void SetQuadratic(const float i_Quadratic) { UpdateMember(Quadratic, i_Quadratic); }
+	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); };
+	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
+	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
 
 	// TODO: Separate tickable and non-tickable components
 	virtual void Tick() override {}
 
 private:
 	void Update(const int Index);
-
-	template<typename T>
-	void UpdateMember(T& Member, const T Update)
-	{
-		if (Member != Update)
-		{
-			Member = Update;
-			IsDirty = true;
-		}
-	}
 
 	glm::vec3 Position;
 
@@ -48,8 +40,6 @@ private:
 	float Constant;
 	float Linear;
 	float Quadratic;
-
-	bool IsDirty;
 
 public:
 	static void UpdatePointLights();

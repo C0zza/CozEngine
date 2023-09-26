@@ -12,9 +12,9 @@ public:
 	CDirectionalLightComponent();
 	~CDirectionalLightComponent();
 
-	void SetAmbient(const glm::vec3& i_Ambient) { SetDirtyMember(Ambient, i_Ambient); }
-	void SetDiffuse(const glm::vec3& i_Diffuse) { SetDirtyMember(Diffuse, i_Diffuse); }
-	void SetSpecular(const glm::vec3& i_Specular) { SetDirtyMember(Specular, i_Specular); }
+	void SetAmbient(const glm::vec3& i_Ambient);
+	void SetDiffuse(const glm::vec3& i_Diffuse);
+	void SetSpecular(const glm::vec3& i_Specular);
 
 	// TODO: Separate tickable and non-tickable components
 	virtual void Tick() override {};
