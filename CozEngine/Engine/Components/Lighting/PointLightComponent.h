@@ -5,7 +5,7 @@
 
 #include "Components/Component.h"
 
-// Should match number in shader
+// Should match number in shader.fs
 #define MAX_NUM_POINT_LIGHT 4
 
 class CPointLightComponent : public CComponent
@@ -18,6 +18,7 @@ public:
 	void SetDiffuse(const glm::vec3& i_Diffuse) { UpdateMember(Diffuse, i_Diffuse); }
 	void SetSpecular(const glm::vec3& i_Specular) { UpdateMember(Specular, i_Specular); }
 
+	// See https://learnopengl.com/Lighting/Light-casters for general point light values
 	void SetConstant(const float i_Constant) { UpdateMember(Quadratic, i_Constant); }
 	void SetLinear(const float i_Linear) { UpdateMember(Quadratic, i_Linear); }
 	void SetQuadratic(const float i_Quadratic) { UpdateMember(Quadratic, i_Quadratic); }

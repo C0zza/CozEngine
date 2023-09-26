@@ -20,6 +20,8 @@ CDirectionalLightComponent::CDirectionalLightComponent()
 	Ambient = ZeroVector;
 	Diffuse = ZeroVector;
 	Specular = ZeroVector;
+
+	LShader::SetGlobalVec("DirectionalLight.Direction", Direction);
 }
 
 CDirectionalLightComponent::~CDirectionalLightComponent()

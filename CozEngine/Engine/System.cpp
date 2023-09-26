@@ -14,6 +14,7 @@
 #include "Game/Components/TestComponent.h"
 #include "Components/Lighting/DirectionalLightComponent.h"
 #include "Components/Lighting/PointLightComponent.h"
+#include "Components/Lighting/SpotLightComponent.h"
 #include "Rendering/Material.h"
 #include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
@@ -67,28 +68,22 @@ void System::SetupGame()
 	DirectionalLight->SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
 	DirectionalLight->SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
 
-	CObject* PointLightObject = new CObject();
-	Objects.emplace_back(PointLightObject);
-	CPointLightComponent* TestPointLight = PointLightObject->Components.AddComponent<CPointLightComponent>(PointLightObject);
-	//// Values for a point light of 100 distance. See https://learnopengl.com/Lighting/Light-casters
-	TestPointLight->SetAmbient(glm::vec3(0.2f, 0.f, 0.f));
-	TestPointLight->SetDiffuse(glm::vec3(0.5f, 0.f, 0.f));
-	TestPointLight->SetSpecular(glm::vec3(1.0f, 0.f, 0.f));
-	TestPointLight->SetConstant(1.0f);
-	TestPointLight->SetLinear(0.09f);
-	TestPointLight->SetQuadratic(0.032f);
+	CObject* SpotLightObject = new CObject();
+	Objects.emplace_back(SpotLightObject);
+	CSpotLightComponent* SpotLight = SpotLightObject->Components.AddComponent<CSpotLightComponent>(SpotLightObject);
+	SpotLight->SetAmbient(glm::vec3(0.f, 0.2f, 0.f));
+	SpotLight->SetDiffuse(glm::vec3(0.f, 0.5f, 0.f));
+	SpotLight->SetSpecular(glm::vec3(0.f, 0.7f, 0.f));
+	SpotLight->SetCutOff(glm::cos(glm::radians(12.5f)));
+	SpotLight->SetOuterCutOff(glm::cos(glm::radians(17.5f)));
 
 	// TEMP
-	PointLightTransform = &PointLightObject->Transform;
-
-	//DefaultShader->SetFloat("Light.CutOff", glm::cos(glm::radians(12.5f)));
-	//DefaultShader->SetFloat("Light.OuterCutOff", glm::cos(glm::radians(17.5f)));
+	PointLightTransform = &SpotLightObject->Transform;
 
 	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
 	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
 	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
 
-	// DefaultMaterial->Ambient = glm::vec3(0.3f, 0.3f, 0.3f);
 	DefaultMaterial->Diffuse = BoxTexture;
 	DefaultMaterial->Specular = SpecularBoxTexture;
 	DefaultMaterial->SpecularShininess = 32.f;
@@ -108,12 +103,11 @@ void System::Run()
 		m_Renderer.Tick();
 
 		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
-		PointLightTransform->SetPosition(glm::vec3(sin(glfwGetTime()) * 10.f, CameraPos.y, CameraPos.z));
+		PointLightTransform->SetPosition(glm::vec3(sin(glfwGetTime()) * 5.f, CameraPos.y, CameraPos.z / 2));
+
 		CPointLightComponent::UpdatePointLights();
+		CSpotLightComponent::UpdateSpotLights();
 		CDirectionalLightComponent::UpdateDirectionalLight();
-		/*float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
-		SomeCamera->CameraTransform->SetPosition(glm::vec3(camX, 0.f, camZ));*/
 
 		LShader::SetGlobalVec("ViewPos", SomeCamera->CameraTransform->GetPosition());
 		LShader::SetGlobalMat4("View", m_Renderer.GetViewMatrix());

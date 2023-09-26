@@ -75,7 +75,7 @@
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DirtyFlag.cpp">
+    <ClCompile Include="Engine\Components\Lighting\SpotLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DirtyFlag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Lighting\SpotLightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

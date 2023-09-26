@@ -19,9 +19,9 @@ public:
 	// TODO: Separate tickable and non-tickable components
 	virtual void Tick() override {};
 
+private:
 	void Update();
 
-private:
 	glm::vec3 Direction;
 	glm::vec3 Ambient;
 	glm::vec3 Diffuse;

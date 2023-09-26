@@ -26,6 +26,13 @@ CPointLightComponent::CPointLightComponent()
 	}
 
 	PointLights.push_back(this);
+
+	if (PointLights.size() <= MAX_NUM_POINT_LIGHT)
+	{
+		std::stringstream PointLightElement;
+		PointLightElement << "PointLights[" << PointLights.size() - 1 << "].";
+		LShader::SetGlobalVec(PointLightElement.str() + "Position", Position);
+	}
 }
 
 CPointLightComponent::~CPointLightComponent()
