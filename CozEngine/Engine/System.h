@@ -28,7 +28,7 @@ public:
 
 private:
 	Renderer m_Renderer;
-	InputManager m_InputManager;
+	LInputManager InputManager;
 
 	std::vector<std::unique_ptr<CObject>> Objects;
 	

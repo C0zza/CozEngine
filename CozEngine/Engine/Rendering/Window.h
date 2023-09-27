@@ -10,7 +10,7 @@ struct GLFWwindow;
 class LWindow
 {
 public:
-	friend class InputManager;
+	friend class LInputManager;
 	friend class Renderer;
 
 	void Init();

@@ -22,6 +22,8 @@ public:
 	void Rotate(const glm::vec3& Rotate);
 
 	glm::vec3 GetForward() const;
+	glm::vec3 GetRight() const;
+	glm::vec3 GetUp() const;
 
 	void UpdateTransformationMatrix();
 	const glm::mat4& GetTransformationMatrix();

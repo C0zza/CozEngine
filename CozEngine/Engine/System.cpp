@@ -30,6 +30,7 @@ System::~System()
 void System::Init()
 {
 	m_Renderer.Init();
+	InputManager.Init(m_Renderer.GetWindow().get());
 }
 
 void System::Shutdown()
@@ -44,12 +45,12 @@ void System::SetupGame()
 
 	CObject* CameraObject = new CObject();
 	CameraObject->Transform.Move(glm::vec3(0.f, 0.f, 10.f));
+	CameraObject->Components.AddComponent<CTestComponent>(CameraObject);
 	CCameraComponent* Camera = CameraObject->Components.AddComponent<CCameraComponent>(CameraObject);
 	Camera->ActivateCamera();
 	Objects.emplace_back(CameraObject);
 
 	CObject* TestObject = new CObject();
-	// TestObject->Components.AddComponent<CTestComponent>(TestObject);
 	TestObject->Transform.Move(glm::vec3(0.f, 0.f, 0.f));
 	Objects.emplace_back(TestObject);
 

@@ -5,18 +5,29 @@
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.h"
 
-void InputManager::Init(std::shared_ptr<LWindow> i_Window)
+LInputManager::InputEventList LInputManager::Events = {};
+bool LInputManager::IsInitialized = false;
+
+void LInputManager::Init(LWindow* i_Window)
 {
-	m_Window = std::weak_ptr<LWindow>(i_Window);
+	assert(i_Window);
+	glfwSetKeyCallback(i_Window->m_Window, KeyCallback);
+	IsInitialized = true;
 }
 
-void InputManager::ProcessInput()
+void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	std::shared_ptr<LWindow> sWindow = m_Window.lock();
-	assert(sWindow && sWindow->m_Window);
+	KeyAction Ka;
+	Ka.first = key;
+	Ka.second = action;
 
-	if (glfwGetKey(sWindow->m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (Events.find(Ka) != Events.end())
 	{
-		glfwSetWindowShouldClose(sWindow->m_Window, true);
+		for (unsigned int i = 0; i < Events[Ka].size(); i++)
+		{
+			(*Events[Ka][i])();
+		}
+
+		// TODO: Test for recursion? If event consumes input?
 	}
-}
+  }

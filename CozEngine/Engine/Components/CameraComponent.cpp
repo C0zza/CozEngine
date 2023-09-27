@@ -16,8 +16,7 @@ const glm::mat4& CCameraComponent::GetViewMatrix()
     assert(Parent);
     if (Parent->Transform.GetIsDirty())
     {
-        glm::vec3 ForwardVector = Parent->Transform.GetForward();
-        CachedViewMatrix = glm::lookAt(Parent->Transform.GetPosition(), glm::vec3(ForwardVector.x, ForwardVector.y, ForwardVector.z), glm::vec3(0.f, 1.f, 0.f));
+        CachedViewMatrix = glm::lookAt(Parent->Transform.GetPosition(), Parent->Transform.GetPosition() + Parent->Transform.GetForward(), Parent->Transform.GetUp());
     }
 
     return CachedViewMatrix;

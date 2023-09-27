@@ -51,6 +51,24 @@ glm::vec3 LTransform::GetForward() const
 	return glm::normalize(Result);
 }
 
+glm::vec3 LTransform::GetRight() const
+{
+	glm::vec3 Result = glm::vec3(1.f, 0.f, 0.f);
+	Result = glm::rotateX(Result, Rotation.x);
+	Result = glm::rotateY(Result, Rotation.y);
+	Result = glm::rotateZ(Result, Rotation.z);
+	return glm::normalize(Result);
+}
+
+glm::vec3 LTransform::GetUp() const
+{
+	glm::vec3 Result = glm::vec3(0.f, 1.f, 0.f);
+	Result = glm::rotateX(Result, Rotation.x);
+	Result = glm::rotateY(Result, Rotation.y);
+	Result = glm::rotateZ(Result, Rotation.z);
+	return glm::normalize(Result);
+}
+
 void LTransform::UpdateTransformationMatrix()
 {
 	TransformationMatrix = glm::mat4(1.f);
