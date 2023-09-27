@@ -16,14 +16,14 @@ public:
 private:
 	float Speed = 0.05f;
 
-	LInputEvent<CTestComponent> MoveLeftEvent;
-	LInputEvent<CTestComponent> MoveRightEvent;
-	LInputEvent<CTestComponent> StopMoveLeftEvent;
-	LInputEvent<CTestComponent> StopMoveRightEvent;
-	LInputEvent<CTestComponent> MoveForwardEvent;
-	LInputEvent<CTestComponent> StopMoveForwardEvent;
-	LInputEvent<CTestComponent> MoveBackEvent;
-	LInputEvent<CTestComponent> StopMoveBackEvent;
+	LKeyInputEvent<CTestComponent> MoveLeftEvent;
+	LKeyInputEvent<CTestComponent> MoveRightEvent;
+	LKeyInputEvent<CTestComponent> StopMoveLeftEvent;
+	LKeyInputEvent<CTestComponent> StopMoveRightEvent;
+	LKeyInputEvent<CTestComponent> MoveForwardEvent;
+	LKeyInputEvent<CTestComponent> StopMoveForwardEvent;
+	LKeyInputEvent<CTestComponent> MoveBackEvent;
+	LKeyInputEvent<CTestComponent> StopMoveBackEvent;
 
 	void MoveLeft();
 	void StopMoveLeft();
@@ -33,6 +33,9 @@ private:
 	void StopMoveForward();
 	void MoveBack();
 	void StopMoveBack();
+
+	LMouseMoveEvent<CTestComponent> MouseRotateEvent;
+	void Rotate(double X, double Y);
 
 	glm::vec3 Movement = glm::vec3(0.f, 0.f, 0.f);
 };

@@ -30,7 +30,6 @@ System::~System()
 void System::Init()
 {
 	m_Renderer.Init();
-	InputManager.Init(m_Renderer.GetWindow().get());
 }
 
 void System::Shutdown()
@@ -106,6 +105,8 @@ void System::SetupGame()
 	DefaultMaterial->SpecularShininess = 32.f;
 
 	TestModelComponent->SetMaterial(DefaultMaterial);
+
+	InputManager.Init(m_Renderer.GetWindow().get());
 }
 
 void System::Run()

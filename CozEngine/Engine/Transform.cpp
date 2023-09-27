@@ -22,6 +22,19 @@ LTransform::LTransform()
 {
 }
 
+void LTransform::MoveRelative(const glm::vec3& Movement)
+{
+	glm::vec3 RotatedMovement = Movement;
+	RotatedMovement = glm::rotateX(RotatedMovement, Rotation.x);
+	RotatedMovement = glm::rotateY(RotatedMovement, Rotation.y);
+	RotatedMovement = glm::rotateZ(RotatedMovement, Rotation.z);
+
+	Position.x += RotatedMovement.x;
+	Position.y += RotatedMovement.y;
+	Position.z += RotatedMovement.z;
+	IsDirty = true;
+}
+
 void LTransform::Move(const glm::vec3& Movement)
 {
 	Position.x += Movement.x;
@@ -35,9 +48,9 @@ void LTransform::Rotate(const glm::vec3& Rotate)
 	Rotation += Rotate;
 
 	float Min = 0.f, Max = 360.f;
-	Clamp(Position.x, Min, Max);
-	Clamp(Position.y, Min, Max);
-	Clamp(Position.z, Min, Max);
+	/*Clamp(Rotation.x, Min, Max);
+	Clamp(Rotation.y, Min, Max);
+	Clamp(Rotation.z, Min, Max);*/
 
 	IsDirty = true;
 }

@@ -19,6 +19,7 @@ public:
 	void SetScale(const glm::vec3& NewScale) { Scale = NewScale; IsDirty = true; }
 
 	void Move(const glm::vec3& Movement);
+	void MoveRelative(const glm::vec3& Movement);
 	void Rotate(const glm::vec3& Rotate);
 
 	glm::vec3 GetForward() const;

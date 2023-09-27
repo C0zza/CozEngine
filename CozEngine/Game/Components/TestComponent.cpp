@@ -7,35 +7,40 @@
 
 CTestComponent::CTestComponent()
 {
-	MoveLeftEvent = LInputEvent<CTestComponent>(this, &CTestComponent::MoveLeft);
-	StopMoveLeftEvent = LInputEvent<CTestComponent>(this, &CTestComponent::StopMoveLeft);
-	MoveRightEvent = LInputEvent<CTestComponent>(this, &CTestComponent::MoveRight);
-	StopMoveRightEvent = LInputEvent<CTestComponent>(this, &CTestComponent::StopMoveRight);
-	MoveForwardEvent = LInputEvent<CTestComponent>(this, &CTestComponent::MoveForward);
-	StopMoveForwardEvent = LInputEvent<CTestComponent>(this, &CTestComponent::StopMoveForward);
-	MoveBackEvent = LInputEvent<CTestComponent>(this, &CTestComponent::MoveBack);
-	StopMoveBackEvent = LInputEvent<CTestComponent>(this, &CTestComponent::StopMoveBack);
+	MoveLeftEvent.Init(this, &CTestComponent::MoveLeft);
+	StopMoveLeftEvent.Init(this, &CTestComponent::StopMoveLeft);
+	MoveRightEvent.Init(this, &CTestComponent::MoveRight);
+	StopMoveRightEvent.Init(this, &CTestComponent::StopMoveRight);
+	MoveForwardEvent.Init(this, &CTestComponent::MoveForward);
+	StopMoveForwardEvent.Init(this, &CTestComponent::StopMoveForward);
+	MoveBackEvent.Init(this, &CTestComponent::MoveBack);
+	StopMoveBackEvent.Init(this, &CTestComponent::StopMoveBack);
 
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_A, GLFW_PRESS), &MoveLeftEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_A, GLFW_RELEASE), &StopMoveLeftEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_D, GLFW_PRESS), &MoveRightEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_D, GLFW_RELEASE), &StopMoveRightEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_W, GLFW_PRESS), &MoveForwardEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_W, GLFW_RELEASE), &StopMoveForwardEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_S, GLFW_PRESS), &MoveBackEvent);
-	LInputManager::RegisterEvent(KeyAction(GLFW_KEY_S, GLFW_RELEASE), &StopMoveBackEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_PRESS), &MoveLeftEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_RELEASE), &StopMoveLeftEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_PRESS), &MoveRightEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_RELEASE), &StopMoveRightEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_PRESS), &MoveForwardEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_RELEASE), &StopMoveForwardEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_PRESS), &MoveBackEvent);
+	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_RELEASE), &StopMoveBackEvent);
+
+	MouseRotateEvent.Init(this, &CTestComponent::Rotate);
+	LInputManager::RegisterMouseMoveEvent(&MouseRotateEvent);
 }
 
 CTestComponent::~CTestComponent()
 {
-	LInputManager::UnregisterEvent(&MoveLeftEvent);
-	LInputManager::UnregisterEvent(&StopMoveLeftEvent);
-	LInputManager::UnregisterEvent(&MoveRightEvent);
-	LInputManager::UnregisterEvent(&StopMoveRightEvent);
-	LInputManager::UnregisterEvent(&MoveForwardEvent);
-	LInputManager::UnregisterEvent(&StopMoveForwardEvent);
-	LInputManager::UnregisterEvent(&MoveBackEvent);
-	LInputManager::UnregisterEvent(&StopMoveBackEvent);
+	LInputManager::UnregisterKeyEvent(&MoveLeftEvent);
+	LInputManager::UnregisterKeyEvent(&StopMoveLeftEvent);
+	LInputManager::UnregisterKeyEvent(&MoveRightEvent);
+	LInputManager::UnregisterKeyEvent(&StopMoveRightEvent);
+	LInputManager::UnregisterKeyEvent(&MoveForwardEvent);
+	LInputManager::UnregisterKeyEvent(&StopMoveForwardEvent);
+	LInputManager::UnregisterKeyEvent(&MoveBackEvent);
+	LInputManager::UnregisterKeyEvent(&StopMoveBackEvent);
+
+	LInputManager::UnregisterMouseMoveEvent(&MouseRotateEvent);
 }
 
 void CTestComponent::Tick()
@@ -44,32 +49,28 @@ void CTestComponent::Tick()
 	
 	if (glm::length(Movement) > 0)
 	{
-		Parent->Transform.Move(glm::normalize(Movement) * Speed);
+		Parent->Transform.MoveRelative(glm::normalize(Movement) * Speed);
 	}
 }
 
 void CTestComponent::MoveLeft()
 {
 	Movement.x -= 1.f;
-	assert(Movement.x >= -1.f);
 }
 
 void CTestComponent::MoveRight()
 {
 	Movement.x += 1.f;
-	assert(Movement.x <= 1.f);
 }
 
 void CTestComponent::StopMoveLeft()
 {
 	Movement.x += 1.f;
-	assert(Movement.x <= 1.f);
 }
 
 void CTestComponent::StopMoveRight()
 {
 	Movement.x -= 1.f;
-	assert(Movement.x >= -1.f);
 }
 
 void CTestComponent::MoveForward()
@@ -90,4 +91,10 @@ void CTestComponent::MoveBack()
 void CTestComponent::StopMoveBack()
 {
 	Movement.z -= 1.f;
+}
+
+void CTestComponent::Rotate(double X, double Y)
+{
+	assert(Parent);
+	Parent->Transform.Rotate(glm::vec3(X, Y, 0) * 0.01f);
 }
