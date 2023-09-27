@@ -31,8 +31,6 @@ private:
 	InputManager m_InputManager;
 
 	std::vector<std::unique_ptr<CObject>> Objects;
-
-	std::shared_ptr<Camera> SomeCamera;
 	
 	// TEMP
 	LTransform* PointLightTransform;

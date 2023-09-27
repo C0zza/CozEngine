@@ -23,7 +23,7 @@ public:
 		}
 
 		Components.emplace_back(Component);
-		Components.back()->SetParent(Parent);
+		Components.back()->Parent = Parent;
 
 		return Component;
 	}

@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-void Window::Init()
+void LWindow::Init()
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -36,7 +36,7 @@ void Window::Init()
 	glEnable(GL_DEPTH_TEST);
 }
 
-bool Window::ShouldClose() const
+bool LWindow::ShouldClose() const
 {
 	assert(m_Window);
 	return glfwWindowShouldClose(m_Window);

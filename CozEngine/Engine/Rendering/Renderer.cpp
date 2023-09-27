@@ -6,20 +6,21 @@
 #include <string>
 #include <vector>
 
-#include "Camera.h"
 #include "Components/ModelComponent.h"
+#include "Components/CameraComponent.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Object.h"
 
 void Renderer::Init()
 {
 	// Utility library for OpenGL
 	glfwInit();
 
-	m_Window = std::make_shared<Window>();
+	m_Window = std::make_shared<LWindow>();
 	assert(m_Window);
 	m_Window->Init();
 
@@ -36,13 +37,12 @@ void Renderer::Tick()
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	std::shared_ptr<Camera> ActiveCamera = m_ActiveCamera.lock();
-	if (!ActiveCamera.get())
-	{
-		return;
-	}
-
-	ViewMatrix = ActiveCamera->GetViewMatrix();
+	// TODO: Cache these?
+	CCameraComponent* ActiveCamera = CCameraComponent::GetActiveCamera();
+	assert(ActiveCamera);
+	LShader::SetGlobalVec("ViewPos", ActiveCamera->Parent->Transform.GetPosition());
+	LShader::SetGlobalMat4("View", ActiveCamera->GetViewMatrix());
+	LShader::SetGlobalMat4("Projection", GetProjectionMatrix());
 }
 
 void Renderer::PostTick()
@@ -50,12 +50,4 @@ void Renderer::PostTick()
 	assert(m_Window->m_Window);
 	glfwSwapBuffers(m_Window->m_Window);
 	glfwPollEvents();
-}
-
-void Renderer::SetActiveCamera(const std::shared_ptr<Camera>& i_Camera)
-{
-	if (i_Camera)
-	{
-		m_ActiveCamera = std::weak_ptr<Camera>(i_Camera);
-	}
 }

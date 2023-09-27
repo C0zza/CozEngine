@@ -2,16 +2,16 @@
 
 #include <memory>
 
-class Window;
+class LWindow;
 
 class InputManager
 {
 public:
-	void Init(std::shared_ptr<Window> i_Window);
+	void Init(std::shared_ptr<LWindow> i_Window);
 
 	void ProcessInput();
 
 private:
-	std::weak_ptr<Window> m_Window;
+	std::weak_ptr<LWindow> m_Window;
 };
 

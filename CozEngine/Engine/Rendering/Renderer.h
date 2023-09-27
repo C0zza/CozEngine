@@ -6,7 +6,7 @@
 
 class Camera;
 class CModelComponent;
-class Window;
+class LWindow;
 
 class Renderer
 {
@@ -15,20 +15,15 @@ public:
 	void Shutdown();
 	void Tick();
 
-	std::shared_ptr<Window>& GetWindow() { return m_Window; }
-
-	void SetActiveCamera(const std::shared_ptr<Camera>& i_Camera);
+	std::shared_ptr<LWindow>& GetWindow() { return m_Window; }
 
 	// TEMP
 	void PostTick();
-	const glm::mat4& GetViewMatrix() const { return ViewMatrix; }
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
 private:
-	std::shared_ptr<Window> m_Window;
-	std::weak_ptr<Camera> m_ActiveCamera;
+	std::shared_ptr<LWindow> m_Window;
 
-	glm::mat4 ViewMatrix = glm::mat4(0);
 	glm::mat4 ProjectionMatrix = glm::mat4(0);
 };
 

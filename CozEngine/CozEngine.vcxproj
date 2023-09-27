@@ -145,10 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
-    <ClCompile Include="Engine\Components\ComponentList.cpp" />
-    <ClCompile Include="Engine\Components\Component.cpp" />
-    <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Rendering\Lighting\Lighting.cpp" />
@@ -169,11 +167,11 @@
     <ClCompile Include="Engine\Components\Lighting\SpotLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\CameraComponent.h" />
     <ClInclude Include="Engine\Components\Lighting\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\DirtyFlag.h" />
     <ClInclude Include="Engine\Components\ComponentList.h" />
     <ClInclude Include="Engine\Components\Component.h" />
-    <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />

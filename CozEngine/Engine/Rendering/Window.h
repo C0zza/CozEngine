@@ -7,7 +7,7 @@
 
 struct GLFWwindow;
 
-class Window
+class LWindow
 {
 public:
 	friend class InputManager;

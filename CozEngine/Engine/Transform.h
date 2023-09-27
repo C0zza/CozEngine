@@ -24,7 +24,7 @@ public:
 	glm::vec3 GetForward() const;
 
 	void UpdateTransformationMatrix();
-	const glm::mat4& GetTransformationMatrix() const { return TransformationMatrix; }
+	const glm::mat4& GetTransformationMatrix();
 	bool GetIsDirty() const { return IsDirty; }
 
 private:

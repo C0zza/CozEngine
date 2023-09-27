@@ -62,3 +62,13 @@ void LTransform::UpdateTransformationMatrix()
 
 	IsDirty = false;
 }
+
+const glm::mat4& LTransform::GetTransformationMatrix()
+{
+	if (IsDirty)
+	{
+		UpdateTransformationMatrix();
+	}
+
+	return TransformationMatrix;
+}

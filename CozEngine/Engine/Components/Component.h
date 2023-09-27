@@ -12,9 +12,6 @@ public:
 
 	virtual void Tick() = 0;
 
-	void SetParent(CObject* Object) { Parent = Object; }
-
-protected:
 	CObject* Parent = nullptr;
 };
 

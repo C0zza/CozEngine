@@ -7,11 +7,11 @@
 #include <iostream>
 
 #include "Object.h"
-#include "Camera.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Transform.h"
 #include "Game/Components/TestComponent.h"
+#include "Components/CameraComponent.h"
 #include "Components/Lighting/DirectionalLightComponent.h"
 #include "Components/Lighting/PointLightComponent.h"
 #include "Components/Lighting/SpotLightComponent.h"
@@ -30,7 +30,6 @@ System::~System()
 void System::Init()
 {
 	m_Renderer.Init();
-	m_InputManager.Init(m_Renderer.GetWindow());
 }
 
 void System::Shutdown()
@@ -43,9 +42,11 @@ void System::SetupGame()
 	LTexture::SetFlipVerticallyOnLoad(true);
 	//std::shared_ptr<LTexture> SmileyTexture = std::make_shared<LTexture>(LTexture("awesomeface.png", true, ETextureType::Diffuse));
 
-	SomeCamera = std::make_shared<Camera>();
-	SomeCamera->CameraTransform->Move(glm::vec3(0.f, 0.f, 10.f));
-	m_Renderer.SetActiveCamera(SomeCamera);
+	CObject* CameraObject = new CObject();
+	CameraObject->Transform.Move(glm::vec3(0.f, 0.f, 10.f));
+	CCameraComponent* Camera = CameraObject->Components.AddComponent<CCameraComponent>(CameraObject);
+	Camera->ActivateCamera();
+	Objects.emplace_back(CameraObject);
 
 	CObject* TestObject = new CObject();
 	// TestObject->Components.AddComponent<CTestComponent>(TestObject);
@@ -99,20 +100,13 @@ void System::Run()
 	assert(m_Renderer.GetWindow());
 	while (!m_Renderer.GetWindow()->ShouldClose())
 	{
-		m_InputManager.ProcessInput();
-
-		m_Renderer.Tick();
-
-		glm::vec3 CameraPos = SomeCamera->CameraTransform->GetPosition();
-		PointLightTransform->SetPosition(glm::vec3(0.f, CameraPos.y, sin(glfwGetTime()) * 10.f + 10.f));
+		PointLightTransform->SetPosition(glm::vec3(0.f, 0.f, sin(glfwGetTime()) * 10.f + 10.f));
 
 		CPointLightComponent::UpdatePointLights();
 		CSpotLightComponent::UpdateSpotLights();
 		CDirectionalLightComponent::UpdateDirectionalLight();
 
-		LShader::SetGlobalVec("ViewPos", SomeCamera->CameraTransform->GetPosition());
-		LShader::SetGlobalMat4("View", m_Renderer.GetViewMatrix());
-		LShader::SetGlobalMat4("Projection", m_Renderer.GetProjectionMatrix());
+		m_Renderer.Tick();
 
 		// under current setup mesh drawing can be out of sync
 		for (std::unique_ptr<CObject>& Object : Objects)
