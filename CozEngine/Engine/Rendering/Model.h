@@ -19,6 +19,9 @@ class LShader;
 class LModel
 {
 public:
+	// TEMP
+	LModel();
+
 	LModel(char const* Path);
 	void Draw(const LShader& Shader, const glm::mat4& Transform) const;
 

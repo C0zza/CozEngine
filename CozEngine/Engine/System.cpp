@@ -69,8 +69,20 @@ void System::SetupGame()
 	DirectionalLight->SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
 	DirectionalLight->SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
 
+	std::shared_ptr<LModel> CubeModel = std::make_shared<LModel>();
+
 	CObject* SpotLightObject = new CObject();
 	Objects.emplace_back(SpotLightObject);
+
+	CModelComponent* CubeModelComponent = SpotLightObject->Components.AddComponent<CModelComponent>(SpotLightObject);
+	CubeModelComponent->SetModel(CubeModel);
+
+	std::shared_ptr<LMaterial> CubeMaterial = std::make_shared<LMaterial>(DefaultShader);
+	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("container.jpg", false, ETextureType::Diffuse);
+	CubeMaterial->Diffuse = BoxTexture;
+
+	CubeModelComponent->SetMaterial(CubeMaterial);
+
 	CSpotLightComponent* SpotLight = SpotLightObject->Components.AddComponent<CSpotLightComponent>(SpotLightObject);
 	SpotLight->SetAmbient(glm::vec3(0.f, 0.2f, 0.f));
 	SpotLight->SetDiffuse(glm::vec3(0.f, 0.5f, 0.f));
@@ -85,11 +97,11 @@ void System::SetupGame()
 	PointLightTransform = &SpotLightObject->Transform;
 
 	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
-	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
-	std::shared_ptr<LTexture> SpecularBoxTexture = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
+	std::shared_ptr<LTexture> BagTexture = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
+	std::shared_ptr<LTexture> SpecBagTexture = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
 
-	DefaultMaterial->Diffuse = BoxTexture;
-	DefaultMaterial->Specular = SpecularBoxTexture;
+	DefaultMaterial->Diffuse = BagTexture;
+	DefaultMaterial->Specular = SpecBagTexture;
 	DefaultMaterial->SpecularShininess = 32.f;
 
 	TestModelComponent->SetMaterial(DefaultMaterial);

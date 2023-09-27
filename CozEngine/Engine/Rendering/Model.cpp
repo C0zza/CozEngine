@@ -7,6 +7,12 @@
 
 #include "Transform.h"
 
+// TEMP - Adds a basic cube mesh for testing
+LModel::LModel()
+{
+	Meshes.push_back(LMesh());
+}
+
 LModel::LModel(char const* Path)
 {
 	LoadModel(Path);
