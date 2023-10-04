@@ -24,6 +24,10 @@ private:
 	LKeyInputEvent<CTestComponent> StopMoveForwardEvent;
 	LKeyInputEvent<CTestComponent> MoveBackEvent;
 	LKeyInputEvent<CTestComponent> StopMoveBackEvent;
+	LKeyInputEvent<CTestComponent> MoveDownEvent;
+	LKeyInputEvent<CTestComponent> StopMoveDownEvent;
+	LKeyInputEvent<CTestComponent> MoveUpEvent;
+	LKeyInputEvent<CTestComponent> StopMoveUpEvent;
 
 	void MoveLeft();
 	void StopMoveLeft();
@@ -33,6 +37,10 @@ private:
 	void StopMoveForward();
 	void MoveBack();
 	void StopMoveBack();
+	void MoveDown();
+	void StopMoveDown();
+	void MoveUp();
+	void StopMoveUp();
 
 	LMouseMoveEvent<CTestComponent> MouseRotateEvent;
 	void Rotate(double X, double Y);
