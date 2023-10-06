@@ -147,6 +147,12 @@
   <ItemGroup>
     <ClCompile Include="Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ComponentManager.cpp" />
+    <ClCompile Include="Engine\ECS\ComponentPool.cpp" />
+    <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
+    <ClCompile Include="Engine\ECS\Coordinator.cpp" />
+    <ClCompile Include="Engine\ECS\EntityManager.cpp" />
+    <ClCompile Include="Engine\ECS\SystemManager.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Rendering\Lighting\Lighting.cpp" />
@@ -172,6 +178,13 @@
     <ClInclude Include="Engine\DirtyFlag.h" />
     <ClInclude Include="Engine\Components\ComponentList.h" />
     <ClInclude Include="Engine\Components\Component.h" />
+    <ClInclude Include="Engine\ECS\ComponentManager.h" />
+    <ClInclude Include="Engine\ECS\ComponentPool.h" />
+    <ClInclude Include="Engine\ECS\ComponentSystem.h" />
+    <ClInclude Include="Engine\ECS\Coordinator.h" />
+    <ClInclude Include="Engine\ECS\ECSDefinitions.h" />
+    <ClInclude Include="Engine\ECS\EntityManager.h" />
+    <ClInclude Include="Engine\ECS\SystemManager.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />
