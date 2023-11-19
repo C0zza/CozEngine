@@ -19,6 +19,8 @@
 #include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
 
+#include "Game/Components/TestECSComponent.h"
+
 System::System()
 {
 }
@@ -107,6 +109,10 @@ void System::SetupGame()
 	TestModelComponent->SetMaterial(DefaultMaterial);
 
 	InputManager.Init(m_Renderer.GetWindow().get());
+
+	ECS.AddComponentSystem<CTestECSComponentSystem, CTestECSComponent>();
+
+	TestEntity = new CTestEntity(&ECS);
 }
 
 void System::Run()
@@ -130,6 +136,8 @@ void System::Run()
 				Object->TickComponents();
 			}
 		}
+
+		ECS.RunComponentSystems();
 
 		m_Renderer.PostTick();
 	}

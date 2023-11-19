@@ -90,6 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,14 +149,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
+    <ClCompile Include="Engine\ECS\ECS.cpp" />
     <ClCompile Include="Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ComponentManager.cpp" />
-    <ClCompile Include="Engine\ECS\ComponentPool.cpp" />
-    <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
-    <ClCompile Include="Engine\ECS\Coordinator.cpp" />
-    <ClCompile Include="Engine\ECS\EntityManager.cpp" />
-    <ClCompile Include="Engine\ECS\SystemManager.cpp" />
+    <ClCompile Include="Engine\ECS\Entity.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Rendering\Lighting\Lighting.cpp" />
@@ -171,21 +172,20 @@
     <ClCompile Include="Engine\Rendering\Model.cpp" />
     <ClCompile Include="Engine\Components\Lighting\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting\SpotLightComponent.cpp" />
+    <ClCompile Include="Engine\Misc\TypeIdGenerator.cpp" />
+    <ClCompile Include="Game\Components\TestECSComponent.cpp" />
+    <ClCompile Include="Game\TestEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\ComponentSystem.h" />
+    <ClInclude Include="Engine\ECS\ECS.h" />
     <ClInclude Include="Engine\Components\CameraComponent.h" />
     <ClInclude Include="Engine\Components\Lighting\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\DirtyFlag.h" />
     <ClInclude Include="Engine\Components\ComponentList.h" />
     <ClInclude Include="Engine\Components\Component.h" />
-    <ClInclude Include="Engine\ECS\ComponentManager.h" />
-    <ClInclude Include="Engine\ECS\ComponentPool.h" />
-    <ClInclude Include="Engine\ECS\ComponentSystem.h" />
-    <ClInclude Include="Engine\ECS\Coordinator.h" />
-    <ClInclude Include="Engine\ECS\ECSDefinitions.h" />
-    <ClInclude Include="Engine\ECS\EntityManager.h" />
-    <ClInclude Include="Engine\ECS\SystemManager.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
+    <ClInclude Include="Engine\ECS\ECSDefinitions.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
@@ -194,6 +194,7 @@
     <ClInclude Include="Engine\Rendering\Window.h" />
     <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\Object.h" />
+    <ClInclude Include="Engine\ECS\Entity.h" />
     <ClInclude Include="Game\Components\TestComponent.h" />
     <ClInclude Include="Engine\Components\ModelComponent.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
@@ -202,6 +203,9 @@
     <ClInclude Include="Engine\Components\Lighting\PointLightComponent.h" />
     <ClInclude Include="Engine\Components\Lighting\SpotLightComponent.h" />
     <ClInclude Include="Engine\Rendering\Lighting\Lighting.h" />
+    <ClInclude Include="Engine\Misc\TypeIdGenerator.h" />
+    <ClInclude Include="Game\Components\TestECSComponent.h" />
+    <ClInclude Include="Game\TestEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

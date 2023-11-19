@@ -5,8 +5,11 @@
 #include <glm/glm.hpp>
 
 #include "Input/InputManager.h"
+#include "ECS/ECS.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Window.h"
+
+#include "Game/TestEntity.h"
 
 class CObject;
 class Camera;
@@ -29,6 +32,9 @@ public:
 private:
 	Renderer m_Renderer;
 	LInputManager InputManager;
+	LECS ECS;
+
+	CTestEntity* TestEntity = nullptr;
 
 	std::vector<std::unique_ptr<CObject>> Objects;
 	
