@@ -46,7 +46,7 @@ public:
 	template<typename TComponentType>
 	void RemoveComponent(const LEntityID EntityID)
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator<TComponentType>::GetTypeID();
+		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
@@ -60,7 +60,7 @@ public:
 	template<typename TComponentType>
 	bool GetComponent(const LEntityID EntityID, TComponentType& Component)
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator<TComponentType>::GetTypeID();
+		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
