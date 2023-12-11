@@ -94,12 +94,17 @@ void LTransform::UpdateTransformationMatrix()
 	IsDirty = false;
 }
 
-const glm::mat4& LTransform::GetTransformationMatrix()
+const glm::mat4& LTransform::GetTransformationMatrix() const
+{
+	return TransformationMatrix;
+}
+
+const glm::mat4& LTransform::GetUpdatedTransformationMatrix()
 {
 	if (IsDirty)
 	{
 		UpdateTransformationMatrix();
 	}
 
-	return TransformationMatrix;
+	return GetTransformationMatrix();
 }

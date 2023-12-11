@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <unordered_map>
 #include <vector>
 
@@ -7,7 +8,12 @@
 
 class LComponentSystemBase
 {
+protected:
+	bool IsTickable = true;
+
 public:
+	bool GetIsTickable() const { return IsTickable; }
+
 	virtual void Run() = 0;
 	virtual void RemoveComponent(const LEntityID EntityID) = 0;
 };
@@ -18,13 +24,14 @@ class LComponentSystem : public LComponentSystemBase
 public:
 	virtual void Run() override
 	{
+		assert(IsTickable);
 		for (std::pair<LEntityID, TComponentType>& Component : Components)
 		{
 			RunComponent(Component.second);
 		}
 	}
 
-	virtual void RunComponent(TComponentType& Component) = 0;
+	virtual void RunComponent(TComponentType& Component) {};
 
 	void AddComponent(const LEntityID EntityID, const TComponentType& Component)
 	{
@@ -42,9 +49,10 @@ public:
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{
 			const LEntityID IndexToRemove = EntityIdToComponentIndex[EntityID];
-			const std::pair<LEntityID, TComponentType> LastComponent = Components[Components.size() - 1];
+			std::pair<LEntityID, TComponentType>& LastComponent = Components[Components.size() - 1];
 
 			Components[IndexToRemove] = LastComponent;
+
 			Components.pop_back();
 			EntityIdToComponentIndex[LastComponent.first] = IndexToRemove;
 

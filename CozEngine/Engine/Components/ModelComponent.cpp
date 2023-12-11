@@ -18,6 +18,6 @@ void CModelComponent::Tick()
 			Parent->Transform.UpdateTransformationMatrix();
 		}
 
-		Model->Draw(*Material->GetShader(), Parent->Transform.GetTransformationMatrix());
+		Model->Draw(*Material->GetShader(), Parent->Transform.GetUpdatedTransformationMatrix());
 	}
 }

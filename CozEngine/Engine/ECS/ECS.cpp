@@ -2,8 +2,8 @@
 
 void LECS::RunComponentSystems()
 {
-	for (auto& ComponentSystem : ComponentSystems)
+	for (LComponentSystemBase* ComponentSystem : TickableComponentSystems)
 	{
-		ComponentSystem.second->Run();
+		ComponentSystem->Run();
 	}
 }

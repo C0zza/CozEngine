@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
     <ClCompile Include="Engine\Components\CameraComponent.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Game\TestEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h" />
     <ClInclude Include="Engine\ECS\ComponentSystem.h" />
     <ClInclude Include="Engine\ECS\ECS.h" />
     <ClInclude Include="Engine\Components\CameraComponent.h" />

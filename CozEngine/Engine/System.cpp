@@ -15,6 +15,7 @@
 #include "Components/Lighting/DirectionalLightComponent.h"
 #include "Components/Lighting/PointLightComponent.h"
 #include "Components/Lighting/SpotLightComponent.h"
+#include "ECS/ECSComponents/ECSModelComponent.h"
 #include "Rendering/Material.h"
 #include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
@@ -56,10 +57,6 @@ void System::SetupGame()
 	Objects.emplace_back(TestObject);
 
 	std::shared_ptr<LModel> Model = std::make_shared<LModel>("Game/Assets/backpack/backpack.obj");
-
-	CModelComponent* TestModelComponent = TestObject->Components.AddComponent<CModelComponent>(TestObject);
-
-	TestModelComponent->SetModel(Model);
 
 	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
 
@@ -106,13 +103,14 @@ void System::SetupGame()
 	DefaultMaterial->Specular = SpecBagTexture;
 	DefaultMaterial->SpecularShininess = 32.f;
 
-	TestModelComponent->SetMaterial(DefaultMaterial);
+	//TestModelComponent->SetMaterial(DefaultMaterial);
 
 	InputManager.Init(m_Renderer.GetWindow().get());
 
 	ECS.AddComponentSystem<CTestECSComponentSystem, CTestECSComponent>();
+	ECS.AddComponentSystem<CECSModelComponentSystem, CECSModelComponent>();
 
-	TestEntity = new CTestEntity(&ECS);
+	TestEntity = new CTestEntity(&ECS, Model, DefaultMaterial);
 }
 
 void System::Run()

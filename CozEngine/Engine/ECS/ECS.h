@@ -23,8 +23,15 @@ public:
 			return;
 		}
 
-		ComponentSystems.insert({TypeID, std::make_unique<TComponentSystem>()});
+		ComponentSystems.insert({ TypeID, std::make_unique<TComponentSystem>() });
+
+		if (ComponentSystems[TypeID]->GetIsTickable())
+		{
+			TickableComponentSystems.push_back(ComponentSystems[TypeID].get());
+		}
 	}
+
+	// TODO: RemoveComponentSystem. Manage ComponentSystems and TickableComponentSystems
 
 	template<typename TComponentType, typename... TArgs>
 	void AddComponent(const LEntityID EntityID, TArgs... Args)
@@ -82,5 +89,6 @@ public:
 
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
+	std::vector<LComponentSystemBase*> TickableComponentSystems;
 };
 
