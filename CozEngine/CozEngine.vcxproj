@@ -149,8 +149,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSTransformComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />

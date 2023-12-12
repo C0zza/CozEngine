@@ -82,6 +82,7 @@ public:
 	}
 
 private:
+	// TODO: reserve amount/ notify when reallocation of the vector occurs.
 	std::vector<std::pair<LEntityID,TComponentType>> Components;
 	std::unordered_map<LEntityID, unsigned int> EntityIdToComponentIndex;
 };
