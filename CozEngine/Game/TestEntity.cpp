@@ -11,5 +11,5 @@ CTestEntity::CTestEntity(LECS* i_ECS, std::shared_ptr<LModel>& Model, std::share
 	: LEntity(i_ECS)
 {
 	// AddComponent<CTestECSComponent>();
-	AddComponent<CECSModelComponent>(Model, Material, &Transform);
+	AddComponent<CECSModelComponent>(Model, Material);
 }

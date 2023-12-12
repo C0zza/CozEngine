@@ -6,10 +6,17 @@
 
 #include "ECSDefinitions.h"
 
+class LECS;
+
 class LComponentSystemBase
 {
+public:
+	static void SetECS(LECS* i_ECS);
+
 protected:
-	bool IsTickable = true;
+	bool IsTickable = false;
+
+	static LECS* ECS;
 
 public:
 	bool GetIsTickable() const { return IsTickable; }
@@ -40,8 +47,10 @@ public:
 			return;
 		}
 
-		EntityIdToComponentIndex[EntityID] = (unsigned int)Components.size(); // TODO: Check entity doesn't already exist
+		unsigned int ComponentIndex = (unsigned int)Components.size();
+		EntityIdToComponentIndex[EntityID] = ComponentIndex; // TODO: Check entity doesn't already exist
 		Components.push_back({ EntityID,Component });
+		Components[ComponentIndex].second.EntityID = EntityID;
 	}
 
 	virtual void RemoveComponent(const LEntityID EntityID) final
@@ -68,7 +77,7 @@ public:
 		}
 
 		// TODO: Better to return reference? But less safe
-		Component = Components[EntityIdToComponentIndex[EntityID]];
+		Component = Components[EntityIdToComponentIndex[EntityID]].second;
 		return true;
 	}
 

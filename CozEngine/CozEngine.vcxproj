@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSTransformComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
@@ -178,6 +180,8 @@
     <ClCompile Include="Game\TestEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSTransformComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h" />
     <ClInclude Include="Engine\ECS\ComponentSystem.h" />
     <ClInclude Include="Engine\ECS\ECS.h" />

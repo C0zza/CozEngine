@@ -63,3 +63,18 @@ LIDType LTypeIdGenerator<T>::IdCount = 0;
 
 template<typename T>
 std::queue<LIDType> LTypeIdGenerator<T>::StaleIDs = {};
+
+// TODO: Will probably also be useful to be able to access LEntity by ID. Wait for use case.
+
+//template<typename T>
+//class LTypeManager : public LTypeIdGenerator<T>
+//{
+//public:
+//	static LIDType RegisterNewObject()
+//	{
+//
+//	}
+//
+//private:
+//	static std::unordered_map<
+//};

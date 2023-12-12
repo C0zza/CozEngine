@@ -16,6 +16,7 @@
 #include "Components/Lighting/PointLightComponent.h"
 #include "Components/Lighting/SpotLightComponent.h"
 #include "ECS/ECSComponents/ECSModelComponent.h"
+#include "ECS/ECSComponents/ECSTransformComponent.h"
 #include "Rendering/Material.h"
 #include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
@@ -109,6 +110,7 @@ void System::SetupGame()
 
 	ECS.AddComponentSystem<CTestECSComponentSystem, CTestECSComponent>();
 	ECS.AddComponentSystem<CECSModelComponentSystem, CECSModelComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CECSTransformComponent>, CECSTransformComponent>();
 
 	TestEntity = new CTestEntity(&ECS, Model, DefaultMaterial);
 }

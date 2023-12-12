@@ -11,6 +11,8 @@
 class LECS
 {
 public:
+	LECS();
+
 	void RunComponentSystems();
 
 	template<typename TComponentSystem, typename TComponentType>
@@ -74,7 +76,7 @@ public:
 			return false;
 		}
 
-		LComponentSystem<TComponentType>* ComponentSystem = dynamic_cast<LComponentSystem<TComponentType>>(ComponentSystems[TypeID].get());
+		LComponentSystem<TComponentType>* ComponentSystem = dynamic_cast<LComponentSystem<TComponentType>*>(ComponentSystems[TypeID].get());
 		assert(ComponentSystem);
 		return ComponentSystem->GetComponent(EntityID, Component);
 	}

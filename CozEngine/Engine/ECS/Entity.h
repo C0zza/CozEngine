@@ -31,6 +31,7 @@ protected:
 		return ECS->GetComponent<TComponentType>(ID, Component);
 	}
 
+	// TODO: remove when everything is converted to ECS
 	LTransform Transform;
 
 private:
