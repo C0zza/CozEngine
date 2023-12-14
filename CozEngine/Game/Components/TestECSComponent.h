@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ECS/ComponentSystem.h"
+#include "ECS/ECSComponents/ECSComponent.h"
 
-struct CTestECSComponent
+struct CTestECSComponent : LECSComponent
 {
 	int SomeInt = 0;
 };

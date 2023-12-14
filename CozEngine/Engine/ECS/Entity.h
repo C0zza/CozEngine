@@ -6,35 +6,32 @@
 class LEntity
 {
 public:
-	LEntity(LECS* i_ECS);
+	LEntity();
 	~LEntity();
 
 	LTransform& GetTransform() { return Transform; }
 	LEntityID GetID() const { return ID; }
 
-protected:
 	template<typename TComponentType, typename... TInitArgs>
-	void AddComponent(TInitArgs... Args)
+	TComponentType* AddComponent(TInitArgs... Args)
 	{
-		ECS->AddComponent<TComponentType>(ID, Args...);
+		return LECS::Get()->AddComponent<TComponentType>(ID, Args...);
 	}
 
 	template<typename TComponentType>
 	void RemoveComponent()
 	{
-		ECS->RemoveComponent<TComponentType>(ID);
+		LECS::Get()->RemoveComponent<TComponentType>(ID);
 	}
 
 	template<typename TComponentType>
-	bool GetComponent(TComponentType& Component)
+	TComponentType* GetComponent()
 	{
-		return ECS->GetComponent<TComponentType>(ID, Component);
+		return LECS::Get()->GetComponent<TComponentType>(ID);
 	}
 
+protected:
 	// TODO: remove when everything is converted to ECS
 	LTransform Transform;
-
-private:
 	LEntityID ID;
-	LECS* ECS;
 };

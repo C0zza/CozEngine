@@ -5,9 +5,9 @@
 class LModel;
 class LMaterial;
 
-class CTestEntity : LEntity
+class CTestEntity : public LEntity
 {
 public:
-	CTestEntity(LECS* i_ECS, std::shared_ptr<LModel>& Model, std::shared_ptr<LMaterial>& Material);
+	CTestEntity(std::shared_ptr<LModel>& Model, std::shared_ptr<LMaterial>& Material);
 };
 

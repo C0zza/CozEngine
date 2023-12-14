@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSCameraComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
@@ -176,8 +178,14 @@
     <ClCompile Include="Engine\Misc\TypeIdGenerator.cpp" />
     <ClCompile Include="Game\Components\TestECSComponent.cpp" />
     <ClCompile Include="Game\TestEntity.cpp" />
+    <ClCompile Include="Game\PlayerEntity.cpp" />
+    <ClCompile Include="Game\Components\Movement.cpp" />
+    <ClCompile Include="Game\SpotLightEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSComponentHeaders.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSCameraComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSTransformComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h" />
@@ -210,6 +218,9 @@
     <ClInclude Include="Engine\Misc\TypeIdGenerator.h" />
     <ClInclude Include="Game\Components\TestECSComponent.h" />
     <ClInclude Include="Game\TestEntity.h" />
+    <ClInclude Include="Game\PlayerEntity.h" />
+    <ClInclude Include="Game\Components\Movement.h" />
+    <ClInclude Include="Game\SpotLightEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

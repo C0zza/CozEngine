@@ -42,8 +42,7 @@ public:
 		}
 		else
 		{
-			static const LIDType IdCounter = ++IdCount;
-			return IdCounter;
+			return ++IdCount;
 		}
 	}
 

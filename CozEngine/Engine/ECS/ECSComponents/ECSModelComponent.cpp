@@ -11,11 +11,9 @@ void CECSModelComponentSystem::RunComponent(CECSModelComponent& Component)
 		Component.Material->Use();
 		assert(Component.Material->GetShader());
 
-		CECSTransformComponent EntityTransform;
-		if (ECS->GetComponent<CECSTransformComponent>(Component.EntityID, EntityTransform))
+		if (CECSTransformComponent* EntityTransform = LECS::Get()->GetComponent<CECSTransformComponent>(Component.EntityID))
 		{
-			// TODO: BAD, we're getting a reference to the transform. Updating the matrix if necessary, then losing that calculation
-			Component.Model->Draw(*Component.Material->GetShader(), EntityTransform.GetUpdatedTransformationMatrix());
+			Component.Model->Draw(*Component.Material->GetShader(), EntityTransform->GetUpdatedTransformationMatrix());
 		}
 	}
 }

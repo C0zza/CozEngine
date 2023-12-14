@@ -13,6 +13,8 @@ class LECS
 public:
 	LECS();
 
+	static LECS* Get() { return ECS; }
+
 	void RunComponentSystems();
 
 	template<typename TComponentSystem, typename TComponentType>
@@ -36,20 +38,20 @@ public:
 	// TODO: RemoveComponentSystem. Manage ComponentSystems and TickableComponentSystems
 
 	template<typename TComponentType, typename... TArgs>
-	void AddComponent(const LEntityID EntityID, TArgs... Args)
+	TComponentType* AddComponent(const LEntityID EntityID, TArgs... Args)
 	{
 		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
-			return;
+			return nullptr;
 		}
 
 		// meeeeeeeeeeeh
 		LComponentSystem<TComponentType>* ComponentSystem = dynamic_cast<LComponentSystem<TComponentType>*>(ComponentSystems[TypeID].get());
 		assert(ComponentSystem);
 		// TODO: go over move semantics for the TComponentType(Args...)
-		ComponentSystem->AddComponent(EntityID, TComponentType(Args...));
+		return ComponentSystem->AddComponent(EntityID, TComponentType(Args...));
 	}
 
 	template<typename TComponentType>
@@ -67,18 +69,18 @@ public:
 	}
 
 	template<typename TComponentType>
-	bool GetComponent(const LEntityID EntityID, TComponentType& Component)
+	TComponentType* GetComponent(const LEntityID EntityID)
 	{
 		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
-			return false;
+			return nullptr;
 		}
 
 		LComponentSystem<TComponentType>* ComponentSystem = dynamic_cast<LComponentSystem<TComponentType>*>(ComponentSystems[TypeID].get());
 		assert(ComponentSystem);
-		return ComponentSystem->GetComponent(EntityID, Component);
+		return ComponentSystem->GetComponent(EntityID);
 	}
 
 	void RemoveEntity(const LEntityID EntityID)
@@ -92,5 +94,7 @@ public:
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
 	std::vector<LComponentSystemBase*> TickableComponentSystems;
+
+	static LECS* ECS;
 };
 

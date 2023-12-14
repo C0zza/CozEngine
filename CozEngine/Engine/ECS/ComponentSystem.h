@@ -10,13 +10,8 @@ class LECS;
 
 class LComponentSystemBase
 {
-public:
-	static void SetECS(LECS* i_ECS);
-
 protected:
 	bool IsTickable = false;
-
-	static LECS* ECS;
 
 public:
 	bool GetIsTickable() const { return IsTickable; }
@@ -29,6 +24,17 @@ template<typename TComponentType>
 class LComponentSystem : public LComponentSystemBase
 {
 public:
+	// TODO: As expected std::vector is unsafe with our AddComponent and GetComponent returning pointers to components.
+	// Either return references which will be safer (but not completely) or change to array.
+	LComponentSystem() { Components.reserve(100); }
+	~LComponentSystem()
+	{
+		for (auto& Component : Components)
+		{
+			Component.second.Destroy();
+		}
+	}
+
 	virtual void Run() override
 	{
 		assert(IsTickable);
@@ -38,19 +44,20 @@ public:
 		}
 	}
 
-	virtual void RunComponent(TComponentType& Component) {};
-
-	void AddComponent(const LEntityID EntityID, const TComponentType& Component)
+	TComponentType* AddComponent(const LEntityID EntityID, const TComponentType& Component)
 	{
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{
-			return;
+			return GetComponent(EntityID);
 		}
 
 		unsigned int ComponentIndex = (unsigned int)Components.size();
 		EntityIdToComponentIndex[EntityID] = ComponentIndex; // TODO: Check entity doesn't already exist
 		Components.push_back({ EntityID,Component });
 		Components[ComponentIndex].second.EntityID = EntityID;
+		Components[ComponentIndex].second.Init();
+
+		return &Components[ComponentIndex].second;
 	}
 
 	virtual void RemoveComponent(const LEntityID EntityID) final
@@ -60,6 +67,7 @@ public:
 			const LEntityID IndexToRemove = EntityIdToComponentIndex[EntityID];
 			std::pair<LEntityID, TComponentType>& LastComponent = Components[Components.size() - 1];
 
+			Components[IndexToRemove].second.Destroy();
 			Components[IndexToRemove] = LastComponent;
 
 			Components.pop_back();
@@ -69,19 +77,19 @@ public:
 		}
 	}
 
-	bool GetComponent(const LEntityID EntityID, TComponentType& Component)
+	TComponentType* GetComponent(const LEntityID EntityID)
 	{
 		if (!EntityIdToComponentIndex.contains(EntityID))
 		{
-			return false;
+			return nullptr;
 		}
 
-		// TODO: Better to return reference? But less safe
-		Component = Components[EntityIdToComponentIndex[EntityID]].second;
-		return true;
+		return &Components[EntityIdToComponentIndex[EntityID]].second;
 	}
 
 private:
+	virtual void RunComponent(TComponentType& Component) {};
+
 	// TODO: reserve amount/ notify when reallocation of the vector occurs.
 	std::vector<std::pair<LEntityID,TComponentType>> Components;
 	std::unordered_map<LEntityID, unsigned int> EntityIdToComponentIndex;

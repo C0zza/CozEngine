@@ -5,5 +5,9 @@
 struct LECSComponent
 {
 	LEntityID EntityID = 0;
+
+	virtual void Init() {}
+
+	virtual void Destroy() {}
 };
 

@@ -8,6 +8,11 @@
 
 #include "Components/ModelComponent.h"
 #include "Components/CameraComponent.h"
+#include "Components/Lighting/DirectionalLightComponent.h"
+#include "Components/Lighting/PointLightComponent.h"
+#include "ECS/ECS.h"
+#include "ECS/ECSComponents/ECSCameraComponent.h"
+#include "ECS/ECSComponents/ECSSpotLightComponent.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -34,13 +39,16 @@ void Renderer::Shutdown()
 
 void Renderer::Tick()
 {
+	CPointLightComponent::UpdatePointLights();
+	CECSSpotLightComponent::UpdateSpotLights();
+	CDirectionalLightComponent::UpdateDirectionalLight();
+
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// TODO: Cache these?
-	CCameraComponent* ActiveCamera = CCameraComponent::GetActiveCamera();
-	assert(ActiveCamera);
-	LShader::SetGlobalVec("ViewPos", ActiveCamera->Parent->Transform.GetPosition());
+	CECSCameraComponent* ActiveCamera = LECS::Get()->GetComponent<CECSCameraComponent>(CECSCameraComponent::GetActiveCameraEntityID());
+
+	LShader::SetGlobalVec("ViewPos", ActiveCamera->GetViewPos());
 	LShader::SetGlobalMat4("View", ActiveCamera->GetViewMatrix());
 	LShader::SetGlobalMat4("Projection", GetProjectionMatrix());
 }

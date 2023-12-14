@@ -1,8 +1,13 @@
 #include "ECS.h"
 
+#include <cassert>
+
+LECS* LECS::ECS = nullptr;
+
 LECS::LECS()
-{
-	LComponentSystemBase::SetECS(this);
+{	
+	assert(!ECS);
+	ECS = this;
 }
 
 void LECS::RunComponentSystems()

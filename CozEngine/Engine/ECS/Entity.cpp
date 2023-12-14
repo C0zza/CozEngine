@@ -3,14 +3,14 @@
 #include "ECS/ECSComponents/ECSTransformComponent.h"
 #include "Misc/TypeIdGenerator.h"
 
-LEntity::LEntity(LECS* i_ECS)
-	: ID {LTypeIdGenerator<LEntityID>::GetNewID()}, ECS{i_ECS}
+LEntity::LEntity()
+	: ID {LTypeIdGenerator<LEntityID>::GetNewID()}
 {
 	AddComponent<CECSTransformComponent>();
 }
 
 LEntity::~LEntity()
 {
-	ECS->RemoveEntity(ID);
+	LECS::Get()->RemoveEntity(ID);
 	LTypeIdGenerator<LEntity>::UnregisterID(ID);
 }
