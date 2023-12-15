@@ -7,13 +7,12 @@
 #include <iostream>
 
 #include "Object.h"
-#include "Rendering/Shader.h"
-#include "Rendering/Texture.h"
 #include "Components/Lighting/DirectionalLightComponent.h"
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Rendering/Material.h"
-#include "Components/ModelComponent.h"
 #include "Rendering/Model.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Texture.h"
 
 #include "Game/Components/TestComponent.h"
 #include "Game/Components/TestECSComponent.h"
@@ -75,6 +74,7 @@ void System::SetupGame()
 	ECS.AddComponentSystem<LComponentSystem<CECSCameraComponent>, CECSCameraComponent>();
 	ECS.AddComponentSystem<CMovementSystem, CMovement>();
 	ECS.AddComponentSystem<LComponentSystem<CECSSpotLightComponent>, CECSSpotLightComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CECSPointLightComponent>, CECSPointLightComponent>();
 
 	// TODO: No system cleaning entities up on shutdown
 	LEntity* TestEntity = new CTestEntity(Model, DefaultMaterial);

@@ -149,12 +149,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSPointLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSCameraComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
-    <ClCompile Include="Engine\Components\CameraComponent.cpp" />
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\Entity.cpp" />
     <ClCompile Include="glad.c" />
@@ -169,12 +169,10 @@
     <ClCompile Include="Engine\Rendering\Window.cpp" />
     <ClCompile Include="Engine\Object.cpp" />
     <ClCompile Include="Game\Components\TestComponent.cpp" />
-    <ClCompile Include="Engine\Components\ModelComponent.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
     <ClCompile Include="Engine\Rendering\Model.cpp" />
     <ClCompile Include="Engine\Components\Lighting\PointLightComponent.cpp" />
-    <ClCompile Include="Engine\Components\Lighting\SpotLightComponent.cpp" />
     <ClCompile Include="Engine\Misc\TypeIdGenerator.cpp" />
     <ClCompile Include="Game\Components\TestECSComponent.cpp" />
     <ClCompile Include="Game\TestEntity.cpp" />
@@ -183,6 +181,7 @@
     <ClCompile Include="Game\SpotLightEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\ECSComponents\ECSPointLightComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponentHeaders.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSCameraComponent.h" />
@@ -191,7 +190,6 @@
     <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h" />
     <ClInclude Include="Engine\ECS\ComponentSystem.h" />
     <ClInclude Include="Engine\ECS\ECS.h" />
-    <ClInclude Include="Engine\Components\CameraComponent.h" />
     <ClInclude Include="Engine\Components\Lighting\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\DirtyFlag.h" />
     <ClInclude Include="Engine\Components\ComponentList.h" />
@@ -208,12 +206,10 @@
     <ClInclude Include="Engine\Object.h" />
     <ClInclude Include="Engine\ECS\Entity.h" />
     <ClInclude Include="Game\Components\TestComponent.h" />
-    <ClInclude Include="Engine\Components\ModelComponent.h" />
     <ClInclude Include="Engine\Rendering\Mesh.h" />
     <ClInclude Include="Engine\Rendering\Material.h" />
     <ClInclude Include="Engine\Rendering\Model.h" />
     <ClInclude Include="Engine\Components\Lighting\PointLightComponent.h" />
-    <ClInclude Include="Engine\Components\Lighting\SpotLightComponent.h" />
     <ClInclude Include="Engine\Rendering\Lighting\Lighting.h" />
     <ClInclude Include="Engine\Misc\TypeIdGenerator.h" />
     <ClInclude Include="Game\Components\TestECSComponent.h" />

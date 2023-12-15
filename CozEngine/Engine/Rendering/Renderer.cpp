@@ -12,6 +12,7 @@
 #include "Components/Lighting/PointLightComponent.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/ECSCameraComponent.h"
+#include "ECS/ECSComponents/ECSPointLightComponent.h"
 #include "ECS/ECSComponents/ECSSpotLightComponent.h"
 #include "Material.h"
 #include "Mesh.h"
@@ -39,7 +40,7 @@ void Renderer::Shutdown()
 
 void Renderer::Tick()
 {
-	CPointLightComponent::UpdatePointLights();
+	CECSPointLightComponent::UpdatePointLights();
 	CECSSpotLightComponent::UpdateSpotLights();
 	CDirectionalLightComponent::UpdateDirectionalLight();
 
