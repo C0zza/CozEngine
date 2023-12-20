@@ -7,11 +7,12 @@
 #include "ECS/ECSComponents/ECSComponent.h"
 
 // Should match number in shader.fs
-#define MAX_NUM_POINT_LIGHT 4
+#define MAX_NUM_SPOT_LIGHT 4
 
-struct CECSPointLightComponent : public LECSComponent, public LDirtyFlag
+struct CSpotLightComponent : public LECSComponent, LDirtyFlag
 {
-	CECSPointLightComponent();
+public:
+	CSpotLightComponent();
 
 	virtual void Init() override;
 	virtual void Destroy() override;
@@ -20,8 +21,10 @@ struct CECSPointLightComponent : public LECSComponent, public LDirtyFlag
 	void SetDiffuse(const glm::vec3& i_Diffuse);
 	void SetSpecular(const glm::vec3& i_Specular);
 
-	// See https://learnopengl.com/Lighting/Light-casters for general point light values
-	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); };
+	void SetCutOff(const float i_CutOff) { SetDirtyMember(CutOff, i_CutOff); }
+	void SetOuterCutOff(const float i_OuterCutOff) { SetDirtyMember(OuterCutOff, i_OuterCutOff); }
+
+	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); }
 	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
 	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
 
@@ -29,21 +32,25 @@ private:
 	void Update(const unsigned int Index);
 
 	glm::vec3 Position;
+	glm::vec3 Direction;
 	glm::vec3 Ambient;
 	glm::vec3 Diffuse;
 	glm::vec3 Specular;
+
+	float CutOff;
+	float OuterCutOff;
 
 	float Constant;
 	float Linear;
 	float Quadratic;
 
 public:
-	static void UpdatePointLights();
+	static void UpdateSpotLights();
 
 private:
-	static std::vector<LEntityID> PointLights;
+	static std::vector<LEntityID> SpotLightEntityIDs;
 
-	static unsigned int PointLightCount;
+	static unsigned int SpotLightCount;
 	static bool IsCountDirty;
 };
 

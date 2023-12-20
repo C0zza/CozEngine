@@ -1,22 +1,22 @@
-#include "ECSSpotLightComponent.h"
+#include "SpotLightComponent.h"
 
 #include <sstream>
 
 #include "ECS/ECS.h"
-#include "ECSTransformComponent.h"
+#include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-std::vector<LEntityID> CECSSpotLightComponent::SpotLightEntityIDs{};
-unsigned int CECSSpotLightComponent::SpotLightCount = 0;
-bool CECSSpotLightComponent::IsCountDirty = true;
+std::vector<LEntityID> CSpotLightComponent::SpotLightEntityIDs{};
+unsigned int CSpotLightComponent::SpotLightCount = 0;
+bool CSpotLightComponent::IsCountDirty = true;
 
-CECSSpotLightComponent::CECSSpotLightComponent()
+CSpotLightComponent::CSpotLightComponent()
 	: CutOff{ 0.f }, OuterCutOff{ 0.f }, Constant{ 0.f }, Linear{ 0.f }, Quadratic{ 0.f }
 {
 }
 
-void CECSSpotLightComponent::Init()
+void CSpotLightComponent::Init()
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
 
@@ -43,7 +43,7 @@ void CECSSpotLightComponent::Init()
 	}
 }
 
-void CECSSpotLightComponent::Destroy()
+void CSpotLightComponent::Destroy()
 {
 	std::vector<LEntityID>::iterator it = std::find(SpotLightEntityIDs.begin(), SpotLightEntityIDs.end(), EntityID);
 
@@ -67,7 +67,7 @@ void CECSSpotLightComponent::Destroy()
 		{
 			SpotLightEntityIDs[Index] = SpotLightEntityIDs[SpotLightEntityIDs.size() - 1];
 
-			CECSSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CECSSpotLightComponent>(SpotLightEntityIDs[Index]);
+			CSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[Index]);
 			assert(SpotLightComp);
 			SpotLightComp->IsDirty = true;
 
@@ -82,29 +82,29 @@ void CECSSpotLightComponent::Destroy()
 	}
 }
 
-void CECSSpotLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+void CSpotLightComponent::SetAmbient(const glm::vec3& i_Ambient)
 {
 	LLighting::AssertRGBVec(i_Ambient);
 	SetDirtyMember(Ambient, i_Ambient);
 }
 
-void CECSSpotLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
+void CSpotLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
 {
 	LLighting::AssertRGBVec(i_Diffuse);
 	SetDirtyMember(Diffuse, i_Diffuse);
 }
 
-void CECSSpotLightComponent::SetSpecular(const glm::vec3& i_Specular)
+void CSpotLightComponent::SetSpecular(const glm::vec3& i_Specular)
 {
 	LLighting::AssertRGBVec(i_Specular);
 	SetDirtyMember(Specular, i_Specular);
 }
 
-void CECSSpotLightComponent::Update(const unsigned int Index)
+void CSpotLightComponent::Update(const unsigned int Index)
 {
-	assert(Index >= 0 && Index <= CECSSpotLightComponent::SpotLightCount);
+	assert(Index >= 0 && Index <= CSpotLightComponent::SpotLightCount);
 
-	CECSTransformComponent* TransformComp = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream SpotLightElement;
@@ -140,7 +140,7 @@ void CECSSpotLightComponent::Update(const unsigned int Index)
 	}
 }
 
-void CECSSpotLightComponent::UpdateSpotLights()
+void CSpotLightComponent::UpdateSpotLights()
 {
 	if (IsCountDirty)
 	{
@@ -151,7 +151,7 @@ void CECSSpotLightComponent::UpdateSpotLights()
 	assert(SpotLightCount <= MAX_NUM_SPOT_LIGHT);
 	for (unsigned int i = 0; i < SpotLightCount; i++)
 	{
-		CECSSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CECSSpotLightComponent>(SpotLightEntityIDs[i]);
+		CSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[i]);
 		if (SpotLightComp)
 		{
 			SpotLightComp->Update(i);

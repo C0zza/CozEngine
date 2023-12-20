@@ -5,10 +5,10 @@
 #include "DirtyFlag.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
-struct CECSDirectionalLightComponent : public LECSComponent, public LDirtyFlag
+struct CDirectionalLightComponent : public LECSComponent, public LDirtyFlag
 {
 public:
-	CECSDirectionalLightComponent();
+	CDirectionalLightComponent();
 
 	virtual void Init() override;
 	virtual void Destroy() override;
@@ -30,6 +30,6 @@ public:
 
 private:
 	// We assume 1 directional light existing at any 1 time. Could be better as simply a member of something?
-	static CECSDirectionalLightComponent* ActiveDirectionalLight;
+	static CDirectionalLightComponent* ActiveDirectionalLight;
 };
 

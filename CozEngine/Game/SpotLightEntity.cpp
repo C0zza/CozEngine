@@ -1,15 +1,15 @@
 #include "SpotLightEntity.h"
 
-#include "ECS/ECSComponents/ECSModelComponent.h"
-#include "ECS/ECSComponents/ECSPointLightComponent.h"
-#include "ECS/ECSComponents/ECSSpotLightComponent.h"
-#include "ECS/ECSComponents/ECSTransformComponent.h"
+#include "ECS/ECSComponents/ModelComponent.h"
+#include "ECS/ECSComponents/PointLightComponent.h"
+#include "ECS/ECSComponents/SpotLightComponent.h"
+#include "ECS/ECSComponents/TransformComponent.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
 
 CSpotLightEntity::CSpotLightEntity(std::shared_ptr<LModel>& Model, std::shared_ptr<LMaterial>& Material)
 {
-	CECSPointLightComponent* SpotLight = AddComponent<CECSPointLightComponent>();
+	CPointLightComponent* SpotLight = AddComponent<CPointLightComponent>();
 	SpotLight->SetAmbient(glm::vec3(0.f, 0.2f, 0.f));
 	SpotLight->SetDiffuse(glm::vec3(0.f, 0.5f, 0.f));
 	SpotLight->SetSpecular(glm::vec3(0.f, 0.7f, 0.f));
@@ -19,8 +19,8 @@ CSpotLightEntity::CSpotLightEntity(std::shared_ptr<LModel>& Model, std::shared_p
 	SpotLight->SetLinear(0.09f);
 	SpotLight->SetQuadratic(0.032f);
 
-	AddComponent<CECSModelComponent>(Model, Material);
+	AddComponent<CModelComponent>(Model, Material);
 
-	CECSTransformComponent* Transform = GetComponent<CECSTransformComponent>();
+	CTransformComponent* Transform = GetComponent<CTransformComponent>();
 	Transform->Move(glm::vec3(0.f, 0.f, 5.f));
 }

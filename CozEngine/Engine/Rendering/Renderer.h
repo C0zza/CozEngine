@@ -5,7 +5,6 @@
 #include <vector>
 
 class Camera;
-class CModelComponent;
 class LWindow;
 
 class Renderer

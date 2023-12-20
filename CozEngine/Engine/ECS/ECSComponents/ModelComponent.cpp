@@ -1,9 +1,9 @@
-#include "ECSModelComponent.h"
+#include "ModelComponent.h"
 
 #include "ECS/ECS.h"
-#include "ECSTransformComponent.h"
+#include "TransformComponent.h"
 
-void CECSModelComponentSystem::RunComponent(CECSModelComponent& Component)
+void CModelComponentSystem::RunComponent(CModelComponent& Component)
 {
 	if (Component.Model.get() && Component.Material.get())
 	{
@@ -11,7 +11,7 @@ void CECSModelComponentSystem::RunComponent(CECSModelComponent& Component)
 		Component.Material->Use();
 		assert(Component.Material->GetShader());
 
-		if (CECSTransformComponent* EntityTransform = LECS::Get()->GetComponent<CECSTransformComponent>(Component.EntityID))
+		if (CTransformComponent* EntityTransform = LECS::Get()->GetComponent<CTransformComponent>(Component.EntityID))
 		{
 			Component.Model->Draw(*Component.Material->GetShader(), EntityTransform->GetUpdatedTransformationMatrix());
 		}

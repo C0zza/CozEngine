@@ -1,16 +1,16 @@
-#include "ECSDirectionalLightComponent.h"
+#include "DirectionalLightComponent.h"
 
 #include <cassert>
 #include <sstream>
 
 #include "ECS/ECS.h"
-#include "ECSTransformComponent.h"
+#include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-CECSDirectionalLightComponent* CECSDirectionalLightComponent::ActiveDirectionalLight = nullptr;
+CDirectionalLightComponent* CDirectionalLightComponent::ActiveDirectionalLight = nullptr;
 
-CECSDirectionalLightComponent::CECSDirectionalLightComponent()
+CDirectionalLightComponent::CDirectionalLightComponent()
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
 	Direction = ZeroVector;
@@ -19,7 +19,7 @@ CECSDirectionalLightComponent::CECSDirectionalLightComponent()
 	Specular = ZeroVector;
 }
 
-void CECSDirectionalLightComponent::Init()
+void CDirectionalLightComponent::Init()
 {
 	assert(!ActiveDirectionalLight);
 	ActiveDirectionalLight = this;
@@ -28,7 +28,7 @@ void CECSDirectionalLightComponent::Init()
 	LShader::SetGlobalVec("DirectionalLight.Direction", Direction);
 }
 
-void CECSDirectionalLightComponent::Destroy()
+void CDirectionalLightComponent::Destroy()
 {
 	assert(ActiveDirectionalLight);
 	if (ActiveDirectionalLight == this)
@@ -38,27 +38,27 @@ void CECSDirectionalLightComponent::Destroy()
 	}
 }
 
-void CECSDirectionalLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+void CDirectionalLightComponent::SetAmbient(const glm::vec3& i_Ambient)
 {
 	LLighting::AssertRGBVec(i_Ambient);
 	SetDirtyMember(Ambient, i_Ambient);
 }
 
-void CECSDirectionalLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
+void CDirectionalLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
 {
 	LLighting::AssertRGBVec(i_Diffuse);
 	SetDirtyMember(Diffuse, i_Diffuse);
 }
 
-void CECSDirectionalLightComponent::SetSpecular(const glm::vec3& i_Specular)
+void CDirectionalLightComponent::SetSpecular(const glm::vec3& i_Specular)
 {
 	LLighting::AssertRGBVec(i_Specular);
 	SetDirtyMember(Specular, i_Specular);
 }
 
-void CECSDirectionalLightComponent::Update()
+void CDirectionalLightComponent::Update()
 {
-	CECSTransformComponent* TransformComp = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream DirectionalLightVar;
@@ -79,7 +79,7 @@ void CECSDirectionalLightComponent::Update()
 	}
 }
 
-void CECSDirectionalLightComponent::UpdateDirectionalLight()
+void CDirectionalLightComponent::UpdateDirectionalLight()
 {
 	if (ActiveDirectionalLight)
 	{

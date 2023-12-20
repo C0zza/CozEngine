@@ -150,11 +150,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\DirectionalLightEntity.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSDirectionalLightComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSPointLightComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSCameraComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\PointLightComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\SpotLightComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\CameraComponent.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\ModelComponent.cpp" />
     <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
     <ClCompile Include="Engine\Components\Lighting\DirectionalLightComponent.cpp" />
@@ -183,14 +183,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\DirectionalLightEntity.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSDirectionalLightComponent.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSPointLightComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\PointLightComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponentHeaders.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSCameraComponent.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSTransformComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\SpotLightComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\CameraComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\TransformComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponent.h" />
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\ModelComponent.h" />
     <ClInclude Include="Engine\ECS\ComponentSystem.h" />
     <ClInclude Include="Engine\ECS\ECS.h" />
     <ClInclude Include="Engine\Components\Lighting\DirectionalLightComponent.h" />

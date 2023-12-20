@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ECS/ECSComponents/ECSCameraComponent.h"
-#include "ECS/ECSComponents/ECSDirectionalLightComponent.h"
-#include "ECS/ECSComponents/ECSModelComponent.h"
-#include "ECS/ECSComponents/ECSTransformComponent.h"
-#include "ECS/ECSComponents/ECSPointLightComponent.h"
-#include "ECS/ECSComponents/ECSSpotLightComponent.h"
+#include "ECS/ECSComponents/CameraComponent.h"
+#include "ECS/ECSComponents/DirectionalLightComponent.h"
+#include "ECS/ECSComponents/ModelComponent.h"
+#include "ECS/ECSComponents/TransformComponent.h"
+#include "ECS/ECSComponents/PointLightComponent.h"
+#include "ECS/ECSComponents/SpotLightComponent.h"

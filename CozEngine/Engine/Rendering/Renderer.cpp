@@ -7,10 +7,10 @@
 #include <vector>
 
 #include "ECS/ECS.h"
-#include "ECS/ECSComponents/ECSCameraComponent.h"
-#include "ECS/ECSComponents/ECSDirectionalLightComponent.h"
-#include "ECS/ECSComponents/ECSPointLightComponent.h"
-#include "ECS/ECSComponents/ECSSpotLightComponent.h"
+#include "ECS/ECSComponents/CameraComponent.h"
+#include "ECS/ECSComponents/DirectionalLightComponent.h"
+#include "ECS/ECSComponents/PointLightComponent.h"
+#include "ECS/ECSComponents/SpotLightComponent.h"
 
 #include "Material.h"
 #include "Mesh.h"
@@ -38,15 +38,14 @@ void Renderer::Shutdown()
 
 void Renderer::Tick()
 {
-	CECSPointLightComponent::UpdatePointLights();
-	CECSSpotLightComponent::UpdateSpotLights();
-	CECSDirectionalLightComponent::UpdateDirectionalLight();
-	//CDirectionalLightComponent::UpdateDirectionalLight();
+	CPointLightComponent::UpdatePointLights();
+	CSpotLightComponent::UpdateSpotLights();
+	CDirectionalLightComponent::UpdateDirectionalLight();
 
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	CECSCameraComponent* ActiveCamera = LECS::Get()->GetComponent<CECSCameraComponent>(CECSCameraComponent::GetActiveCameraEntityID());
+	CCameraComponent* ActiveCamera = LECS::Get()->GetComponent<CCameraComponent>(CCameraComponent::GetActiveCameraEntityID());
 
 	LShader::SetGlobalVec("ViewPos", ActiveCamera->GetViewPos());
 	LShader::SetGlobalMat4("View", ActiveCamera->GetViewMatrix());

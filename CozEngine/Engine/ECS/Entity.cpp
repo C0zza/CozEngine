@@ -1,12 +1,12 @@
 #include "Entity.h"
 
-#include "ECS/ECSComponents/ECSTransformComponent.h"
+#include "ECS/ECSComponents/TransformComponent.h"
 #include "Misc/TypeIdGenerator.h"
 
 LEntity::LEntity()
 	: ID {LTypeIdGenerator<LEntityID>::GetNewID()}
 {
-	AddComponent<CECSTransformComponent>();
+	AddComponent<CTransformComponent>();
 }
 
 LEntity::~LEntity()

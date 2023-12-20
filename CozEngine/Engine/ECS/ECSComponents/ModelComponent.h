@@ -8,23 +8,23 @@
 #include "Rendering/Model.h"
 
 // TODO: rename to something decent once we can get rid of the existing CModelComponent
-struct CECSModelComponent : LECSComponent
+struct CModelComponent : LECSComponent
 {
 	std::shared_ptr<LModel> Model;
 	std::shared_ptr<LMaterial> Material;
 
-	CECSModelComponent(std::shared_ptr<LModel>& i_Model, std::shared_ptr<LMaterial>& i_Material)
+	CModelComponent(std::shared_ptr<LModel>& i_Model, std::shared_ptr<LMaterial>& i_Material)
 	{
 		Model = i_Model;
 		Material = i_Material;
 	}
 };
 
-class CECSModelComponentSystem : public LComponentSystem<CECSModelComponent>
+class CModelComponentSystem : public LComponentSystem<CModelComponent>
 {
 public:
-	CECSModelComponentSystem() { IsTickable = true; }
+	CModelComponentSystem() { IsTickable = true; }
 
-	virtual void RunComponent(CECSModelComponent& Component) override;
+	virtual void RunComponent(CModelComponent& Component) override;
 };
 

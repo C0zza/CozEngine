@@ -9,7 +9,6 @@ public:
 	LEntity();
 	~LEntity();
 
-	LTransform& GetTransform() { return Transform; }
 	LEntityID GetID() const { return ID; }
 
 	template<typename TComponentType, typename... TInitArgs>
@@ -31,7 +30,5 @@ public:
 	}
 
 protected:
-	// TODO: remove when everything is converted to ECS
-	LTransform Transform;
 	LEntityID ID;
 };

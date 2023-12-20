@@ -1,17 +1,17 @@
-#include "ECSPointLightComponent.h"
+#include "PointLightComponent.h"
 
 #include <sstream>
 
 #include "ECS/ECS.h"
-#include "ECSTransformComponent.h"
+#include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-std::vector<LEntityID> CECSPointLightComponent::PointLights = {};
-unsigned int CECSPointLightComponent::PointLightCount = 0;
-bool CECSPointLightComponent::IsCountDirty = true;
+std::vector<LEntityID> CPointLightComponent::PointLights = {};
+unsigned int CPointLightComponent::PointLightCount = 0;
+bool CPointLightComponent::IsCountDirty = true;
 
-CECSPointLightComponent::CECSPointLightComponent()
+CPointLightComponent::CPointLightComponent()
 	: Constant{ 1.f }, Linear{ 0.f }, Quadratic{ 0.f }
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
@@ -21,7 +21,7 @@ CECSPointLightComponent::CECSPointLightComponent()
 	Specular = ZeroVector;
 }
 
-void CECSPointLightComponent::Init()
+void CPointLightComponent::Init()
 {
 	if (PointLightCount < MAX_NUM_POINT_LIGHT)
 	{
@@ -39,7 +39,7 @@ void CECSPointLightComponent::Init()
 	}
 }
 
-void CECSPointLightComponent::Destroy()
+void CPointLightComponent::Destroy()
 {
 	std::vector<LEntityID>::iterator it = std::find(PointLights.begin(), PointLights.end(), EntityID);
 
@@ -63,7 +63,7 @@ void CECSPointLightComponent::Destroy()
 		{
 			PointLights[Index] = PointLights[PointLights.size() - 1];
 
-			CECSPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CECSPointLightComponent>(PointLights[Index]);
+			CPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CPointLightComponent>(PointLights[Index]);
 			assert(PointLightComp);
 			PointLightComp->IsDirty = true;
 
@@ -78,29 +78,29 @@ void CECSPointLightComponent::Destroy()
 	}
 }
 
-void CECSPointLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+void CPointLightComponent::SetAmbient(const glm::vec3& i_Ambient)
 {
 	LLighting::AssertRGBVec(i_Ambient);
 	SetDirtyMember(Ambient, i_Ambient);
 }
 
-void CECSPointLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
+void CPointLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
 {
 	LLighting::AssertRGBVec(i_Diffuse);
 	SetDirtyMember(Diffuse, i_Diffuse);
 }
 
-void CECSPointLightComponent::SetSpecular(const glm::vec3& i_Specular)
+void CPointLightComponent::SetSpecular(const glm::vec3& i_Specular)
 {
 	LLighting::AssertRGBVec(i_Specular);
 	SetDirtyMember(Specular, i_Specular);
 }
 
-void CECSPointLightComponent::Update(const unsigned int Index)
+void CPointLightComponent::Update(const unsigned int Index)
 {
-	assert(Index >= 0 && Index <= CECSPointLightComponent::PointLightCount);
+	assert(Index >= 0 && Index <= CPointLightComponent::PointLightCount);
 
-	CECSTransformComponent* TransformComp = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream PointLightElement;
@@ -124,7 +124,7 @@ void CECSPointLightComponent::Update(const unsigned int Index)
 	}
 }
 
-void CECSPointLightComponent::UpdatePointLights()
+void CPointLightComponent::UpdatePointLights()
 {
 	if (IsCountDirty)
 	{
@@ -135,7 +135,7 @@ void CECSPointLightComponent::UpdatePointLights()
 	assert(PointLightCount <= MAX_NUM_POINT_LIGHT);
 	for (unsigned int i = 0; i < PointLightCount; i++)
 	{
-		CECSPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CECSPointLightComponent>(PointLights[i]);
+		CPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CPointLightComponent>(PointLights[i]);
 		if (PointLightComp)
 		{
 			PointLightComp->Update(i);

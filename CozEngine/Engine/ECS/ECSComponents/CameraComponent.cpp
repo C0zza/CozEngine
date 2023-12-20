@@ -1,15 +1,15 @@
-#include "ECSCameraComponent.h"
+#include "CameraComponent.h"
 
 #include <glm/gtx/rotate_vector.hpp>
 
 #include "ECS/ECS.h"
-#include "ECSTransformComponent.h"
+#include "TransformComponent.h"
 
-LEntityID CECSCameraComponent::ActiveCameraEntityID = 0;
+LEntityID CCameraComponent::ActiveCameraEntityID = 0;
 
-const glm::mat4& CECSCameraComponent::GetViewMatrix()
+const glm::mat4& CCameraComponent::GetViewMatrix()
 {
-    CECSTransformComponent* EntityTransform = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+    CTransformComponent* EntityTransform = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
     assert(EntityTransform);
 
     if(EntityTransform)
@@ -21,9 +21,9 @@ const glm::mat4& CECSCameraComponent::GetViewMatrix()
     return CachedViewMatrix;
 }
 
-const glm::vec3& CECSCameraComponent::GetViewPos()
+const glm::vec3& CCameraComponent::GetViewPos()
 {
-    CECSTransformComponent* EntityTransform = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+    CTransformComponent* EntityTransform = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
     assert(EntityTransform);
     return EntityTransform->GetPosition();
 }

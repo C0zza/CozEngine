@@ -6,7 +6,7 @@
 #include "ECS/ECSComponents/ECSComponent.h"
 #include "Input/InputManager.h"
 
-struct CECSTransformComponent;
+struct CTransformComponent;
 
 struct CMovement : LECSComponent
 {
@@ -19,7 +19,7 @@ public:
 
 	glm::vec3 Movement = glm::vec3(0.f, 0.f, 0.f);
 
-	CECSTransformComponent* GetTransform() { return TransformComponent; }
+	CTransformComponent* GetTransform() { return TransformComponent; }
 
 private:
 	LKeyInputEvent<CMovement> MoveLeftEvent;
@@ -52,7 +52,7 @@ private:
 	void Rotate(double X, double Y);
 
 	// TODO: Pointer will become invalid if the component pool vector is moved :/
-	CECSTransformComponent* TransformComponent;
+	CTransformComponent* TransformComponent;
 };
 
 class CMovementSystem : public LComponentSystem<CMovement>

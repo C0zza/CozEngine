@@ -81,10 +81,10 @@
     <ClCompile Include="Game\TestEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSModelComponent.cpp">
+    <ClCompile Include="Engine\ECS\ECSComponents\ModelComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSCameraComponent.cpp">
+    <ClCompile Include="Engine\ECS\ECSComponents\CameraComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game\PlayerEntity.cpp">
@@ -96,13 +96,13 @@
     <ClCompile Include="Game\SpotLightEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.cpp">
+    <ClCompile Include="Engine\ECS\ECSComponents\SpotLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSPointLightComponent.cpp">
+    <ClCompile Include="Engine\ECS\ECSComponents\PointLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ECSComponents\ECSDirectionalLightComponent.cpp">
+    <ClCompile Include="Engine\ECS\ECSComponents\DirectionalLightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game\DirectionalLightEntity.cpp">
@@ -185,16 +185,16 @@
     <ClInclude Include="Game\TestEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSModelComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\ModelComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSTransformComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSCameraComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\PlayerEntity.h">
@@ -206,16 +206,16 @@
     <ClInclude Include="Game\SpotLightEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSSpotLightComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\SpotLightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ECS\ECSComponents\ECSComponentHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSPointLightComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\PointLightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ECS\ECSComponents\ECSDirectionalLightComponent.h">
+    <ClInclude Include="Engine\ECS\ECSComponents\DirectionalLightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\DirectionalLightEntity.h">

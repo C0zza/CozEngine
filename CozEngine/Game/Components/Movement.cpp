@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "ECS/ECS.h"
-#include "ECS/ECSComponents/ECSTransformComponent.h"
+#include "ECS/ECSComponents/TransformComponent.h"
 
 CMovement::CMovement()
 {
@@ -43,7 +43,7 @@ void CMovement::Init()
 	MouseRotateEvent.Init(this, &CMovement::Rotate);
 	LInputManager::RegisterMouseMoveEvent(&MouseRotateEvent);
 
-	TransformComponent = LECS::Get()->GetComponent<CECSTransformComponent>(EntityID);
+	TransformComponent = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComponent);
 }
 

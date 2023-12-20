@@ -51,13 +51,13 @@ void System::SetupGame()
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	ECS.AddComponentSystem<CTestECSComponentSystem, CTestECSComponent>();
-	ECS.AddComponentSystem<CECSModelComponentSystem, CECSModelComponent>();
-	ECS.AddComponentSystem<LComponentSystem<CECSTransformComponent>, CECSTransformComponent>();
-	ECS.AddComponentSystem<LComponentSystem<CECSCameraComponent>, CECSCameraComponent>();
+	ECS.AddComponentSystem<CModelComponentSystem, CModelComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CTransformComponent>, CTransformComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CCameraComponent>, CCameraComponent>();
 	ECS.AddComponentSystem<CMovementSystem, CMovement>();
-	ECS.AddComponentSystem<LComponentSystem<CECSSpotLightComponent>, CECSSpotLightComponent>();
-	ECS.AddComponentSystem<LComponentSystem<CECSPointLightComponent>, CECSPointLightComponent>();
-	ECS.AddComponentSystem<LComponentSystem<CECSDirectionalLightComponent>, CECSDirectionalLightComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CSpotLightComponent>, CSpotLightComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CPointLightComponent>, CPointLightComponent>();
+	ECS.AddComponentSystem<LComponentSystem<CDirectionalLightComponent>, CDirectionalLightComponent>();
 
 	// TODO: No system cleaning entities up on shutdown
 	LEntity* TestEntity = new CTestEntity(Model, DefaultMaterial);

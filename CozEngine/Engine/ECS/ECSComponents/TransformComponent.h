@@ -4,7 +4,7 @@
 #include "Transform.h"
 
 // Temporarily inherit LTransform to avoid rewriting it all here
-struct CECSTransformComponent : public LTransform, LECSComponent
+struct CTransformComponent : public LTransform, LECSComponent
 {
 };
 
