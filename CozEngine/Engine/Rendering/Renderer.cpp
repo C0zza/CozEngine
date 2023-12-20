@@ -6,14 +6,12 @@
 #include <string>
 #include <vector>
 
-#include "Components/ModelComponent.h"
-#include "Components/CameraComponent.h"
-#include "Components/Lighting/DirectionalLightComponent.h"
-#include "Components/Lighting/PointLightComponent.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/ECSCameraComponent.h"
+#include "ECS/ECSComponents/ECSDirectionalLightComponent.h"
 #include "ECS/ECSComponents/ECSPointLightComponent.h"
 #include "ECS/ECSComponents/ECSSpotLightComponent.h"
+
 #include "Material.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -42,7 +40,8 @@ void Renderer::Tick()
 {
 	CECSPointLightComponent::UpdatePointLights();
 	CECSSpotLightComponent::UpdateSpotLights();
-	CDirectionalLightComponent::UpdateDirectionalLight();
+	CECSDirectionalLightComponent::UpdateDirectionalLight();
+	//CDirectionalLightComponent::UpdateDirectionalLight();
 
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
