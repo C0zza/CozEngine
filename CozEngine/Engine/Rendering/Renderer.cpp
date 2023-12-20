@@ -17,7 +17,6 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
-#include "Object.h"
 
 void Renderer::Init()
 {

@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
-#include "Game/Components/TestECSComponent.h"
 #include "Game/Components/Movement.h"
 #include "Game/DirectionalLightEntity.h"
 #include "Game/PlayerEntity.h"
@@ -50,7 +49,6 @@ void System::SetupGame()
 	InputManager.Init(m_Renderer.GetWindow().get());
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
-	ECS.AddComponentSystem<CTestECSComponentSystem, CTestECSComponent>();
 	ECS.AddComponentSystem<CModelComponentSystem, CModelComponent>();
 	ECS.AddComponentSystem<LComponentSystem<CTransformComponent>, CTransformComponent>();
 	ECS.AddComponentSystem<LComponentSystem<CCameraComponent>, CCameraComponent>();
