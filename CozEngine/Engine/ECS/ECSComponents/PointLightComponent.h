@@ -3,7 +3,7 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
-#include "DirtyFlag.h"
+#include "Misc/DirtyFlag.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
 // Should match number in shader.fs

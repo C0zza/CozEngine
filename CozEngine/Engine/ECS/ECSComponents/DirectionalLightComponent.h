@@ -2,7 +2,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "DirtyFlag.h"
+#include "Misc/DirtyFlag.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
 struct CDirectionalLightComponent : public LECSComponent, public LDirtyFlag

@@ -131,7 +131,7 @@
     <ClInclude Include="Engine\Rendering\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DirtyFlag.h">
+    <ClInclude Include="Engine\Misc\DirtyFlag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\Lighting\Lighting.h">

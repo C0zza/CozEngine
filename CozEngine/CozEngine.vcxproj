@@ -189,7 +189,7 @@
     <ClInclude Include="Engine\ECS\ECSComponents\ModelComponent.h" />
     <ClInclude Include="Engine\ECS\ComponentSystem.h" />
     <ClInclude Include="Engine\ECS\ECS.h" />
-    <ClInclude Include="Engine\DirtyFlag.h" />
+    <ClInclude Include="Engine\Misc\DirtyFlag.h" />
     <ClInclude Include="Engine\include\stb\stb_image.h" />
     <ClInclude Include="Engine\ECS\ECSDefinitions.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
