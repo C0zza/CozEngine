@@ -7,15 +7,16 @@
 
 #include "Transform.h"
 
-// TEMP - Adds a basic cube mesh for testing
-LModel::LModel()
+void LModel::Load()
 {
-	Meshes.push_back(LMesh());
-}
+	if (ObjFile.empty())
+	{
+		std::cout << "LModel::Load - Empty LModel object loaded. Adding default cube." << "\n";
+		Meshes.push_back(LMesh());
+		return;
+	}
 
-LModel::LModel(char const* Path)
-{
-	LoadModel(Path);
+	LoadModel(ObjFile.c_str());
 }
 
 void LModel::Draw(const LShader& Shader, const glm::mat4& Transform) const
@@ -26,12 +27,10 @@ void LModel::Draw(const LShader& Shader, const glm::mat4& Transform) const
 	}
 }
 
-void LModel::LoadModel(char const* ModelPath)
+void LModel::LoadModel(const std::string& ModelPath)
 {
-	std::string Path{ ModelPath };
-
 	Assimp::Importer Importer;
-	const aiScene* Scene = Importer.ReadFile(Path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* Scene = Importer.ReadFile(ModelPath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
 	{
@@ -39,7 +38,6 @@ void LModel::LoadModel(char const* ModelPath)
 		return;
 	}
 
-	Directory = Path.substr(0, Path.find_last_of('/'));
 	ProcessNode(Scene->mRootNode, Scene);
 }
 
@@ -63,7 +61,6 @@ LMesh LModel::ProcessMesh(aiMesh* Mesh, const aiScene* Scene)
 {
 	std::vector<Vertex> Vertices;
 	std::vector<unsigned int> Indices;
-	std::vector<LTexture> Textures;
 
 	// Process Vertices
 	for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
@@ -107,85 +104,5 @@ LMesh LModel::ProcessMesh(aiMesh* Mesh, const aiScene* Scene)
 		}
 	}
 
-	// Process Material
-	// Do we want to set materials up independantly?
-	/*if (Mesh->mMaterialIndex >= 0)
-	{
-		aiMaterial* Material = Scene->mMaterials[Mesh->mMaterialIndex];
-		std::vector<LTexture> DiffuseMaps = LoadMaterialTextures(Material, aiTextureType_DIFFUSE, "DiffuseTexture");
-		Textures.insert(Textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-
-		std::vector<LTexture> SpecularMaps = LoadMaterialTextures(Material, aiTextureType_SPECULAR, "SpecularTexture");
-		Textures.insert(Textures.end(), DiffuseMaps.begin(), DiffuseMaps.end());
-	}*/
-
 	return LMesh(Vertices, Indices);
 }
-
-//std::vector<LTexture> LModel::LoadMaterialTextures(aiMaterial* Mat, aiTextureType Type, char const* TypeName)
-//{
-//	std::vector<LTexture> Textures;
-//	for (unsigned int i = 0; i < Mat->GetTextureCount(Type); i++)
-//	{
-//		aiString String;
-//		Mat->GetTexture(Type, i, &String);
-//		
-//		const unsigned int TextureId = TextureFromFile(String.C_Str(), Directory);
-//		ETextureType TextureType;
-//		switch (Type)
-//		{
-//		case aiTextureType::aiTextureType_DIFFUSE:
-//			TextureType = ETextureType::Diffuse;
-//			break;
-//		case aiTextureType::aiTextureType_SPECULAR:
-//			TextureType = ETextureType::Specular;
-//			break;
-//		}
-//
-//		LTexture Texture(TextureId, TextureType, String.C_Str());
-//
-//		Textures.push_back(Texture);
-//	}
-//
-//	return Textures;
-//}
-//
-//unsigned int TextureFromFile(const char* Path, const std::string& Directory, bool Gamma = false)
-//{
-//	std::string filename = std::string(Path);
-//	filename = Directory + '/' + filename;
-//
-//	unsigned int textureID;
-//	glGenTextures(1, &textureID);
-//
-//	int width, height, nrComponents;
-//	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-//	if (data)
-//	{
-//		GLenum format;
-//		if (nrComponents == 1)
-//			format = GL_RED;
-//		else if (nrComponents == 3)
-//			format = GL_RGB;
-//		else if (nrComponents == 4)
-//			format = GL_RGBA;
-//
-//		glBindTexture(GL_TEXTURE_2D, textureID);
-//		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-//		glGenerateMipmap(GL_TEXTURE_2D);
-//
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//		stbi_image_free(data);
-//	}
-//	else
-//	{
-//		std::cout << "Texture failed to load at path: " << Path << std::endl;
-//		stbi_image_free(data);
-//	}
-//
-//	return textureID;
-//}

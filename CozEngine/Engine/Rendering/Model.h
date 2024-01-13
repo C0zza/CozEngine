@@ -4,9 +4,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Material.h"
 #include "Mesh.h"
-#include "Texture.h"
+#include "ResourceManagement/Resource.h"
 
 struct aiMaterial;
 struct aiMesh;
@@ -14,24 +13,23 @@ struct aiNode;
 struct aiScene;
 
 class LShader;
-// class LTexture;
 
-class LModel
+class LModel : public LResource
 {
 public:
-	// TEMP
-	LModel();
-
-	LModel(char const* Path);
+	virtual void Load() override;
+	virtual void Unload() override {}
+	
 	void Draw(const LShader& Shader, const glm::mat4& Transform) const;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LModel, ObjFile)
 
 private:
 	std::vector<LMesh> Meshes;
-	std::string Directory;
+	std::string ObjFile;
 
-	void LoadModel(char const* ModelPath);
+	void LoadModel(const std::string& ModelPath);
 	void ProcessNode(aiNode* Node, const aiScene* Scene);
 	LMesh ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
-	// std::vector<LTexture> LoadMaterialTextures(aiMaterial* Mat, aiTextureType Type, char const* TypeName);
 };
 

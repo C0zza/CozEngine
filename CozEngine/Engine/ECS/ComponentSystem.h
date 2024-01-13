@@ -31,20 +31,21 @@ public:
 	{
 		for (auto& Component : Components)
 		{
-			Component.second.Destroy();
+			Component.Destroy();
 		}
 	}
 
 	virtual void Run() override
 	{
 		assert(IsTickable);
-		for (std::pair<LEntityID, TComponentType>& Component : Components)
+		for (TComponentType& Component : Components)
 		{
-			RunComponent(Component.second);
+			RunComponent(Component);
 		}
 	}
 
-	TComponentType* AddComponent(const LEntityID EntityID, const TComponentType& Component)
+	template<typename... TArgs>
+	TComponentType* AddComponent(const LEntityID EntityID, TArgs... Args)
 	{
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{
@@ -53,11 +54,11 @@ public:
 
 		unsigned int ComponentIndex = (unsigned int)Components.size();
 		EntityIdToComponentIndex[EntityID] = ComponentIndex; // TODO: Check entity doesn't already exist
-		Components.push_back({ EntityID,Component });
-		Components[ComponentIndex].second.EntityID = EntityID;
-		Components[ComponentIndex].second.Init();
+		Components.emplace_back(Args...);
+		Components[ComponentIndex].EntityID = EntityID;
+		Components[ComponentIndex].Init();
 
-		return &Components[ComponentIndex].second;
+		return &Components[ComponentIndex];
 	}
 
 	virtual void RemoveComponent(const LEntityID EntityID) final
@@ -65,13 +66,13 @@ public:
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{
 			const LEntityID IndexToRemove = EntityIdToComponentIndex[EntityID];
-			std::pair<LEntityID, TComponentType>& LastComponent = Components[Components.size() - 1];
+			TComponentType& LastComponent = Components[Components.size() - 1];
 
-			Components[IndexToRemove].second.Destroy();
+			Components[IndexToRemove].Destroy();
 			Components[IndexToRemove] = LastComponent;
 
 			Components.pop_back();
-			EntityIdToComponentIndex[LastComponent.first] = IndexToRemove;
+			EntityIdToComponentIndex[LastComponent.EntityID] = IndexToRemove;
 
 			EntityIdToComponentIndex.erase(EntityID);
 		}
@@ -84,13 +85,13 @@ public:
 			return nullptr;
 		}
 
-		return &Components[EntityIdToComponentIndex[EntityID]].second;
+		return &Components[EntityIdToComponentIndex[EntityID]];
 	}
 
 private:
 	virtual void RunComponent(TComponentType& Component) {};
 
 	// TODO: reserve amount/ notify when reallocation of the vector occurs.
-	std::vector<std::pair<LEntityID,TComponentType>> Components;
+	std::vector<TComponentType> Components;
 	std::unordered_map<LEntityID, unsigned int> EntityIdToComponentIndex;
 };

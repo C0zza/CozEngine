@@ -102,9 +102,6 @@
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Serializable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Dev\SerializableTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +213,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dev\SerializableTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourceHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourceHandleHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

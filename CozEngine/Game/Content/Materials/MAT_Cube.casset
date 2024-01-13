@@ -1,0 +1,12 @@
+{
+  "Diffuse": {
+    "AssetPath": "Game/Content/Textures/Container.casset"
+  },
+  "Shader": {
+    "AssetPath": "Engine/Content/Shaders/DefaultShader.casset"
+  },
+  "Specular": {
+    "AssetPath": ""
+  },
+  "SpecularShininess": 0.0
+}

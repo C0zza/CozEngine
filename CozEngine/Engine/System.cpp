@@ -13,11 +13,6 @@
 #include "Game/SpotLightEntity.h"
 #include "Game/TestEntity.h"
 
-#include "Rendering/Material.h"
-#include "Rendering/Model.h"
-#include "Rendering/Shader.h"
-#include "Rendering/Texture.h"
-
 void System::Init()
 {
 	m_Renderer.Init();
@@ -32,20 +27,6 @@ void System::SetupGame()
 {
 	LTexture::SetFlipVerticallyOnLoad(true);
 
-	std::shared_ptr<LModel> Model = std::make_shared<LModel>("Game/Assets/backpack/backpack.obj");
-	std::shared_ptr<LShader> DefaultShader = std::make_shared<LShader>("Engine/Rendering/DefaultShaders/shader.vs", "Engine/Rendering/DefaultShaders/shader.fs");
-
-	std::shared_ptr<LModel> CubeModel = std::make_shared<LModel>();
-
-	std::shared_ptr<LMaterial> CubeMaterial = std::make_shared<LMaterial>(DefaultShader);
-	std::shared_ptr<LTexture> BoxTexture = std::make_shared<LTexture>("container.jpg", false, ETextureType::Diffuse);
-	CubeMaterial->Diffuse = BoxTexture;
-
-	std::shared_ptr<LMaterial> DefaultMaterial = std::make_shared<LMaterial>(DefaultShader);
-	DefaultMaterial->Diffuse = std::make_shared<LTexture>("backpack/diffuse.jpg", false, ETextureType::Diffuse);
-	DefaultMaterial->Specular = std::make_shared<LTexture>("backpack/specular.jpg", false, ETextureType::Specular);
-	DefaultMaterial->SpecularShininess = 32.f;
-
 	InputManager.Init(m_Renderer.GetWindow().get());
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
@@ -58,9 +39,9 @@ void System::SetupGame()
 	ECS.AddComponentSystem<LComponentSystem<CDirectionalLightComponent>, CDirectionalLightComponent>();
 
 	// TODO: No system cleaning entities up on shutdown
-	LEntity* TestEntity = new CTestEntity(Model, DefaultMaterial);
+	LEntity* TestEntity = new CTestEntity();
 	LEntity* CameraEntity = new CPlayerEntity();
-	LEntity* SpotLightEntity = new CSpotLightEntity(CubeModel, CubeMaterial);
+	LEntity* SpotLightEntity = new CSpotLightEntity();
 	LEntity* DirectionalLightEntity = new CDirectionalLightEntity();
 }
 

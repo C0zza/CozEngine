@@ -1,30 +1,22 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 #include <fstream>
-#include <unordered_map>
-#include <vector>
+#include <iostream>
 
 #include "json.hpp"
 
-typedef nlohmann::json LSerializedData;
-
-class LSerializable
-{
-public:
-	LSerializedData GetData(const std::string& Asset);
-};
-
-// For classes that will be saved and loaded from their own file.
-class LSavable : public LSerializable
+class LSavable
 {
 public:
 	template<typename T>
-	void SaveAssetToDisk(const std::string& Asset, const T& Object)
+	static void SaveAssetToDisk(const std::string& Asset, const T& Object)
 	{
-		// std::fstream::trunc should clear the file
-		std::fstream AssetFile(Asset, std::fstream::out, std::fstream::trunc);
-		
+		CreateDirectoryForAsset(Asset);
+
+		std::fstream AssetFile(Asset, std::ios::out | std::ios::trunc);
+
 		if (AssetFile.is_open())
 		{
 			nlohmann::json Data = Object;
@@ -34,7 +26,7 @@ public:
 	}
 
 	template<typename T>
-	void LoadAssetFromDisk(const std::string& Asset, T& Object)
+	static void LoadAssetFromDisk(const std::string& Asset, T& Object)
 	{
 		std::ifstream AssetFile(Asset);
 		if (AssetFile.is_open())
@@ -42,6 +34,25 @@ public:
 			nlohmann::json Data;
 			AssetFile >> Data;
 			Object = Data.get<T>();
+		}
+	}
+
+private:
+
+	static void CreateDirectoryForAsset(const std::string& AssetPath)
+	{
+		std::size_t EndOfDirectory = AssetPath.find_last_of("/\\");
+		if (EndOfDirectory != std::string::npos)
+		{
+			std::string Directory = AssetPath.substr(0, EndOfDirectory);
+			try
+			{
+				std::filesystem::create_directories(Directory);
+			}
+			catch(std::filesystem::filesystem_error e)
+			{
+				std::cout << e.what() << "\n";
+			}
 		}
 	}
 };

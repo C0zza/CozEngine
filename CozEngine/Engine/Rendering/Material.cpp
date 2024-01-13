@@ -5,40 +5,30 @@
 #include "Shader.h"
 #include "Texture.h"
 
-LMaterial::LMaterial(const std::shared_ptr<LShader>& i_Shader)
-{
-	Shader = i_Shader;
-}
-
 void LMaterial::Use() const
 {	
 	// Temp save on setting shader each mesh draw
 	static LShader* CurrentShader = nullptr;
 	if (!CurrentShader)
 	{
-		assert(Shader.get());
-		CurrentShader = Shader.get();
-		assert(CurrentShader);
+		assert(Shader.Get());
+		CurrentShader = Shader.Get();
 		CurrentShader->Use();
-	}
-	else
-	{
-		assert(CurrentShader);
 	}
 
 	// Shader->SetVec3("Material.Ambient", Ambient);
 
-	if (Diffuse.get())
+	if (Diffuse.Get())
 	{
-		Shader->SetInt("Material.Diffuse", 0);
-		Diffuse->Use(0);
+		Shader.Get()->SetInt("Material.Diffuse", 0);
+		Diffuse.Get()->Use(0);
 	}
 
-	if (Specular.get())
+	if (Specular.Get())
 	{
-		Shader->SetInt("Material.Specular", 1);
-		Specular->Use(1);
-		Shader->SetFloat("Material.Shininess", SpecularShininess);
+		Shader.Get()->SetInt("Material.Specular", 1);
+		Specular.Get()->Use(1);
+		Shader.Get()->SetFloat("Material.Shininess", SpecularShininess);
 	}
 
 	glActiveTexture(GL_TEXTURE0);

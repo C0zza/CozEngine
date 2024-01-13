@@ -8,30 +8,7 @@
 
 const char* LTexture::TextureDirectory = "Game/Assets/";
 
-LTexture::LTexture(const unsigned int ID, const ETextureType Type, const char* Path)
-	: TextureID{ ID }, TextureType{ Type }, Width{ 0 }, Height{ 0 }
-{
-	Init(Path, false);
-}
-
-LTexture::LTexture(const char* TexturePath, const bool HasAlpha, const ETextureType i_TextureType)
-	: Width{ 0 }, Height{ 0 }, TextureID{ 0 }, TextureType{ i_TextureType }
-{
-	Init(TexturePath, HasAlpha);
-}
-
-void LTexture::Use(const unsigned int TextureUnit) const
-{
-	glActiveTexture(GL_TEXTURE0 + TextureUnit);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
-}
-
-void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
-{
-	stbi_set_flip_vertically_on_load(Flip);
-}
-
-void LTexture::Init(const char* TexturePath, const bool HasAlpha)
+void LTexture::Load()
 {
 	glGenTextures(1, &TextureID);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
@@ -43,13 +20,13 @@ void LTexture::Init(const char* TexturePath, const bool HasAlpha)
 
 	int nrChannels;
 	std::string FullTexturePath = TextureDirectory;
-	FullTexturePath += TexturePath;
+	FullTexturePath += TextureFile;
 
 	unsigned char* data = stbi_load(FullTexturePath.c_str(), &Width, &Height, &nrChannels, 0);
 
 	if (data)
 	{
-		int Format = HasAlpha ? GL_RGBA : GL_RGB;
+		int Format = bHasAlpha ? GL_RGBA : GL_RGB;
 		glTexImage2D(GL_TEXTURE_2D, 0, Format, Width, Height, 0, Format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -59,4 +36,15 @@ void LTexture::Init(const char* TexturePath, const bool HasAlpha)
 	}
 
 	stbi_image_free(data);
+}
+
+void LTexture::Use(const unsigned int TextureUnit) const
+{
+	glActiveTexture(GL_TEXTURE0 + TextureUnit);
+	glBindTexture(GL_TEXTURE_2D, TextureID);
+}
+
+void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
+{
+	stbi_set_flip_vertically_on_load(Flip);
 }

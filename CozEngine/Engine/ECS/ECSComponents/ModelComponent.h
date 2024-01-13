@@ -6,17 +6,18 @@
 #include "ECS/ECSComponents/ECSComponent.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
+#include "ResourceManagement/ResourceManager.h"
 
 // TODO: rename to something decent once we can get rid of the existing CModelComponent
 struct CModelComponent : LECSComponent
 {
-	std::shared_ptr<LModel> Model;
-	std::shared_ptr<LMaterial> Material;
+	LResourceHandle<LModel> Model;
+	LResourceHandle<LMaterial> Material;
 
-	CModelComponent(std::shared_ptr<LModel>& i_Model, std::shared_ptr<LMaterial>& i_Material)
+	CModelComponent(const std::string& i_Model, const std::string& i_Material)
 	{
-		Model = i_Model;
-		Material = i_Material;
+		Model = LResourceManager::GetResource<LModel>(i_Model);
+		Material = LResourceManager::GetResource<LMaterial>(i_Material);
 	}
 };
 

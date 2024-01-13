@@ -3,13 +3,18 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 #include <vector>
-class LShader
+
+#include "ResourceManagement/ResourceHandleHelper.h"
+
+class LShader : public LResource
 {
 public:
-	LShader(const char* VertexPath, const char* FragmentPath);
-	~LShader();
+	LShader() : ID{ 0 } {}
 
-	unsigned int GetID() { return ID; }
+	virtual void Load() override;
+	virtual void Unload() override;
+
+	unsigned int GetID() const { return ID; }
 
 	void Use();
 
@@ -26,8 +31,24 @@ public:
 	static void SetGlobalFloat(const std::string& name, const float f);
 	static void SetGlobalMat4(const std::string& name, const glm::mat4& mat);
 	static void SetGlobalVec(const std::string& name, const glm::vec3& vec);
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LShader, VertexShaderPath, FragmentShaderPath)
+
 private:
 	unsigned int ID;
 
+	std::string VertexShaderPath;
+	std::string FragmentShaderPath;
+
 	static std::vector<LShader*> Shaders;
 };
+
+inline void to_json(nlohmann::json& J, const LResourceHandle<LShader>& ResourceHandle)
+{
+	LResourceHandleHelper::ToJsonHelper(J, ResourceHandle);
+}
+
+inline void from_json(const nlohmann::json& J, LResourceHandle<LShader>& ResourceHandle)
+{
+	LResourceHandleHelper::FromJsonHelper(J, ResourceHandle);
+}

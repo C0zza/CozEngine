@@ -51,7 +51,7 @@ public:
 		LComponentSystem<TComponentType>* ComponentSystem = dynamic_cast<LComponentSystem<TComponentType>*>(ComponentSystems[TypeID].get());
 		assert(ComponentSystem);
 		// TODO: go over move semantics for the TComponentType(Args...)
-		return ComponentSystem->AddComponent(EntityID, TComponentType(Args...));
+		return ComponentSystem->AddComponent(EntityID, Args...);
 	}
 
 	template<typename TComponentType>

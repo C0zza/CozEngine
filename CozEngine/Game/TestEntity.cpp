@@ -2,13 +2,9 @@
 
 #include <memory>
 
-// #include "Components/TestECSComponent.h"
 #include "ECS/ECSComponents/ModelComponent.h"
-#include "Rendering/Material.h"
-#include "Rendering/Model.h"
 
-CTestEntity::CTestEntity(std::shared_ptr<LModel>& Model, std::shared_ptr<LMaterial>& Material)
+CTestEntity::CTestEntity()
 {
-	// AddComponent<CTestECSComponent>();
-	AddComponent<CModelComponent>(Model, Material);
+	AddComponent<CModelComponent>("Game/Content/Models/MOD_Backpack.casset", "Game/Content/Materials/MAT_DefaultMaterial.casset");
 }

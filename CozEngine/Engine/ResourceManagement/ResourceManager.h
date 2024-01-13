@@ -4,6 +4,8 @@
 #include <string>
 
 #include "Resource.h"
+#include "ResourceHandle.h"
+#include "Serializable.h"
 
 class LResourceManager
 {
@@ -13,19 +15,25 @@ public:
 	template<typename T>
 	static LResourceHandle<T> GetResource(const std::string& Asset)
 	{
-		if (!Resources.contains(Asset))
+		if (Asset.empty())
 		{
-			Resources.insert({ Asset, new T() });
-			Resources[Asset]->SetAssetPath(Asset);
-			Resources[Asset]->LoadAssetFromDisk(Asset, *Resources[Asset]);
-			Resources[Asset]->Load();
+			return LResourceHandle<T>();
 		}
 
-		LResourceHandle<T> Resource(Resources[Asset]);
-		return Resource;
+		if (!Resources.contains(Asset))
+		{
+			T* Resource = new T();
+			Resources.insert({ Asset, Resource });
+
+			LSavable::LoadAssetFromDisk(Asset, *Resource);
+			Resource->SetAssetPath(Asset);
+			Resource->Load();
+		}
+
+		return LResourceHandle<T>(Resources[Asset]);
 	}
 
-	static void UnloadResource(const std::string& Asset);
+	static void UnloadResource(const std::string Asset);
 
 private:
 	static std::unordered_map<std::string, LResource*> Resources;

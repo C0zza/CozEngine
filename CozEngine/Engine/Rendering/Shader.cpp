@@ -7,8 +7,7 @@
 
 std::vector<LShader*> LShader::Shaders = {};
 
-LShader::LShader(const char* VertexPath, const char* FragmentPath)
-	: ID{ 0 }
+void LShader::Load()
 {
 	std::ifstream VertexFile;
 	std::ifstream FragmentFile;
@@ -16,18 +15,18 @@ LShader::LShader(const char* VertexPath, const char* FragmentPath)
 	VertexFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	FragmentFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-	VertexFile.open(VertexPath);
-	FragmentFile.open(FragmentPath);
+	VertexFile.open(VertexShaderPath);
+	FragmentFile.open(FragmentShaderPath);
 
 	if (!VertexFile.is_open())
 	{
-		std::cout << "Shader::Shader - Failed to open " << VertexPath << ".\n";
+		std::cout << "Shader::Shader - Failed to open " << VertexShaderPath << ".\n";
 		return;
 	}
 
 	if (!FragmentFile.is_open())
 	{
-		std::cout << "Shader::Shader - Failed to open " << FragmentPath << ".\n";
+		std::cout << "Shader::Shader - Failed to open " << FragmentShaderPath << ".\n";
 		return;
 	}
 
@@ -88,7 +87,7 @@ LShader::LShader(const char* VertexPath, const char* FragmentPath)
 	Shaders.push_back(this);
 }
 
-LShader::~LShader()
+void LShader::Unload()
 {
 	unsigned int Index = -1;
 	for (unsigned int i = 0; i < Shaders.size(); i++)

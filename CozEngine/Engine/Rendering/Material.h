@@ -4,23 +4,28 @@
 #include <memory>
 #include <vector>
 
-class LTexture;
-class LShader;
+#include "ResourceManagement/Resource.h"
+#include "ResourceManagement/ResourceHandle.h"
+// Required for to_json, from_json LTexture/LShader definitions
+#include "Texture.h"
+#include "Shader.h"
 
-class LMaterial
+class LMaterial : public LResource
 {
 public:
-	LMaterial(const std::shared_ptr<LShader>& i_Shader);
+	virtual void Load() override {}
+	virtual void Unload() override {}
 
 	void Use() const;
-	const LShader* GetShader() const { return Shader.get(); }
+	const LShader* GetShader() const { return Shader.Get(); }
 
-	// glm::vec3 Ambient = glm::vec3(0.f, 0.f, 0.f);
-	std::shared_ptr<LTexture> Diffuse = nullptr;
-	std::shared_ptr<LTexture> Specular = nullptr;
+	LResourceHandle<LTexture> Diffuse;
+	LResourceHandle<LTexture> Specular;
 	float SpecularShininess = 0.f;
 
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Diffuse, Specular, SpecularShininess, Shader)
+
 private:
-	std::shared_ptr<LShader> Shader = nullptr;
+	LResourceHandle<LShader> Shader;
 };
 

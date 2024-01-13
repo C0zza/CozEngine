@@ -1,0 +1,4 @@
+{
+  "FragmentShaderPath": "Engine/Rendering/DefaultShaders/shader.fs",
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/shader.vs"
+}

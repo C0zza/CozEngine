@@ -1,0 +1,12 @@
+{
+  "Diffuse": {
+    "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Diffuse.casset"
+  },
+  "Shader": {
+    "AssetPath": "Engine/Content/Shaders/DefaultShader.casset"
+  },
+  "Specular": {
+    "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Specular.casset"
+  },
+  "SpecularShininess": 32.0
+}

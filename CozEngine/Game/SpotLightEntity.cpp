@@ -4,10 +4,8 @@
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
 #include "ECS/ECSComponents/TransformComponent.h"
-#include "Rendering/Material.h"
-#include "Rendering/Model.h"
 
-CSpotLightEntity::CSpotLightEntity(std::shared_ptr<LModel>& Model, std::shared_ptr<LMaterial>& Material)
+CSpotLightEntity::CSpotLightEntity()
 {
 	CPointLightComponent* SpotLight = AddComponent<CPointLightComponent>();
 	SpotLight->SetAmbient(glm::vec3(0.f, 0.2f, 0.f));
@@ -19,7 +17,7 @@ CSpotLightEntity::CSpotLightEntity(std::shared_ptr<LModel>& Model, std::shared_p
 	SpotLight->SetLinear(0.09f);
 	SpotLight->SetQuadratic(0.032f);
 
-	AddComponent<CModelComponent>(Model, Material);
+	AddComponent<CModelComponent>("Game/Content/Models/MOD_Cube.casset", "Game/Content/Materials/MAT_Cube.casset");
 
 	CTransformComponent* Transform = GetComponent<CTransformComponent>();
 	Transform->Move(glm::vec3(0.f, 0.f, 5.f));

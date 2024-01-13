@@ -12,12 +12,13 @@ void LResourceManager::Shutdown()
 	}
 }
 
-void LResourceManager::UnloadResource(const std::string& Asset)
+// Asset string not passed as reference because we need to null Resources[Asset] and Asset would otherwise be deleted
+void LResourceManager::UnloadResource(const std::string Asset)
 {
 	if (Resources.contains(Asset))
 	{
 		Resources[Asset]->Unload();
-		
+
 		delete Resources[Asset];
 		Resources[Asset] = nullptr;
 
