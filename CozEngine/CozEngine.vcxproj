@@ -178,7 +178,6 @@
     <ClCompile Include="Game\SpotLightEntity.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resource.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp" />
-    <ClCompile Include="Dev\SerializableTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\include\json.hpp" />
@@ -216,7 +215,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Serializable.h" />
-    <ClInclude Include="Dev\SerializableTest.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceHandle.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceHandleHelper.h" />
   </ItemGroup>

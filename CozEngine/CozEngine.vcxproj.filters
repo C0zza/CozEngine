@@ -102,9 +102,6 @@
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dev\SerializableTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -210,9 +207,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\include\json.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Dev\SerializableTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\ResourceHandle.h">
