@@ -12,6 +12,10 @@
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include "Material.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -53,6 +57,17 @@ void Renderer::Tick()
 
 void Renderer::PostTick()
 {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("My name is window, ImGui window");
+	ImGui::Text("Hello there!");
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	assert(m_Window->m_Window);
 	glfwSwapBuffers(m_Window->m_Window);
 	glfwPollEvents();

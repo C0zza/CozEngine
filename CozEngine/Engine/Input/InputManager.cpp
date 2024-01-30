@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.h"
 
+#include "imgui/imgui.h"
+
 std::map<const KeyAction, std::vector<KeyEvent*>> LInputManager::Events{};
 std::vector<MouseMoveEvent*> LInputManager::MouseMoveEvents{};
 
@@ -26,6 +28,11 @@ void LInputManager::Init(LWindow* i_Window)
 
 void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (ImGui::GetIO().WantCaptureKeyboard)
+	{
+		return;
+	}
+
 	KeyAction Ka;
 	Ka.first = key;
 	Ka.second = action;
@@ -43,6 +50,11 @@ void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int a
 
 void LInputManager::MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+	{
+		return;
+	}
+
 	double MovementX = xpos - PreviousMouseX;
 	double MovementY = ypos - PreviousMouseY;
 

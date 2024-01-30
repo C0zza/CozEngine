@@ -11,7 +11,6 @@
 class System
 {
 public:
-	void Init();
 	void Shutdown();
 	void SetupGame();
 	void Run();
