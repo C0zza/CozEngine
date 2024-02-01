@@ -11,7 +11,7 @@ void LModel::Load()
 {
 	if (ObjFile.empty())
 	{
-		std::cout << "LModel::Load - Empty LModel object loaded. Adding default cube." << "\n";
+		// std::cout << "LModel::Load - Empty LModel object loaded. Adding default cube." << "\n";
 		Meshes.push_back(LMesh());
 		return;
 	}

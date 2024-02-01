@@ -28,10 +28,12 @@ void LInputManager::Init(LWindow* i_Window)
 
 void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+#if defined(COZ_EDITOR)
 	if (ImGui::GetIO().WantCaptureKeyboard)
 	{
 		return;
 	}
+#endif
 
 	KeyAction Ka;
 	Ka.first = key;
@@ -50,10 +52,12 @@ void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int a
 
 void LInputManager::MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
 {
+#if defined(COZ_EDITOR)
 	if (ImGui::GetIO().WantCaptureMouse)
 	{
 		return;
 	}
+#endif
 
 	double MovementX = xpos - PreviousMouseX;
 	double MovementY = ypos - PreviousMouseY;

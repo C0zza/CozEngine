@@ -1,11 +1,5 @@
 #include "System.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
-
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/Movement.h"
 #include "Game/DirectionalLightEntity.h"
@@ -13,15 +7,19 @@
 #include "Game/SpotLightEntity.h"
 #include "Game/TestEntity.h"
 
+#if defined(COZ_EDITOR)
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#endif
 
 void System::Shutdown()
 {
+#if defined(COZ_EDITOR)
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+#endif
 
 	m_Renderer.Shutdown();
 }
@@ -33,6 +31,7 @@ void System::SetupGame()
 	m_Renderer.Init();
 	InputManager.Init(m_Renderer.GetWindow().get());
 
+#if defined(COZ_EDITOR)
 	// Imgui init must be after our glfw input callbacks have been setup otherwise imgui is overriden.
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -40,6 +39,7 @@ void System::SetupGame()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(m_Renderer.GetWindow()->m_Window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
+#endif
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	ECS.AddComponentSystem<CModelComponentSystem, CModelComponent>();

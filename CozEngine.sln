@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CozEngine", "CozEngine\CozE
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Editor|x64 = Debug Editor|x64
+		Debug Editor|x86 = Debug Editor|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug Editor|x64.ActiveCfg = Debug Editor|x64
+		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug Editor|x64.Build.0 = Debug Editor|x64
+		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug Editor|x86.ActiveCfg = Debug Editor|Win32
+		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug Editor|x86.Build.0 = Debug Editor|Win32
 		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug|x64.ActiveCfg = Debug|x64
 		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug|x64.Build.0 = Debug|x64
 		{50E6B57E-6FED-4CD9-ACD2-7CFDE382F7C3}.Debug|x86.ActiveCfg = Debug|Win32

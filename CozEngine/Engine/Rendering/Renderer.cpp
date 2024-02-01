@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
-#include <vector>
 
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/CameraComponent.h"
@@ -12,14 +11,13 @@
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
 
+#if defined(COZ_EDITOR)
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#endif
 
-#include "Material.h"
-#include "Mesh.h"
 #include "Shader.h"
-#include "Texture.h"
 #include "Window.h"
 
 void Renderer::Init()
@@ -57,6 +55,7 @@ void Renderer::Tick()
 
 void Renderer::PostTick()
 {
+#if defined(COZ_EDITOR)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -67,6 +66,7 @@ void Renderer::PostTick()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
 
 	assert(m_Window->m_Window);
 	glfwSwapBuffers(m_Window->m_Window);
