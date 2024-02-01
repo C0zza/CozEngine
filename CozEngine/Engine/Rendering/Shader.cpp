@@ -20,13 +20,13 @@ void LShader::Load()
 
 	if (!VertexFile.is_open())
 	{
-		std::cout << "Shader::Shader - Failed to open " << VertexShaderPath << ".\n";
+		std::cout << "ERROR - Shader::Shader Failed to open " << VertexShaderPath << ".\n";
 		return;
 	}
 
 	if (!FragmentFile.is_open())
 	{
-		std::cout << "Shader::Shader - Failed to open " << FragmentShaderPath << ".\n";
+		std::cout << "ERROR - Shader::Shader - Failed to open " << FragmentShaderPath << ".\n";
 		return;
 	}
 
