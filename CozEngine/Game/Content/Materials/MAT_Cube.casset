@@ -6,7 +6,7 @@
     "AssetPath": "Engine/Content/Shaders/DefaultShader.casset"
   },
   "Specular": {
-    "AssetPath": ""
+    "AssetPath": "Game/Content/Textures/NullSpecular.casset"
   },
-  "SpecularShininess": 0.0
+  "SpecularShininess": 1.0
 }

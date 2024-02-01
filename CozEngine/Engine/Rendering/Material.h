@@ -12,7 +12,7 @@
 class LMaterial : public LResource
 {
 public:
-	virtual void Load() override {}
+	virtual void Load() override;
 	virtual void Unload() override {}
 
 	void Use() const;
@@ -20,7 +20,7 @@ public:
 
 	LResourceHandle<LTexture> Diffuse;
 	LResourceHandle<LTexture> Specular;
-	float SpecularShininess = 0.f;
+	float SpecularShininess = 1.f;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Diffuse, Specular, SpecularShininess, Shader)
 

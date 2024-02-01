@@ -45,7 +45,7 @@ public:
 	}
 
 	template<typename... TArgs>
-	TComponentType* AddComponent(const LEntityID EntityID, TArgs... Args)
+	TComponentType* AddComponent(const LEntityID EntityID, TArgs&... Args)
 	{
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{

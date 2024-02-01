@@ -35,10 +35,10 @@ public:
 		}
 	}
 
-	// TODO: RemoveComponentSystem. Manage ComponentSystems and TickableComponentSystems
+	// TODO: RemoveComponentSystem.
 
 	template<typename TComponentType, typename... TArgs>
-	TComponentType* AddComponent(const LEntityID EntityID, TArgs... Args)
+	TComponentType* AddComponent(const LEntityID EntityID, TArgs&... Args)
 	{
 		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
 

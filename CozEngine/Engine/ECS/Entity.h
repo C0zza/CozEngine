@@ -12,7 +12,7 @@ public:
 	LEntityID GetID() const { return ID; }
 
 	template<typename TComponentType, typename... TInitArgs>
-	TComponentType* AddComponent(TInitArgs... Args)
+	TComponentType* AddComponent(TInitArgs&... Args)
 	{
 		return LECS::Get()->AddComponent<TComponentType>(ID, Args...);
 	}
