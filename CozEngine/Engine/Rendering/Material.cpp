@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
+#include "Misc/Logging.h"
 #include "Shader.h"
 #include "Texture.h"
 
@@ -12,17 +13,17 @@ void LMaterial::Load()
 	if (SpecularShininess < 1.0f)
 	{
 		SpecularShininess = 1.0f;
-		std::cout << "INFO - Specular shininess for " << GetAssetPath() << " has been overriden. Min shininess is 1 otherwise no lighting will apply." << "\n";
+		Log(LLogLevel::INFO, "Specular shininess for " + GetAssetPath() + " has been overriden. Min shininess is 1 otherwise no lighting will apply.");
 	}
 
 	if (!Diffuse.Get())
 	{
-		std::cout << "WARNING - Invalid diffuse texture for " << GetAssetPath() << " . Whatever diffuse texture is bound before this will end up being used on draw." << "\n";
+		Log(LLogLevel::WARNING, "Invalid diffuse texture for " + GetAssetPath() + ". Whatever diffuse texture is bound before this will end up being used on draw.");
 	}
 
 	if (!Specular.Get())
 	{
-		std::cout << "WARNING - Invalid specular texture for " << GetAssetPath() << " .Whatever specular texture is bound before this will end up being used on draw." << "\n";
+		Log(LLogLevel::WARNING, "WARNING - Invalid specular texture for " + GetAssetPath() + ". Whatever specular texture is bound before this will end up being used on draw.");
 	}
 }
 

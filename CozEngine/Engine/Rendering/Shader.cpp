@@ -5,6 +5,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "Misc/Logging.h"
+
 std::vector<LShader*> LShader::Shaders = {};
 
 void LShader::Load()
@@ -20,13 +22,13 @@ void LShader::Load()
 
 	if (!VertexFile.is_open())
 	{
-		std::cout << "ERROR - Shader::Shader Failed to open " << VertexShaderPath << ".\n";
+		Log(LLogLevel::ERROR, "LShader::Load Failed to open " + VertexShaderPath);
 		return;
 	}
 
 	if (!FragmentFile.is_open())
 	{
-		std::cout << "ERROR - Shader::Shader - Failed to open " << FragmentShaderPath << ".\n";
+		Log(LLogLevel::ERROR, "LShader::Load Failed to open " + FragmentShaderPath);
 		return;
 	}
 
@@ -50,24 +52,27 @@ void LShader::Load()
 	glCompileShader(VertexShaderID);
 
 	int  Success;
-	char InfoLog[512];
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Success);
+#if defined(_DEBUG)
+	char InfoLog[512];
 	if (!Success)
 	{
 		glGetShaderInfoLog(VertexShaderID, 512, NULL, InfoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << InfoLog << std::endl;
+		Log(LLogLevel::ERROR, "SHADER::VERTEX::COMPILATION_FAILED\n" + std::string(InfoLog));
 	}
+#endif
 
 	unsigned int FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(FragmentShaderID, 1, &cFragmentCode, NULL);
 	glCompileShader(FragmentShaderID);
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Success);
+#if defined(_DEBUG)
 	if (!Success)
 	{
 		glGetShaderInfoLog(FragmentShaderID, 512, NULL, InfoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << InfoLog << "\n";
-
+		Log(LLogLevel::ERROR, "SHADER::FRAGMENT::COMPILATION_FAILED\n" + std::string(InfoLog));
 	}
+#endif
 
 	ID = glCreateProgram();
 	glAttachShader(ID, VertexShaderID);
@@ -75,11 +80,13 @@ void LShader::Load()
 	glLinkProgram(ID);
 
 	glGetProgramiv(ID, GL_LINK_STATUS, &Success);
+#if defined(_DEBUG)
 	if (!Success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, InfoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << InfoLog << "\n";
+		Log(LLogLevel::ERROR, "SHADER::PROGRAM::COMPILATION_FAILED\n" + std::string(InfoLog));
 	}
+#endif
 
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);

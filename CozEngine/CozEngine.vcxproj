@@ -294,6 +294,7 @@
     <ClInclude Include="Engine\ResourceManagement\Serializable.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceHandle.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceHandleHelper.h" />
+    <ClInclude Include="Engine\Misc\Logging.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "Misc/Logging.h"
 #include "json.hpp"
 
 class LSavable
@@ -51,7 +52,7 @@ private:
 			}
 			catch(std::filesystem::filesystem_error e)
 			{
-				std::cout << e.what() << "\n";
+				Log(LLogLevel::ERROR, "LSavable::CreateDirectoryForAsset - " + std::string(e.what()));
 			}
 		}
 	}

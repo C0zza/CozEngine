@@ -6,6 +6,7 @@
 
 #include "ComponentSystem.h"
 #include "ECSDefinitions.h"
+#include "Misc/Logging.h"
 #include "Misc/TypeIdGenerator.h"
 
 class LECS
@@ -61,7 +62,7 @@ public:
 
 		if (!ComponentSystems.contains(TypeID))
 		{
-			// TODO: Add logging system. Could just be std::cout stuff
+			Log(LLogLevel::INFO, "LECS::RemoveComponent<T> - Component type not found on entity(ID) " + EntityID);
 			return;
 		}
 

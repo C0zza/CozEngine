@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Misc/Logging.h"
+
 void LWindow::Init()
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -14,7 +16,7 @@ void LWindow::Init()
 	m_Window = glfwCreateWindow(800, 600, "CozEngine - GLFW Window", NULL, NULL);
 	if (!m_Window)
 	{
-		std::cout << "Failed to create GLFW window\n";
+		Log(LLogLevel::ERROR, "LWindow::Init - Failed to create GLFW window");
 		glfwTerminate();
 		return;
 	}
@@ -23,7 +25,7 @@ void LWindow::Init()
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD\n";
+		Log(LLogLevel::ERROR, "LWindow::Init - Failed to initialize GLAD");
 		return;
 	}
 

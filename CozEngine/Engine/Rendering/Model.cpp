@@ -5,13 +5,14 @@
 #include <glad/glad.h> 
 #include <stb/stb_image.h>
 
+#include "Misc/Logging.h"
 #include "Transform.h"
 
 void LModel::Load()
 {
 	if (ObjFile.empty())
 	{
-		// std::cout << "LModel::Load - Empty LModel object loaded. Adding default cube." << "\n";
+		Log(LLogLevel::INFO, "LModel::Load - Empty LModel object loaded. Adding default cube.");
 		Meshes.push_back(LMesh());
 		return;
 	}
@@ -34,7 +35,7 @@ void LModel::LoadModel(const std::string& ModelPath)
 
 	if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
 	{
-		std::cout << "ERROR::ASSIMP::" << Importer.GetErrorString() << "\n";
+		Log(LLogLevel::ERROR, "ERROR::ASSIMP::" + std::string(Importer.GetErrorString()));
 		return;
 	}
 
