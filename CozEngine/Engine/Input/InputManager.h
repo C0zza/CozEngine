@@ -5,6 +5,8 @@
 #include <utility>
 #include <vector>
 
+#include "Misc/Logging.h"
+
 struct GLFWwindow;
 class LWindow;
 
@@ -71,7 +73,19 @@ public:
 			Events.insert({ i_KeyAction, {} });
 		}
 
-		Events[i_KeyAction].push_back(i_Event);
+		std::vector<KeyEvent*>& KeyActionEvents = Events[i_KeyAction];
+
+		std::vector<KeyEvent*>::iterator it = std::find(KeyActionEvents.begin(), KeyActionEvents.end(), i_Event);
+		if (it == KeyActionEvents.end())
+		{
+			KeyActionEvents.push_back(i_Event);
+		}
+		else
+		{
+			// TODO: Check this makes sense. I.e. would i_Event point to the same place for multiple objects of the same type (assuming the same method).
+			assert(false);
+			Log(LLogLevel::INFO, "LInputManager::RegisterKeyEvent - Attempted to register duplicate KeyEvent. Ignoring.");
+		}
 	}
 
 	static void UnregisterKeyEvent(KeyEvent* i_Event)
@@ -87,6 +101,8 @@ public:
 				return;
 			}
 		}
+
+		Log(LLogLevel::WARNING, "LInputManager::UnregisterKeyEvent - Could not find KeyEvent to unregister.");
 	}
 
 	static void RegisterMouseMoveEvent(MouseMoveEvent* i_Event)
@@ -101,7 +117,7 @@ public:
 		}
 		else
 		{
-			assert(false);
+			Log(LLogLevel::INFO, "LInputManager::RegisterMouseMoveEvent - Attempted to register duplicate MouseMoveEvent. Ignoring.");
 		}
 	}
 
@@ -114,6 +130,10 @@ public:
 		if (it != MouseMoveEvents.end())
 		{
 			MouseMoveEvents.erase(it);
+		}
+		else
+		{
+			Log(LLogLevel::WARNING, "LInputManager::UnregisterMouseMoveEvent - Could not find MouseMoveEvent to unregister.");
 		}
 	}
 };

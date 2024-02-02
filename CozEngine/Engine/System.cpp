@@ -29,17 +29,6 @@ void System::SetupGame()
 	LTexture::SetFlipVerticallyOnLoad(true);
 
 	m_Renderer.Init();
-	InputManager.Init(m_Renderer.GetWindow().get());
-
-#if defined(COZ_EDITOR)
-	// Imgui init must be after our glfw input callbacks have been setup otherwise imgui is overriden.
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(m_Renderer.GetWindow()->m_Window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
-#endif
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	ECS.AddComponentSystem<CModelComponentSystem, CModelComponent>();
@@ -55,6 +44,19 @@ void System::SetupGame()
 	LEntity* CameraEntity = new CPlayerEntity();
 	LEntity* SpotLightEntity = new CSpotLightEntity();
 	LEntity* DirectionalLightEntity = new CDirectionalLightEntity();
+
+	// Setup input after everything is loaded to prevent input during being picked up
+	InputManager.Init(m_Renderer.GetWindow().get());
+
+#if defined(COZ_EDITOR)
+	// Imgui init must be after our glfw input callbacks have been setup otherwise imgui is overriden.
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(m_Renderer.GetWindow()->m_Window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+#endif
 }
 
 void System::Run()

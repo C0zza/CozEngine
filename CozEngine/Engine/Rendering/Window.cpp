@@ -13,7 +13,7 @@ void LWindow::Init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	m_Window = glfwCreateWindow(800, 600, "CozEngine - GLFW Window", NULL, NULL);
+	m_Window = glfwCreateWindow(1280, 720, "CozEngine - GLFW Window", NULL, NULL);
 	if (!m_Window)
 	{
 		Log(LLogLevel::ERROR, "LWindow::Init - Failed to create GLFW window");
@@ -29,7 +29,7 @@ void LWindow::Init()
 		return;
 	}
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1280, 720);
 	glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* Window, int width, int height)
 		{
 			glViewport(0, 0, width, height);

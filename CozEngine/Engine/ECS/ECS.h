@@ -25,6 +25,7 @@ public:
 
 		if (ComponentSystems.contains(TypeID))
 		{
+			Log(LLogLevel::INFO, "LECS::AddComponentSystem - " + std::string(typeid(TComponentSystem).name()) + " has already been added.");
 			return;
 		}
 
@@ -45,6 +46,7 @@ public:
 
 		if (!ComponentSystems.contains(TypeID))
 		{
+			Log(LLogLevel::INFO, "LECS::AddComponent - Unable to add " + std::string(typeid(TComponentType).name()) + " as there's no associated ComponentSystem.");
 			return nullptr;
 		}
 
@@ -62,7 +64,7 @@ public:
 
 		if (!ComponentSystems.contains(TypeID))
 		{
-			Log(LLogLevel::INFO, "LECS::RemoveComponent<T> - Component type not found on entity(ID) " + EntityID);
+			Log(LLogLevel::INFO, "LECS::RemoveComponent - Unable to remove " + std::string(typeid(TComponentType).name()) + " as there's no associated ComponentSystem.");
 			return;
 		}
 
@@ -76,6 +78,7 @@ public:
 
 		if (!ComponentSystems.contains(TypeID))
 		{
+			Log(LLogLevel::INFO, "LECS::GetComponent - Unable to get " + std::string(typeid(TComponentType).name()) + " as there's no associated ComponentSystem.");
 			return nullptr;
 		}
 

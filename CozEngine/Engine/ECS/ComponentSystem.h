@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ECSDefinitions.h"
+#include "Misc/Logging.h"
 
 class LECS;
 
@@ -49,11 +50,12 @@ public:
 	{
 		if (EntityIdToComponentIndex.contains(EntityID))
 		{
+			Log(LLogLevel::INFO, "Entity already has a " + std::string(typeid(TComponentType).name()) + ". Returning existing instance.");
 			return GetComponent(EntityID);
 		}
 
 		unsigned int ComponentIndex = (unsigned int)Components.size();
-		EntityIdToComponentIndex[EntityID] = ComponentIndex; // TODO: Check entity doesn't already exist
+		EntityIdToComponentIndex[EntityID] = ComponentIndex;
 		Components.emplace_back(Args...);
 		Components[ComponentIndex].EntityID = EntityID;
 		Components[ComponentIndex].Init();
@@ -76,12 +78,17 @@ public:
 
 			EntityIdToComponentIndex.erase(EntityID);
 		}
+		else
+		{
+			Log(LLogLevel::INFO, "LComponentSystem::RemoveComponent - Entity does not have a " + std::string(typeid(TComponentType).name()) + ".");
+		}
 	}
 
 	TComponentType* GetComponent(const LEntityID EntityID)
 	{
 		if (!EntityIdToComponentIndex.contains(EntityID))
 		{
+			Log(LLogLevel::INFO, "LComponentSystem::GetComponent - Entity does not have a " + std::string(typeid(TComponentType).name()) + ". Returning nullptr.");
 			return nullptr;
 		}
 

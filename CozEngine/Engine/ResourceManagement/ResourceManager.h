@@ -17,6 +17,7 @@ public:
 	{
 		if (Asset.empty())
 		{
+			Log(LLogLevel::INFO, "LResourceManager::GetResource - Empty Asset provided. Returning empty LResourceHandle.");
 			return LResourceHandle<T>();
 		}
 

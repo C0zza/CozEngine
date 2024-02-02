@@ -22,6 +22,7 @@ void LInputManager::Init(LWindow* i_Window)
 
 	glfwGetCursorPos(i_Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(i_Window->m_Window, MouseMoveCallback);
+	glfwSetInputMode(i_Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	IsInitialized = true;
 }

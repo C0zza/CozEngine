@@ -24,4 +24,8 @@ void LResourceManager::UnloadResource(const std::string Asset)
 
 		Resources.erase(Asset);
 	}
+	else
+	{
+		Log(LLogLevel::INFO, "LResourceManager::UnloadResource - Attempted to unload resource, " + Asset + " which isn't currently loaded.");
+	}
 }

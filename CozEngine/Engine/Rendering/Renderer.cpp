@@ -29,7 +29,7 @@ void Renderer::Init()
 	assert(m_Window);
 	m_Window->Init();
 
-	ProjectionMatrix = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.f);
+	ProjectionMatrix = glm::perspective(glm::radians(60.0f), 1280.f / 720.f, 0.1f, 100.f);
 }
 
 void Renderer::Shutdown()
