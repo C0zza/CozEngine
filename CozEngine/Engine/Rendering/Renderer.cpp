@@ -3,7 +3,6 @@
 #include <cassert>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <string>
 
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/CameraComponent.h"

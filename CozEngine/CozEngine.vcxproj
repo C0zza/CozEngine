@@ -223,7 +223,6 @@
     <ClCompile Include="Engine\ECS\ECSComponents\SpotLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\CameraComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ModelComponent.cpp" />
-    <ClCompile Include="Engine\ECS\ComponentSystem.cpp" />
     <ClCompile Include="Engine\ECS\ECS.cpp" />
     <ClCompile Include="Engine\ECS\Entity.cpp" />
     <ClCompile Include="glad.c" />

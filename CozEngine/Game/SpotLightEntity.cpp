@@ -2,7 +2,6 @@
 
 #include "ECS/ECSComponents/ModelComponent.h"
 #include "ECS/ECSComponents/PointLightComponent.h"
-#include "ECS/ECSComponents/SpotLightComponent.h"
 #include "ECS/ECSComponents/TransformComponent.h"
 
 CSpotLightEntity::CSpotLightEntity()

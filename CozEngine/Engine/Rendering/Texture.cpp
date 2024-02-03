@@ -1,10 +1,11 @@
 #include "Texture.h"
 
 #include <glad/glad.h>
-#include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #include <string>
+
+#include "Misc/Logging.h"
 
 const char* LTexture::TextureDirectory = "Game/Assets/";
 
@@ -32,7 +33,7 @@ void LTexture::Load()
 	}
 	else
 	{
-		std::cerr << "Texture::Texture - Failed to load texture " << FullTexturePath << "\n";
+		Log(LLogLevel::ERROR, "LTexture::Load - Failed to load texture" + FullTexturePath);
 	}
 
 	stbi_image_free(data);

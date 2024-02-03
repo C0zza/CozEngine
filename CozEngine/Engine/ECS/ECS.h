@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <memory>
 #include <map>
 
 #include "ComponentSystem.h"

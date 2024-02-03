@@ -1,6 +1,5 @@
 #include "InputManager.h"
 
-#include <cassert>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.h"

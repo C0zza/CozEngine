@@ -60,9 +60,6 @@
     <ClCompile Include="Engine\ECS\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ECS\ComponentSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Misc\TypeIdGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

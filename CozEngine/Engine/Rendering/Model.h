@@ -1,7 +1,6 @@
 #pragma once
 
 #include <assimp/postprocess.h>
-#include <iostream>
 #include <vector>
 
 #include "Mesh.h"

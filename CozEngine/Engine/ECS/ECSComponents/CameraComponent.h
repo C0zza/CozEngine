@@ -3,7 +3,6 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-#include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
 class LECS;

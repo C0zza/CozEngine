@@ -1,12 +1,10 @@
 #pragma once
 
-#include <memory>
 #include <glm/glm.hpp>
 
 #include "Input/InputManager.h"
 #include "ECS/ECS.h"
 #include "Rendering/Renderer.h"
-#include "Rendering/Window.h"
 
 class System
 {

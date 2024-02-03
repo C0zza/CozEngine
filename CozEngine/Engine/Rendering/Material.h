@@ -1,8 +1,6 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-#include <memory>
-#include <vector>
 
 #include "ResourceManagement/ResourceHandle.h"
 // Required for to_json, from_json LTexture/LShader definitions

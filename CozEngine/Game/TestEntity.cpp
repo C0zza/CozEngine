@@ -1,7 +1,5 @@
 #include "TestEntity.h"
 
-#include <memory>
-
 #include "ECS/ECSComponents/ModelComponent.h"
 
 CTestEntity::CTestEntity()

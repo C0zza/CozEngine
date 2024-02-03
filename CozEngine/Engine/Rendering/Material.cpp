@@ -1,7 +1,6 @@
 #include "Material.h"
 
 #include <glad/glad.h>
-#include <iostream>
 
 #include "Misc/Logging.h"
 #include "Shader.h"

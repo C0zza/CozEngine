@@ -6,6 +6,7 @@
 #include "Game/PlayerEntity.h"
 #include "Game/SpotLightEntity.h"
 #include "Game/TestEntity.h"
+#include "Rendering/Window.h"
 
 #if defined(COZ_EDITOR)
 #include "imgui/imgui.h"
