@@ -1,5 +1,7 @@
 #include "Lighting.h"
 
+#include <glm/vec3.hpp>
+
 void LLighting::AssertRGBVec(const glm::vec3& Vec)
 {
 	assert(Vec.x >= 0.f && Vec.x <= 1.f);

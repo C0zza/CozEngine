@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include "Input/InputManager.h"
 #include "ECS/ECS.h"
 #include "Rendering/Renderer.h"

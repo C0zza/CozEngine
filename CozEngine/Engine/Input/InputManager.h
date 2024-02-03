@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <map>
-#include <utility>
 #include <vector>
 
 #include "Misc/Logging.h"

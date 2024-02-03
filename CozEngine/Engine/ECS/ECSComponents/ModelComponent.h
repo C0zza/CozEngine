@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 #include "Rendering/Material.h"

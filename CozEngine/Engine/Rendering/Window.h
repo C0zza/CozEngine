@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Renderer.h"
 #include "Input/InputManager.h"
 

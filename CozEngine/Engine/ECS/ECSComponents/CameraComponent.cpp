@@ -1,6 +1,7 @@
 #include "CameraComponent.h"
 
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/vec3.hpp>
 
 #include "ECS/ECS.h"
 #include "TransformComponent.h"

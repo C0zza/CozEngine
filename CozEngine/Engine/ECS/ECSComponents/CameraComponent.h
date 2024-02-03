@@ -1,7 +1,7 @@
 #pragma once
 
+#include <glm/fwd.hpp>
 #include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
 
 #include "ECS/ECSComponents/ECSComponent.h"
 
@@ -17,7 +17,7 @@ struct CCameraComponent : LECSComponent
 	static LEntityID GetActiveCameraEntityID() { return ActiveCameraEntityID; }
 
 private:
-	glm::mat4 CachedViewMatrix = glm::mat4(0.f);
+	glm::mat4 CachedViewMatrix;
 
 	static LEntityID ActiveCameraEntityID;
 };
