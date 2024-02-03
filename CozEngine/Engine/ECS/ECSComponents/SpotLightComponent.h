@@ -14,7 +14,6 @@ struct CSpotLightComponent : public LECSComponent, LDirtyFlag
 public:
 	CSpotLightComponent();
 
-	virtual void Init() override;
 	virtual void Destroy() override;
 
 	void SetAmbient(const glm::vec3& i_Ambient);
@@ -27,6 +26,9 @@ public:
 	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); }
 	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
 	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
+
+protected:
+	virtual void Init() override;
 
 private:
 	void Update(const unsigned int Index);

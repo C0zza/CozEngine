@@ -4,6 +4,7 @@
 
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Globes.h"
 
 CMovement::CMovement()
 {
@@ -13,6 +14,13 @@ CMovement::CMovement()
 
 void CMovement::Init()
 {
+	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
+	if (!InputManager)
+	{
+		Log(LLogLevel::WARNING, "CMovement::Init - Failed to init component after invalid LinputManager.");
+		return;
+	}
+
 	MoveLeftEvent.Init(this, &CMovement::MoveLeft);
 	StopMoveLeftEvent.Init(this, &CMovement::StopMoveLeft);
 	MoveRightEvent.Init(this, &CMovement::MoveRight);
@@ -26,24 +34,24 @@ void CMovement::Init()
 	MoveUpEvent.Init(this, &CMovement::MoveUp);
 	StopMoveUpEvent.Init(this, &CMovement::StopMoveUp);
 
-
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_PRESS), &MoveLeftEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_RELEASE), &StopMoveLeftEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_PRESS), &MoveRightEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_RELEASE), &StopMoveRightEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_PRESS), &MoveForwardEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_RELEASE), &StopMoveForwardEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_PRESS), &MoveBackEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_RELEASE), &StopMoveBackEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS), &MoveDownEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_LEFT_SHIFT, GLFW_RELEASE), &StopMoveDownEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_SPACE, GLFW_PRESS), &MoveUpEvent);
-	LInputManager::RegisterKeyEvent(KeyAction(GLFW_KEY_SPACE, GLFW_RELEASE), &StopMoveUpEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_PRESS), &MoveLeftEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_A, GLFW_RELEASE), &StopMoveLeftEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_PRESS), &MoveRightEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_D, GLFW_RELEASE), &StopMoveRightEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_PRESS), &MoveForwardEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_W, GLFW_RELEASE), &StopMoveForwardEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_PRESS), &MoveBackEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_S, GLFW_RELEASE), &StopMoveBackEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS), &MoveDownEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_LEFT_SHIFT, GLFW_RELEASE), &StopMoveDownEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_SPACE, GLFW_PRESS), &MoveUpEvent);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_SPACE, GLFW_RELEASE), &StopMoveUpEvent);
 
 	MouseRotateEvent.Init(this, &CMovement::Rotate);
-	LInputManager::RegisterMouseMoveEvent(&MouseRotateEvent);
+	InputManager->RegisterMouseMoveEvent(&MouseRotateEvent);
 
-	TransformComponent = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
+	assert(ECS);
+	TransformComponent = ECS->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComponent);
 }
 

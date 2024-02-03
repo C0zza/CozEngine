@@ -22,8 +22,9 @@ struct CModelComponent : LECSComponent
 class CModelComponentSystem : public LComponentSystem<CModelComponent>
 {
 public:
-	CModelComponentSystem() { IsTickable = true; }
-
 	virtual void RunComponent(CModelComponent& Component) override;
+
+protected:
+	virtual void Init() override { IsTickable = true; }
 };
 

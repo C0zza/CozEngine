@@ -4,29 +4,37 @@
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.h"
 
+#include "Globes.h"
 #include "imgui/imgui.h"
 
-std::map<const KeyAction, std::vector<KeyEvent*>> LInputManager::Events{};
-std::vector<MouseMoveEvent*> LInputManager::MouseMoveEvents{};
+std::map<void*, LInputManager*> LInputManager::InputManagers{};
 
-bool LInputManager::IsInitialized = false;
-
-double LInputManager::PreviousMouseX = 0.f;
-double LInputManager::PreviousMouseY = 0.f;
-
-void LInputManager::Init(LWindow* i_Window)
+void LInputManager::Initialize()
 {
-	assert(i_Window);
-	glfwSetKeyCallback(i_Window->m_Window, KeyCallback);
+	LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+	assert(Renderer);
+	LWindow* Window = Renderer->GetWindow();
+	assert(Window);
+	assert(Window->m_Window);
 
-	glfwGetCursorPos(i_Window->m_Window, &PreviousMouseX, &PreviousMouseY);
-	glfwSetCursorPosCallback(i_Window->m_Window, MouseMoveCallback);
-	glfwSetInputMode(i_Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (LInputManager::GetInputManagers().contains(Window->m_Window))
+	{
+		Log(LLogLevel::WARNING, "LInputMangager::Initialize - Additional LInputManager created for window. Ignoring");
+		return;
+	}
+
+	InputManagers.emplace(Window->m_Window, this);
+
+	glfwSetKeyCallback(Window->m_Window, KeyCallback);
+
+	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
+	glfwSetCursorPosCallback(Window->m_Window, MouseMoveCallback);
+	glfwSetInputMode(Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	IsInitialized = true;
 }
 
-void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 #if defined(COZ_EDITOR)
 	if (ImGui::GetIO().WantCaptureKeyboard)
@@ -50,7 +58,7 @@ void LInputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int a
 	}
   }
 
-void LInputManager::MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
+void LInputManager::ProcessMouseMove(GLFWwindow* window, double xpos, double ypos)
 {
 #if defined(COZ_EDITOR)
 	if (ImGui::GetIO().WantCaptureMouse)
@@ -69,4 +77,9 @@ void LInputManager::MouseMoveCallback(GLFWwindow* window, double xpos, double yp
 
 	PreviousMouseX = xpos;
 	PreviousMouseY = ypos;
+}
+
+bool LInputManager::HasRequiredSubsystems() const
+{
+	return CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 }

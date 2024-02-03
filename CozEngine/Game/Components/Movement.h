@@ -58,7 +58,7 @@ private:
 class CMovementSystem : public LComponentSystem<CMovement>
 {
 public:
-	CMovementSystem() { IsTickable = true; }
+	virtual void Init() override { IsTickable = true; }
 
 private:
 	virtual void RunComponent(CMovement& Component) override;

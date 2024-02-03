@@ -7,13 +7,11 @@
 #include "ECSDefinitions.h"
 #include "Misc/Logging.h"
 #include "Misc/TypeIdGenerator.h"
+#include "Subsystem.h"
 
-class LECS
+class LECS : public LSubsystem<LECS>
 {
 public:
-	LECS();
-
-	static LECS* Get() { return ECS; }
 
 	void RunComponentSystems();
 
@@ -28,7 +26,10 @@ public:
 			return;
 		}
 
-		ComponentSystems.insert({ TypeID, std::make_unique<TComponentSystem>() });
+		TComponentSystem* ComponentSystem = new TComponentSystem();
+		ComponentSystems.insert({ TypeID, std::unique_ptr<TComponentSystem>(ComponentSystem) });
+		ComponentSystems.at(TypeID)->InternalInit(this);
+		
 
 		if (ComponentSystems[TypeID]->GetIsTickable())
 		{
@@ -97,7 +98,5 @@ public:
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
 	std::vector<LComponentSystemBase*> TickableComponentSystems;
-
-	static LECS* ECS;
 };
 

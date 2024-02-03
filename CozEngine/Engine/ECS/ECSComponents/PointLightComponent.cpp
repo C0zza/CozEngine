@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "ECS/ECS.h"
+#include "Globes.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
@@ -63,7 +64,8 @@ void CPointLightComponent::Destroy()
 		{
 			PointLights[Index] = PointLights[PointLights.size() - 1];
 
-			CPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CPointLightComponent>(PointLights[Index]);
+			assert(ECS);
+			CPointLightComponent* PointLightComp = ECS->GetComponent<CPointLightComponent>(PointLights[Index]);
 			assert(PointLightComp);
 			PointLightComp->IsDirty = true;
 
@@ -100,7 +102,8 @@ void CPointLightComponent::Update(const unsigned int Index)
 {
 	assert(Index >= 0 && Index <= CPointLightComponent::PointLightCount);
 
-	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
+	assert(ECS);
+	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream PointLightElement;
@@ -132,10 +135,13 @@ void CPointLightComponent::UpdatePointLights()
 		IsCountDirty = false;
 	}
 
+	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
+	assert(ECS);
+
 	assert(PointLightCount <= MAX_NUM_POINT_LIGHT);
 	for (unsigned int i = 0; i < PointLightCount; i++)
 	{
-		CPointLightComponent* PointLightComp = LECS::Get()->GetComponent<CPointLightComponent>(PointLights[i]);
+		CPointLightComponent* PointLightComp = ECS->GetComponent<CPointLightComponent>(PointLights[i]);
 		if (PointLightComp)
 		{
 			PointLightComp->Update(i);

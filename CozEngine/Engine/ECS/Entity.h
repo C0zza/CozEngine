@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS.h"
+#include "Globes.h"
 
 class LEntity
 {
@@ -13,21 +14,24 @@ public:
 	template<typename TComponentType, typename... TInitArgs>
 	TComponentType* AddComponent(TInitArgs&... Args)
 	{
-		return LECS::Get()->AddComponent<TComponentType>(ID, Args...);
+		return GetECS()->AddComponent<TComponentType>(ID, Args...);
 	}
 
 	template<typename TComponentType>
 	void RemoveComponent()
 	{
-		LECS::Get()->RemoveComponent<TComponentType>(ID);
+		GetECS()->RemoveComponent<TComponentType>(ID);
 	}
 
 	template<typename TComponentType>
 	TComponentType* GetComponent()
 	{
-		return LECS::Get()->GetComponent<TComponentType>(ID);
+		return GetECS()->GetComponent<TComponentType>(ID);
 	}
 
 protected:
 	LEntityID ID;
+
+private:
+	LECS* GetECS() const;
 };

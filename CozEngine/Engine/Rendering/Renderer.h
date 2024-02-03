@@ -4,25 +4,32 @@
 #include <memory>
 #include <vector>
 
-class Camera;
+#include "Subsystem.h"
+
+class LECS;
 class LWindow;
 
-class Renderer
+class LRenderer : public LSubsystem<LRenderer>
 {
 public:
-	void Init();
-	void Shutdown();
-	void Tick();
+	virtual bool HasRequiredSubsystems() const override;
 
-	std::shared_ptr<LWindow>& GetWindow() { return m_Window; }
+	void Update();
+	void Swap();
 
-	// TEMP
-	void PostTick();
+	LWindow* GetWindow() { return m_Window.get(); }
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
-private:
-	std::shared_ptr<LWindow> m_Window;
+protected:
+	virtual void Initialize() override;
+	virtual void Deinitialize() override;
 
+private:
+	std::unique_ptr<LWindow> m_Window;
 	glm::mat4 ProjectionMatrix = glm::mat4(0);
+
+	LECS* ECS = nullptr;
 };
+
+
 

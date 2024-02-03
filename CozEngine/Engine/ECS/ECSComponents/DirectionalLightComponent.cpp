@@ -58,7 +58,8 @@ void CDirectionalLightComponent::SetSpecular(const glm::vec3& i_Specular)
 
 void CDirectionalLightComponent::Update()
 {
-	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
+	assert(ECS);
+	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream DirectionalLightVar;

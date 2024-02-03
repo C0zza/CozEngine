@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Misc/Logging.h"
+#include "Subsystem.h"
 
 struct GLFWwindow;
 class LWindow;
@@ -46,24 +47,31 @@ using LMouseMoveEvent = LInputEvent<T, void (T::*)(double X, double Y), double, 
 using KeyEvent = IInputEvent<>;
 using MouseMoveEvent = IInputEvent<double, double>;
 
-class LInputManager
+class LInputManager : public LSubsystem<LInputManager>
 {
 private:
-	static std::map<const KeyAction, std::vector<KeyEvent*>> Events;
-	static std::vector<MouseMoveEvent*> MouseMoveEvents;
+	std::map<const KeyAction, std::vector<KeyEvent*>> Events;
+	std::vector<MouseMoveEvent*> MouseMoveEvents;
 
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos);
+	bool IsInitialized = false;
 
-	static bool IsInitialized;
+	double PreviousMouseX = 0.f;
+	double PreviousMouseY = 0.f;
 
-	static double PreviousMouseX;
-	static double PreviousMouseY;
+	static std::map<void*, LInputManager*> InputManagers;
+
+protected:
+	virtual void Initialize() override;
 
 public:
-	static void Init(LWindow* i_Window);
+	static const std::map<void*, LInputManager*>& GetInputManagers() { return InputManagers; }
 
-	static void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event)
+	void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods);
+	void ProcessMouseMove(GLFWwindow* window, double xpos, double ypos);
+
+	virtual bool HasRequiredSubsystems() const override;
+
+	void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event)
 	{
 		assert(i_Event);
 
@@ -87,7 +95,7 @@ public:
 		}
 	}
 
-	static void UnregisterKeyEvent(KeyEvent* i_Event)
+	void UnregisterKeyEvent(KeyEvent* i_Event)
 	{
 		assert(i_Event);
 
@@ -104,7 +112,7 @@ public:
 		Log(LLogLevel::WARNING, "LInputManager::UnregisterKeyEvent - Could not find KeyEvent to unregister.");
 	}
 
-	static void RegisterMouseMoveEvent(MouseMoveEvent* i_Event)
+	void RegisterMouseMoveEvent(MouseMoveEvent* i_Event)
 	{
 		assert(i_Event);
 
@@ -120,7 +128,7 @@ public:
 		}
 	}
 
-	static void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event)
+	void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event)
 	{
 		assert(i_Event);
 
@@ -136,3 +144,19 @@ public:
 		}
 	}
 };
+
+inline void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (window && LInputManager::GetInputManagers().contains(window))
+	{
+		LInputManager::GetInputManagers().at(window)->ProcessKey(window, key, scancode, action, mods);
+	}
+}
+
+inline void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (window && LInputManager::GetInputManagers().contains(window))
+	{
+		LInputManager::GetInputManagers().at(window)->ProcessMouseMove(window, xpos, ypos);
+	}
+}

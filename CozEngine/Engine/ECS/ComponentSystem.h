@@ -11,14 +11,19 @@ class LECS;
 
 class LComponentSystemBase
 {
+	friend class LECS;
+public:
+	bool GetIsTickable() const { return IsTickable; }
+	virtual void RemoveComponent(const LEntityID EntityID) = 0;
+
 protected:
 	bool IsTickable = false;
 
-public:
-	bool GetIsTickable() const { return IsTickable; }
+	virtual void Init() = 0;
 
+private:
 	virtual void Run() = 0;
-	virtual void RemoveComponent(const LEntityID EntityID) = 0;
+	virtual void InternalInit(LECS* i_ECS) = 0;
 };
 
 template<typename TComponentType>
@@ -36,15 +41,6 @@ public:
 		}
 	}
 
-	virtual void Run() override
-	{
-		assert(IsTickable);
-		for (TComponentType& Component : Components)
-		{
-			RunComponent(Component);
-		}
-	}
-
 	template<typename... TArgs>
 	TComponentType* AddComponent(const LEntityID EntityID, TArgs&... Args)
 	{
@@ -58,7 +54,7 @@ public:
 		EntityIdToComponentIndex[EntityID] = ComponentIndex;
 		Components.emplace_back(Args...);
 		Components[ComponentIndex].EntityID = EntityID;
-		Components[ComponentIndex].Init();
+		Components[ComponentIndex].InternalInit();
 
 		return &Components[ComponentIndex];
 	}
@@ -95,8 +91,28 @@ public:
 		return &Components[EntityIdToComponentIndex[EntityID]];
 	}
 
+protected:
+	virtual void Init() override {}
+
+	LECS* ECS = nullptr;
+
 private:
 	virtual void RunComponent(TComponentType& Component) {};
+
+	virtual void Run() final
+	{
+		assert(IsTickable);
+		for (TComponentType& Component : Components)
+		{
+			RunComponent(Component);
+		}
+	}
+
+	virtual void InternalInit(LECS* i_ECS) final
+	{
+		ECS = i_ECS;
+		Init();
+	}
 
 	// TODO: reserve amount/ notify when reallocation of the vector occurs.
 	std::vector<TComponentType> Components;

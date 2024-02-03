@@ -11,6 +11,13 @@ LEntity::LEntity()
 
 LEntity::~LEntity()
 {
-	LECS::Get()->RemoveEntity(ID);
+	GetECS()->RemoveEntity(ID);
 	LTypeIdGenerator<LEntity>::UnregisterID(ID);
+}
+
+LECS* LEntity::GetECS() const
+{
+	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
+	assert(ECS);
+	return ECS;
 }

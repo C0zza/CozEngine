@@ -1,11 +1,7 @@
-#include "Engine/System.h"
+#include "Globes.h"
 
 int main()
 {
-	std::unique_ptr<System> CozEngineSystem = std::make_unique<System>();
-
-	CozEngineSystem->SetupGame();
-	CozEngineSystem->Run();
-
+	CSystem.Run();
 	return 0;
 }

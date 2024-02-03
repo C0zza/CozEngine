@@ -11,7 +11,8 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 		Component.Material->Use();
 		assert(Component.Material->GetShader());
 
-		if (CTransformComponent* EntityTransform = LECS::Get()->GetComponent<CTransformComponent>(Component.EntityID))
+		assert(ECS);
+		if (CTransformComponent* EntityTransform = ECS->GetComponent<CTransformComponent>(Component.EntityID))
 		{
 			Component.Model->Draw(*Component.Material->GetShader(), EntityTransform->GetUpdatedTransformationMatrix());
 		}

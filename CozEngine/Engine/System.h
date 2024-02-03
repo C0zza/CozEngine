@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Input/InputManager.h"
-#include "ECS/ECS.h"
-#include "Rendering/Renderer.h"
+#include "SubsystemCollection.h"
 
-class System
+class ISubsystem;
+
+class LSystem
 {
 public:
-	void Shutdown();
-	void SetupGame();
 	void Run();
 
+	const LSubsystemCollection& GetSubsystems() { return Subsystems; }
+
 private:
-	Renderer m_Renderer;
-	LInputManager InputManager;
-	LECS ECS;
+	LSubsystemCollection Subsystems;
 };
+
+
 

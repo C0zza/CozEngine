@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "ECS/ECS.h"
+#include "Globes.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
@@ -67,7 +68,8 @@ void CSpotLightComponent::Destroy()
 		{
 			SpotLightEntityIDs[Index] = SpotLightEntityIDs[SpotLightEntityIDs.size() - 1];
 
-			CSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[Index]);
+			assert(ECS);
+			CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[Index]);
 			assert(SpotLightComp);
 			SpotLightComp->IsDirty = true;
 
@@ -104,7 +106,8 @@ void CSpotLightComponent::Update(const unsigned int Index)
 {
 	assert(Index >= 0 && Index <= CSpotLightComponent::SpotLightCount);
 
-	CTransformComponent* TransformComp = LECS::Get()->GetComponent<CTransformComponent>(EntityID);
+	assert(ECS);
+	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
 	assert(TransformComp);
 
 	std::stringstream SpotLightElement;
@@ -148,10 +151,13 @@ void CSpotLightComponent::UpdateSpotLights()
 		IsCountDirty = false;
 	}
 
+	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
+	assert(ECS);
+
 	assert(SpotLightCount <= MAX_NUM_SPOT_LIGHT);
 	for (unsigned int i = 0; i < SpotLightCount; i++)
 	{
-		CSpotLightComponent* SpotLightComp = LECS::Get()->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[i]);
+		CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[i]);
 		if (SpotLightComp)
 		{
 			SpotLightComp->Update(i);

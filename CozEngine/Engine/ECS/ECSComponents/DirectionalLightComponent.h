@@ -10,12 +10,14 @@ struct CDirectionalLightComponent : public LECSComponent, public LDirtyFlag
 public:
 	CDirectionalLightComponent();
 
-	virtual void Init() override;
 	virtual void Destroy() override;
 
 	void SetAmbient(const glm::vec3& i_Ambient);
 	void SetDiffuse(const glm::vec3& i_Diffuse);
 	void SetSpecular(const glm::vec3& i_Specular);
+
+protected:
+	virtual void Init() override;
 
 private:
 	void Update();

@@ -210,6 +210,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\ECSComponent.cpp" />
+    <ClCompile Include="Engine\Globes.cpp" />
     <ClCompile Include="Engine\include\imgui\imgui.cpp" />
     <ClCompile Include="Engine\include\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\include\imgui\imgui_draw.cpp" />
@@ -245,8 +247,10 @@
     <ClCompile Include="Game\SpotLightEntity.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resource.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp" />
+    <ClCompile Include="Engine\SubsystemCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Globes.h" />
     <ClInclude Include="Engine\include\imgui\imconfig.h" />
     <ClInclude Include="Engine\include\imgui\imgui.h" />
     <ClInclude Include="Engine\include\imgui\imgui_impl_glfw.h" />
@@ -294,6 +298,8 @@
     <ClInclude Include="Engine\ResourceManagement\ResourceHandle.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceHandleHelper.h" />
     <ClInclude Include="Engine\Misc\Logging.h" />
+    <ClInclude Include="Engine\Subsystem.h" />
+    <ClInclude Include="Engine\SubsystemCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
