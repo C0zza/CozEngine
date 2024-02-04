@@ -13,13 +13,14 @@ struct CMovement : LECSComponent
 public:
 	CMovement();
 
-	virtual void Init() override;
-
 	float Speed = 0.05f;
 
 	glm::vec3 Movement = glm::vec3(0.f, 0.f, 0.f);
 
 	CTransformComponent* GetTransform() { return TransformComponent; }
+
+protected:
+	virtual void Init() override;
 
 private:
 	LKeyInputEvent<CMovement> MoveLeftEvent;

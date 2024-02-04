@@ -1,0 +1,29 @@
+#pragma once
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <cassert>
+#include <filesystem>
+#include <fstream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/common.hpp>
+#include <glm/fwd.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/vec3.hpp>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <queue>
+#include <sstream>
+#include <stb/stb_image.h>
+#include <string.h>
+#include <unordered_map>
+#include <vector>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
