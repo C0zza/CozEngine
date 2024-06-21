@@ -9,3 +9,14 @@ LSubsystemCollection::~LSubsystemCollection()
 		Subsystem.second->Deinitialize();
 	}
 }
+
+void LSubsystemCollection::ForEachSubsystem(std::function<void(LSubsystem*)>&& Func)
+{
+	for (std::pair<const LIDType, std::unique_ptr<LSubsystem>>& Pair : Subsystems)
+	{
+		if (Pair.second.get() && Pair.second->bTickable)
+		{
+			Func(Pair.second.get());
+		}
+	}
+}

@@ -16,6 +16,7 @@
 //#include "imgui/imgui_impl_opengl3.h"
 //#endif
 
+#include "FrameBuffer.h"
 #include "Globes.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -34,12 +35,27 @@
 //	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 //#endif
 
+void LRenderer::BindCustomFrameBuffer()
+{
+	if (CustomFrameBuffer)
+	{
+		CustomFrameBuffer->Bind();
+		glClearColor(.0f, .0f, .0f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+}
+
+void LRenderer::UnbindCustomFrameBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void LRenderer::Initialize()
 {
 	// Utility library for OpenGL
 	glfwInit();
 
-	m_Window = std::make_unique<LWindow>();
+	m_Window = new LWindow();
 	assert(m_Window);
 	m_Window->Init();
 
@@ -47,7 +63,7 @@ void LRenderer::Initialize()
 
 	LTexture::SetFlipVerticallyOnLoad(true);
 
-	ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
+	ECS = CSystem.GetSubsystems().GetSubsystem<LECS>(true);
 }
 
 void LRenderer::Deinitialize()
@@ -55,9 +71,18 @@ void LRenderer::Deinitialize()
 	glfwTerminate();
 }
 
+LRenderer::~LRenderer()
+{
+	if (m_Window)
+	{
+		delete m_Window;
+		m_Window = nullptr;
+	}
+}
+
 bool LRenderer::HasRequiredSubsystems() const
 {
-	return CSystem.GetSubsystems().GetSubsystem<LECS>();
+	return CSystem.GetSubsystems().GetSubsystem<LECS>(true);
 }
 
 void LRenderer::Update()
@@ -68,7 +93,6 @@ void LRenderer::Update()
 
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 	// TODO update automatically by delegate. I.e, setup delegates
 	assert(ECS);

@@ -7,26 +7,36 @@
 #include "Subsystem.h"
 
 class LECS;
+class LFrameBuffer;
 class LWindow;
 
-class LRenderer : public LSubsystem<LRenderer>
+class LRenderer : public LSubsystem
 {
 public:
+	~LRenderer();
+
 	virtual bool HasRequiredSubsystems() const override;
 
 	void Update();
 	void Swap();
 
-	LWindow* GetWindow() { return m_Window.get(); }
+	LWindow* GetWindow() { return m_Window; }
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
+
+	void BindCustomFrameBuffer();
+	void UnbindCustomFrameBuffer();
+
+	void SetCustomFrameBuffer(LFrameBuffer* FrameBuffer) { CustomFrameBuffer = FrameBuffer; }
 
 protected:
 	virtual void Initialize() override;
 	virtual void Deinitialize() override;
 
 private:
-	std::unique_ptr<LWindow> m_Window;
+	LWindow* m_Window;
 	glm::mat4 ProjectionMatrix = glm::mat4(0);
+
+	LFrameBuffer* CustomFrameBuffer = nullptr;
 
 	LECS* ECS = nullptr;
 };

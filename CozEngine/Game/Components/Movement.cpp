@@ -14,7 +14,7 @@ CMovement::CMovement()
 
 void CMovement::Init()
 {
-	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
+	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>(true);
 	if (!InputManager)
 	{
 		Log(LLogLevel::WARNING, "CMovement::Init - Failed to init component after invalid LinputManager.");

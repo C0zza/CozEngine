@@ -8,6 +8,7 @@ struct GLFWwindow;
 class LWindow
 {
 public:
+	friend class LImGuiSubsystem;
 	friend class LInputManager;
 	friend class LRenderer;
 	friend class LSystem;
@@ -17,7 +18,12 @@ public:
 
 	bool ShouldClose() const;
 
+	GLFWwindow* GetWindow() { return m_Window; }
+
 private:
 	GLFWwindow* m_Window;
+
+	int Width = 1280;
+	int Height = 720;
 };
 

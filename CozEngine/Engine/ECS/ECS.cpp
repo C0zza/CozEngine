@@ -1,11 +1,9 @@
 #include "ECS.h"
 
-#include <cassert>
-
-void LECS::RunComponentSystems()
+void LECS::Tick()
 {
 	for (LComponentSystemBase* ComponentSystem : TickableComponentSystems)
 	{
-		ComponentSystem->Run();
+		ComponentSystem->InternalRun();
 	}
 }

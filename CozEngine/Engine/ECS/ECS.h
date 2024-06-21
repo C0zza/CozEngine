@@ -9,12 +9,9 @@
 #include "Misc/TypeIdGenerator.h"
 #include "Subsystem.h"
 
-class LECS : public LSubsystem<LECS>
+class LECS : public LSubsystem
 {
 public:
-
-	void RunComponentSystems();
-
 	template<typename TComponentSystem, typename TComponentType>
 	void AddComponentSystem()
 	{
@@ -94,6 +91,10 @@ public:
 			ComponentSystem.second->RemoveComponent(EntityID);
 		}
 	}
+
+	virtual void Initialize() override { bTickable = true; }
+
+	virtual void Tick() override;
 
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;

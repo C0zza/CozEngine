@@ -22,7 +22,7 @@ protected:
 	virtual void Init() = 0;
 
 private:
-	virtual void Run() = 0;
+	virtual void InternalRun() = 0;
 	virtual void InternalInit(LECS* i_ECS) = 0;
 };
 
@@ -98,14 +98,18 @@ protected:
 
 private:
 	virtual void RunComponent(TComponentType& Component) {};
+	virtual void PreRun() {};
+	virtual void PostRun() {};
 
-	virtual void Run() final
+	virtual void InternalRun() final
 	{
 		assert(IsTickable);
+		PreRun();
 		for (TComponentType& Component : Components)
 		{
 			RunComponent(Component);
 		}
+		PostRun();
 	}
 
 	virtual void InternalInit(LECS* i_ECS) final

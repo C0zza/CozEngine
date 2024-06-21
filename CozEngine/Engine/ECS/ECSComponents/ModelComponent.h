@@ -22,6 +22,9 @@ struct CModelComponent : LECSComponent
 class CModelComponentSystem : public LComponentSystem<CModelComponent>
 {
 public:
+	virtual void PreRun() override;
+	virtual void PostRun() override;
+
 	virtual void RunComponent(CModelComponent& Component) override;
 
 protected:

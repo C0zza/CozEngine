@@ -47,7 +47,7 @@ using LMouseMoveEvent = LInputEvent<T, void (T::*)(double X, double Y), double, 
 using KeyEvent = IInputEvent<>;
 using MouseMoveEvent = IInputEvent<double, double>;
 
-class LInputManager : public LSubsystem<LInputManager>
+class LInputManager : public LSubsystem
 {
 private:
 	std::map<const KeyAction, std::vector<KeyEvent*>> Events;
@@ -69,94 +69,14 @@ public:
 	void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void ProcessMouseMove(GLFWwindow* window, double xpos, double ypos);
 
+	void OnCursorFocusChanged(GLFWwindow* window, int entered);
+	bool bMouseFocused = false;
+
 	virtual bool HasRequiredSubsystems() const override;
 
-	void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event)
-	{
-		assert(i_Event);
+	void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event);
+	void UnregisterKeyEvent(KeyEvent* i_Event);
 
-		if (Events.find(i_KeyAction) == Events.end())
-		{
-			Events.insert({ i_KeyAction, {} });
-		}
-
-		std::vector<KeyEvent*>& KeyActionEvents = Events[i_KeyAction];
-
-		std::vector<KeyEvent*>::iterator it = std::find(KeyActionEvents.begin(), KeyActionEvents.end(), i_Event);
-		if (it == KeyActionEvents.end())
-		{
-			KeyActionEvents.push_back(i_Event);
-		}
-		else
-		{
-			// TODO: Check this makes sense. I.e. would i_Event point to the same place for multiple objects of the same type (assuming the same method).
-			assert(false);
-			Log(LLogLevel::INFO, "LInputManager::RegisterKeyEvent - Attempted to register duplicate KeyEvent. Ignoring.");
-		}
-	}
-
-	void UnregisterKeyEvent(KeyEvent* i_Event)
-	{
-		assert(i_Event);
-
-		for (auto& Event : Events)
-		{
-			std::vector<KeyEvent*>::iterator it = std::find(Event.second.begin(), Event.second.end(), i_Event);
-			if (it != Event.second.end())
-			{
-				Event.second.erase(it);
-				return;
-			}
-		}
-
-		Log(LLogLevel::WARNING, "LInputManager::UnregisterKeyEvent - Could not find KeyEvent to unregister.");
-	}
-
-	void RegisterMouseMoveEvent(MouseMoveEvent* i_Event)
-	{
-		assert(i_Event);
-
-		std::vector<MouseMoveEvent*>::iterator it = std::find(MouseMoveEvents.begin(), MouseMoveEvents.end(), i_Event);
-
-		if (it == MouseMoveEvents.end())
-		{
-			MouseMoveEvents.push_back(i_Event);
-		}
-		else
-		{
-			Log(LLogLevel::INFO, "LInputManager::RegisterMouseMoveEvent - Attempted to register duplicate MouseMoveEvent. Ignoring.");
-		}
-	}
-
-	void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event)
-	{
-		assert(i_Event);
-
-		std::vector<MouseMoveEvent*>::iterator it = std::find(MouseMoveEvents.begin(), MouseMoveEvents.end(), i_Event);
-		
-		if (it != MouseMoveEvents.end())
-		{
-			MouseMoveEvents.erase(it);
-		}
-		else
-		{
-			Log(LLogLevel::WARNING, "LInputManager::UnregisterMouseMoveEvent - Could not find MouseMoveEvent to unregister.");
-		}
-	}
+	void RegisterMouseMoveEvent(MouseMoveEvent* i_Event);
+	void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event);
 };
-
-inline void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (window && LInputManager::GetInputManagers().contains(window))
-	{
-		LInputManager::GetInputManagers().at(window)->ProcessKey(window, key, scancode, action, mods);
-	}
-}
-
-inline void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (window && LInputManager::GetInputManagers().contains(window))
-	{
-		LInputManager::GetInputManagers().at(window)->ProcessMouseMove(window, xpos, ypos);
-	}
-}

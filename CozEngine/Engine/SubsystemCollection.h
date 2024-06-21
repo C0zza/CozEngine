@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <unordered_map>
 
@@ -8,7 +9,7 @@
 #include "Misc/TypeIdGenerator.h"
 #include "Subsystem.h"
 
-class ISubsystem;
+class LSubsystem;
 
 class LSubsystemCollection
 {
@@ -41,7 +42,7 @@ public:
 	}
 
 	template<typename T>
-	T* GetSubsystem() const
+	T* GetSubsystem(const bool bAddIfNotFound = false)
 	{
 		LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<T>();
 		if (Subsystems.contains(TypeID))
@@ -55,15 +56,29 @@ public:
 				Log(LLogLevel::INFO, "LSubsystemCollection::GetSubsystem<T> - Found subsystem type in collection but failed to cast.");
 			}
 		}
-		else
+		else if(bAddIfNotFound)
 		{
-			Log(LLogLevel::INFO, "LSubsystemCollection::GetSubsystem<T> - Could not find subsystem, " + std::string(typeid(T).name()) + ", in collection.");
+			T* Subsystem = new T();
+			if (!Subsystem->HasRequiredSubsystems())
+			{
+				delete Subsystem;
+				Subsystem = nullptr;
+				return nullptr;
+			}
+			else
+			{
+				Subsystems.insert({ TypeID, std::unique_ptr<T>(Subsystem) });
+				Subsystems.at(TypeID)->Initialize();
+				return Subsystem;
+			}
 		}
 
 		return nullptr;
 	}
 
+	void ForEachSubsystem(std::function<void(LSubsystem*)>&& Func);
+
 private:
-	std::unordered_map<LIDType, std::unique_ptr<ISubsystem>> Subsystems;
+	std::unordered_map<LIDType, std::unique_ptr<LSubsystem>> Subsystems;
 };
 
