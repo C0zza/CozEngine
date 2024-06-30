@@ -7,7 +7,6 @@
 
 struct CDirectionalLightComponent : public LECSComponent
 {
-public:
 	CDirectionalLightComponent();
 
 	glm::vec3 Direction;

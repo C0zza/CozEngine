@@ -8,12 +8,8 @@
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-std::vector<LEntityID> CPointLightComponent::PointLights = {};
-unsigned int CPointLightComponent::PointLightCount = 0;
-bool CPointLightComponent::IsCountDirty = true;
-
 CPointLightComponent::CPointLightComponent()
-	: Constant{ 1.f }, Linear{ 0.f }, Quadratic{ 0.f }
+	: Constant{ -1.f }, Linear{ -1.f }, Quadratic{ -1.f }
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
 	Position = ZeroVector;
@@ -22,30 +18,41 @@ CPointLightComponent::CPointLightComponent()
 	Specular = ZeroVector;
 }
 
-void CPointLightComponent::Init()
+void CPointLightComponentSystem::UpdatePointLights()
 {
-	if (PointLightCount < MAX_NUM_POINT_LIGHT)
+	if (IsCountDirty)
 	{
-		PointLightCount++;
-		IsCountDirty = true;
+		LShader::SetGlobalInt("ActivePointLights", PointLightCount);
+		IsCountDirty = false;
 	}
 
-	PointLights.push_back(EntityID);
+	assert(ECS);
+	assert(PointLightCount <= MAX_NUM_POINT_LIGHT);
 
-	if (PointLights.size() <= MAX_NUM_POINT_LIGHT)
+	for (int i = 0; i < PointLightCount; ++i)
 	{
-		std::stringstream PointLightElement;
-		PointLightElement << "PointLights[" << PointLights.size() - 1 << "].";
-		LShader::SetGlobalVec(PointLightElement.str() + "Position", Position);
+		if (CPointLightComponent* PointLightComp = ECS->GetComponent<CPointLightComponent>(PointLights[i]))
+		{
+			UpdatePointLight(PointLightComp, i);
+		}
 	}
 }
 
-void CPointLightComponent::Destroy()
+void CPointLightComponentSystem::OnComponentAdded(CPointLightComponent& Component)
 {
-	std::vector<LEntityID>::iterator it = std::find(PointLights.begin(), PointLights.end(), EntityID);
+	if (PointLightCount < MAX_NUM_POINT_LIGHT)
+	{
+		++PointLightCount;
+		IsCountDirty = true;
+	}
 
-	assert(it != PointLights.end());
+	PointLights.push_back(Component.EntityID);
+}
 
+void CPointLightComponentSystem::OnComponentRemoved(CPointLightComponent& Component)
+{
+	std::vector<LEntityID>::iterator it = std::find(PointLights.begin(), PointLights.end(), Component.EntityID);
+	
 	int Index = it - PointLights.begin();
 
 	if (Index >= MAX_NUM_POINT_LIGHT)
@@ -57,7 +64,7 @@ void CPointLightComponent::Destroy()
 		if (Index == PointLights.size() - 1)
 		{
 			PointLights.erase(PointLights.begin() + Index);
-			PointLightCount--;
+			--PointLightCount;
 			IsCountDirty = true;
 		}
 		else
@@ -67,11 +74,10 @@ void CPointLightComponent::Destroy()
 			assert(ECS);
 			CPointLightComponent* PointLightComp = ECS->GetComponent<CPointLightComponent>(PointLights[Index]);
 			assert(PointLightComp);
-			PointLightComp->IsDirty = true;
-
+			
 			if (PointLights.size() <= MAX_NUM_POINT_LIGHT)
 			{
-				PointLightCount--;
+				--PointLightCount;
 				IsCountDirty = true;
 			}
 
@@ -80,71 +86,22 @@ void CPointLightComponent::Destroy()
 	}
 }
 
-void CPointLightComponent::SetAmbient(const glm::vec3& i_Ambient)
+void CPointLightComponentSystem::UpdatePointLight(CPointLightComponent* Component, int Index)
 {
-	LLighting::AssertRGBVec(i_Ambient);
-	SetDirtyMember(Ambient, i_Ambient);
-}
-
-void CPointLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
-{
-	LLighting::AssertRGBVec(i_Diffuse);
-	SetDirtyMember(Diffuse, i_Diffuse);
-}
-
-void CPointLightComponent::SetSpecular(const glm::vec3& i_Specular)
-{
-	LLighting::AssertRGBVec(i_Specular);
-	SetDirtyMember(Specular, i_Specular);
-}
-
-void CPointLightComponent::Update(const unsigned int Index)
-{
-	assert(Index >= 0 && Index <= CPointLightComponent::PointLightCount);
-
-	assert(ECS);
-	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
-	assert(TransformComp);
+	assert(Component);
+	assert(Index >= 0 && Index <= PointLightCount);
+	
+	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(Component->EntityID);
 
 	std::stringstream PointLightElement;
-	PointLightElement << "PointLights[" << Index << "]";
+	PointLightElement << "PointLights[" << Index << "].";
 
-	if (TransformComp->GetPosition() != Position)
-	{
-		Position = TransformComp->GetPosition();
-		LShader::SetGlobalVec(PointLightElement.str() + ".Position", Position);
-	}
+	LLighting::UpdateLightComponentVec(Component->Position, TransformComp->GetPosition(), "Position", PointLightElement);
+	LLighting::UpdateLightComponentVec(PointLightCache[Index].Ambient, Component->Ambient, "Ambient", PointLightElement);
+	LLighting::UpdateLightComponentVec(PointLightCache[Index].Diffuse, Component->Diffuse, "Diffuse", PointLightElement);
+	LLighting::UpdateLightComponentVec(PointLightCache[Index].Specular, Component->Specular, "Specular", PointLightElement);
 
-	if (IsDirty)
-	{
-		LShader::SetGlobalVec(PointLightElement.str() + ".Ambient", Ambient);
-		LShader::SetGlobalVec(PointLightElement.str() + ".Diffuse", Diffuse);
-		LShader::SetGlobalVec(PointLightElement.str() + ".Specular", Specular);
-		LShader::SetGlobalFloat(PointLightElement.str() + ".Constant", Constant);
-		LShader::SetGlobalFloat(PointLightElement.str() + ".Linear", Linear);
-		LShader::SetGlobalFloat(PointLightElement.str() + ".Quadratic", Quadratic);
-		IsDirty = false;
-	}
-}
-
-void CPointLightComponent::UpdatePointLights()
-{
-	if (IsCountDirty)
-	{
-		LShader::SetGlobalInt("ActivePointLights", PointLightCount);
-		IsCountDirty = false;
-	}
-
-	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-	assert(ECS);
-
-	assert(PointLightCount <= MAX_NUM_POINT_LIGHT);
-	for (unsigned int i = 0; i < PointLightCount; i++)
-	{
-		CPointLightComponent* PointLightComp = ECS->GetComponent<CPointLightComponent>(PointLights[i]);
-		if (PointLightComp)
-		{
-			PointLightComp->Update(i);
-		}
-	}
+	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Constant, Component->Constant, "Constant", PointLightElement);
+	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Linear, Component->Linear, "Linear", PointLightElement);
+	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Quadratic, Component->Quadratic, "Quadratic", PointLightElement);
 }

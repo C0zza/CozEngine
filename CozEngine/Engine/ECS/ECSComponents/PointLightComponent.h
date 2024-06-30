@@ -3,49 +3,44 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
-#include "Misc/DirtyFlag.h"
+#include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
 // Should match number in shader.fs
 #define MAX_NUM_POINT_LIGHT 4
 
-struct CPointLightComponent : public LECSComponent, public LDirtyFlag
+struct CPointLightComponent : public LECSComponent
 {
 	CPointLightComponent();
-
-	virtual void Destroy() override;
-
-	void SetAmbient(const glm::vec3& i_Ambient);
-	void SetDiffuse(const glm::vec3& i_Diffuse);
-	void SetSpecular(const glm::vec3& i_Specular);
-
-	// See https://learnopengl.com/Lighting/Light-casters for general point light values
-	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); };
-	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
-	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
-
-protected:
-	virtual void Init() override;
-
-private:
-	void Update(const unsigned int Index);
 
 	glm::vec3 Position;
 	glm::vec3 Ambient;
 	glm::vec3 Diffuse;
 	glm::vec3 Specular;
 
+	// See https://learnopengl.com/Lighting/Light-casters for general point light values
 	float Constant;
 	float Linear;
 	float Quadratic;
+};
 
+class CPointLightComponentSystem : public LComponentSystem<CPointLightComponent>
+{
 public:
-	static void UpdatePointLights();
+	void UpdatePointLights();
+
+protected:
+	virtual void OnComponentAdded(CPointLightComponent& Component) override;
+	virtual void OnComponentRemoved(CPointLightComponent& Component) override;
 
 private:
-	static std::vector<LEntityID> PointLights;
+	void UpdatePointLight(CPointLightComponent* Component, int Index);
 
-	static unsigned int PointLightCount;
-	static bool IsCountDirty;
+	std::vector<LEntityID> PointLights{};
+
+	CPointLightComponent PointLightCache[MAX_NUM_POINT_LIGHT];
+
+	int PointLightCount = 0;
+	bool IsCountDirty = true;
 };
 

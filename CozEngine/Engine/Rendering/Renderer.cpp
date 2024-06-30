@@ -68,12 +68,20 @@ bool LRenderer::HasRequiredSubsystems() const
 
 void LRenderer::Update()
 {
-	CPointLightComponent::UpdatePointLights();
-	CSpotLightComponent::UpdateSpotLights();
+	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CPointLightComponent>();
+	if (CPointLightComponentSystem* PointLightCS = dynamic_cast<CPointLightComponentSystem*>(ComponentSystem))
+	{
+		PointLightCS->UpdatePointLights();
+	}
 
-	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CDirectionalLightComponent>();
-	CDirectionalLightComponentSystem* DirectionalLightCS = dynamic_cast<CDirectionalLightComponentSystem*>(ComponentSystem);
-	if (DirectionalLightCS)
+	ComponentSystem = ECS->GetComponentSystemFor<CSpotLightComponent>();
+	if (CSpotLightComponentSystem* SpotLightCS = dynamic_cast<CSpotLightComponentSystem*>(ComponentSystem))
+	{
+		SpotLightCS->UpdateSpotLights();
+	}
+
+	ComponentSystem = ECS->GetComponentSystemFor<CDirectionalLightComponent>();
+	if (CDirectionalLightComponentSystem* DirectionalLightCS = dynamic_cast<CDirectionalLightComponentSystem*>(ComponentSystem))
 	{
 		DirectionalLightCS->UpdateDirectionalLight();
 	}

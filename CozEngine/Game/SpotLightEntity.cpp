@@ -2,19 +2,20 @@
 
 #include "ECS/ECSComponents/ModelComponent.h"
 #include "ECS/ECSComponents/PointLightComponent.h"
+#include "ECS/ECSComponents/SpotLightComponent.h"
 #include "ECS/ECSComponents/TransformComponent.h"
 
 CSpotLightEntity::CSpotLightEntity()
 {
-	//CPointLightComponent* SpotLight = AddComponent<CPointLightComponent>();
-	//SpotLight->SetAmbient(glm::vec3(0.f, 0.2f, 0.f));
-	//SpotLight->SetDiffuse(glm::vec3(0.f, 0.5f, 0.f));
-	//SpotLight->SetSpecular(glm::vec3(0.f, 0.7f, 0.f));
-	////SpotLight->SetCutOff(glm::cos(glm::radians(12.5f)));
-	////SpotLight->SetOuterCutOff(glm::cos(glm::radians(17.5f)));
-	//SpotLight->SetConstant(1.0f);
-	//SpotLight->SetLinear(0.09f);
-	//SpotLight->SetQuadratic(0.032f);
+	CSpotLightComponent* SpotLight = AddComponent<CSpotLightComponent>();
+	SpotLight->Ambient = glm::vec3(0.f, 0.2f, 0.f);
+	SpotLight->Diffuse = glm::vec3(0.f, 0.5f, 0.f);
+	SpotLight->Specular = glm::vec3(0.f, 0.7f, 0.f);
+	SpotLight->CutOff = glm::cos(glm::radians(12.5f));
+	SpotLight->OuterCutOff = glm::cos(glm::radians(17.5f));
+	SpotLight->Constant = 1.0f;
+	SpotLight->Linear = 0.09f;
+	SpotLight->Quadratic = 0.032f;
 
 	AddComponent<CModelComponent>("Game/Content/Models/MOD_Cube.casset", "Game/Content/Materials/MAT_Cube.casset");
 

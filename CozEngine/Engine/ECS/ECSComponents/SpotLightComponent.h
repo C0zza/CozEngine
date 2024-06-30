@@ -3,35 +3,16 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
-#include "Misc/DirtyFlag.h"
+#include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
 // Should match number in shader.fs
 #define MAX_NUM_SPOT_LIGHT 4
 
-struct CSpotLightComponent : public LECSComponent, LDirtyFlag
+struct CSpotLightComponent : public LECSComponent
 {
 public:
 	CSpotLightComponent();
-
-	virtual void Destroy() override;
-
-	void SetAmbient(const glm::vec3& i_Ambient);
-	void SetDiffuse(const glm::vec3& i_Diffuse);
-	void SetSpecular(const glm::vec3& i_Specular);
-
-	void SetCutOff(const float i_CutOff) { SetDirtyMember(CutOff, i_CutOff); }
-	void SetOuterCutOff(const float i_OuterCutOff) { SetDirtyMember(OuterCutOff, i_OuterCutOff); }
-
-	void SetConstant(const float i_Constant) { SetDirtyMember(Constant, i_Constant); }
-	void SetLinear(const float i_Linear) { SetDirtyMember(Linear, i_Linear); }
-	void SetQuadratic(const float i_Quadratic) { SetDirtyMember(Quadratic, i_Quadratic); }
-
-protected:
-	virtual void Init() override;
-
-private:
-	void Update(const unsigned int Index);
 
 	glm::vec3 Position;
 	glm::vec3 Direction;
@@ -45,14 +26,26 @@ private:
 	float Constant;
 	float Linear;
 	float Quadratic;
+};
 
+class CSpotLightComponentSystem : public LComponentSystem<CSpotLightComponent>
+{
 public:
-	static void UpdateSpotLights();
+	void UpdateSpotLights();
+
+protected:
+	virtual void OnComponentAdded(CSpotLightComponent& Component) override;
+	virtual void OnComponentRemoved(CSpotLightComponent& Component) override;
 
 private:
-	static std::vector<LEntityID> SpotLightEntityIDs;
+	void UpdateSpotLight(CSpotLightComponent* Component, int Index);
 
-	static unsigned int SpotLightCount;
-	static bool IsCountDirty;
+	std::vector<LEntityID> SpotLights;
+
+	CSpotLightComponent SpotLightCache[MAX_NUM_SPOT_LIGHT];
+
+	int SpotLightCount = 0;
+	bool IsCountDirty = true;
+
 };
 

@@ -25,8 +25,8 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
 	ECS->AddComponentSystem<LComponentSystem<CTransformComponent>, CTransformComponent>();
 	ECS->AddComponentSystem<LComponentSystem<CCameraComponent>, CCameraComponent>();
-	ECS->AddComponentSystem<LComponentSystem<CSpotLightComponent>, CSpotLightComponent>();
-	ECS->AddComponentSystem<LComponentSystem<CPointLightComponent>, CPointLightComponent>();
+	ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
+	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
 	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
 	ECS->AddComponentSystem<CMovementSystem, CMovement>();
 

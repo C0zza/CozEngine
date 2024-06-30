@@ -8,142 +8,12 @@
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-std::vector<LEntityID> CSpotLightComponent::SpotLightEntityIDs{};
-unsigned int CSpotLightComponent::SpotLightCount = 0;
-bool CSpotLightComponent::IsCountDirty = true;
-
 CSpotLightComponent::CSpotLightComponent()
-	: CutOff{ 0.f }, OuterCutOff{ 0.f }, Constant{ 0.f }, Linear{ 0.f }, Quadratic{ 0.f }
+	: CutOff{ -1.f }, OuterCutOff{ -1.f }, Constant{ -1.f }, Linear{ -1.f }, Quadratic{ -1.f }
 {
 }
 
-void CSpotLightComponent::Init()
-{
-	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
-
-	Position = ZeroVector;
-	Direction = ZeroVector;
-	Ambient = ZeroVector;
-	Diffuse = ZeroVector;
-	Specular = ZeroVector;
-
-	if (SpotLightCount < MAX_NUM_SPOT_LIGHT)
-	{
-		SpotLightCount++;
-		IsCountDirty = true;
-	}
-
-	SpotLightEntityIDs.push_back(EntityID);
-
-	if (SpotLightEntityIDs.size() <= MAX_NUM_SPOT_LIGHT)
-	{
-		std::stringstream SpotLightElement;
-		SpotLightElement << "SpotLights[" << SpotLightEntityIDs.size() - 1 << "].";
-		LShader::SetGlobalVec(SpotLightElement.str() + "Position", Position);
-		LShader::SetGlobalVec(SpotLightElement.str() + "Direction", Direction);
-	}
-}
-
-void CSpotLightComponent::Destroy()
-{
-	std::vector<LEntityID>::iterator it = std::find(SpotLightEntityIDs.begin(), SpotLightEntityIDs.end(), EntityID);
-
-	assert(it != SpotLightEntityIDs.end());
-
-	int Index = it - SpotLightEntityIDs.begin();
-
-	if (Index >= MAX_NUM_SPOT_LIGHT)
-	{
-		SpotLightEntityIDs.erase(SpotLightEntityIDs.begin() + Index);
-	}
-	else
-	{
-		if (Index == SpotLightEntityIDs.size() - 1)
-		{
-			SpotLightEntityIDs.erase(SpotLightEntityIDs.begin() + Index);
-			SpotLightCount--;
-			IsCountDirty = true;
-		}
-		else
-		{
-			SpotLightEntityIDs[Index] = SpotLightEntityIDs[SpotLightEntityIDs.size() - 1];
-
-			assert(ECS);
-			CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[Index]);
-			assert(SpotLightComp);
-			SpotLightComp->IsDirty = true;
-
-			if (SpotLightEntityIDs.size() <= MAX_NUM_SPOT_LIGHT)
-			{
-				SpotLightCount--;
-				IsCountDirty = true;
-			}
-
-			SpotLightEntityIDs.pop_back();
-		}
-	}
-}
-
-void CSpotLightComponent::SetAmbient(const glm::vec3& i_Ambient)
-{
-	LLighting::AssertRGBVec(i_Ambient);
-	SetDirtyMember(Ambient, i_Ambient);
-}
-
-void CSpotLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
-{
-	LLighting::AssertRGBVec(i_Diffuse);
-	SetDirtyMember(Diffuse, i_Diffuse);
-}
-
-void CSpotLightComponent::SetSpecular(const glm::vec3& i_Specular)
-{
-	LLighting::AssertRGBVec(i_Specular);
-	SetDirtyMember(Specular, i_Specular);
-}
-
-void CSpotLightComponent::Update(const unsigned int Index)
-{
-	assert(Index >= 0 && Index <= CSpotLightComponent::SpotLightCount);
-
-	assert(ECS);
-	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
-	assert(TransformComp);
-
-	std::stringstream SpotLightElement;
-	SpotLightElement << "SpotLights[" << Index << "].";
-
-	if (TransformComp->GetPosition() != Position)
-	{
-		Position = TransformComp->GetPosition();
-		LShader::SetGlobalVec(SpotLightElement.str() + "Position", Position);
-	}
-
-	glm::vec3 TransformDirection = TransformComp->GetForward();
-	if (TransformDirection != Direction)
-	{
-		Direction = TransformDirection;
-		LShader::SetGlobalVec(SpotLightElement.str() + "Direction", Direction);
-	}
-
-	if (IsDirty)
-	{
-		LShader::SetGlobalVec(SpotLightElement.str() + "Ambient", Ambient);
-		LShader::SetGlobalVec(SpotLightElement.str() + "Diffuse", Diffuse);
-		LShader::SetGlobalVec(SpotLightElement.str() + "Specular", Specular);
-
-		LShader::SetGlobalFloat(SpotLightElement.str() + "CutOff", CutOff);
-		LShader::SetGlobalFloat(SpotLightElement.str() + "OuterCutOff", OuterCutOff);
-
-		LShader::SetGlobalFloat(SpotLightElement.str() + "Constant", Constant);
-		LShader::SetGlobalFloat(SpotLightElement.str() + "Linear", Linear);
-		LShader::SetGlobalFloat(SpotLightElement.str() + "Quadratic", Quadratic);
-
-		IsDirty = false;
-	}
-}
-
-void CSpotLightComponent::UpdateSpotLights()
+void CSpotLightComponentSystem::UpdateSpotLights()
 {
 	if (IsCountDirty)
 	{
@@ -151,16 +21,86 @@ void CSpotLightComponent::UpdateSpotLights()
 		IsCountDirty = false;
 	}
 
-	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
 	assert(ECS);
-
 	assert(SpotLightCount <= MAX_NUM_SPOT_LIGHT);
-	for (unsigned int i = 0; i < SpotLightCount; i++)
+
+	for (int i = 0; i < SpotLightCount; ++i)
 	{
-		CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLightEntityIDs[i]);
-		if (SpotLightComp)
+		if (CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLights[i]))
 		{
-			SpotLightComp->Update(i);
+			UpdateSpotLight(SpotLightComp, i);
 		}
 	}
+}
+
+void CSpotLightComponentSystem::OnComponentAdded(CSpotLightComponent& Component)
+{
+	if (SpotLightCount < MAX_NUM_SPOT_LIGHT)
+	{
+		++SpotLightCount;
+		IsCountDirty = true;
+	}
+
+	SpotLights.push_back(Component.EntityID);
+}
+
+void CSpotLightComponentSystem::OnComponentRemoved(CSpotLightComponent& Component)
+{
+	std::vector<LEntityID>::iterator it = std::find(SpotLights.begin(), SpotLights.end(), Component.EntityID);
+
+	int Index = it - SpotLights.begin();
+
+	if (Index >= MAX_NUM_SPOT_LIGHT)
+	{
+		SpotLights.erase(SpotLights.begin() + Index);
+	}
+	else
+	{
+		if (Index == SpotLights.size() - 1)
+		{
+			SpotLights.erase(SpotLights.begin() + Index);
+			--SpotLightCount;
+			IsCountDirty = true;
+		}
+		else
+		{
+			SpotLights[Index] = SpotLights[SpotLights.size() - 1];
+
+			assert(ECS);
+			CSpotLightComponent* SpotLightComp = ECS->GetComponent<CSpotLightComponent>(SpotLights[Index]);
+			assert(SpotLightComp);
+
+			if (SpotLights.size() <= MAX_NUM_SPOT_LIGHT)
+			{
+				--SpotLightCount;
+				IsCountDirty = true;
+			}
+
+			SpotLights.pop_back();
+		}
+	}
+}
+
+void CSpotLightComponentSystem::UpdateSpotLight(CSpotLightComponent* Component, int Index)
+{
+	assert(Component);
+	assert(Index >= 0 && Index <= SpotLightCount);
+
+	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(Component->EntityID);
+
+	std::stringstream SpotLightElement;
+	SpotLightElement << "SpotLights[" << Index << "].";
+
+	LLighting::UpdateLightComponentVec(Component->Position, TransformComp->GetPosition(), "Position", SpotLightElement);
+	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Direction, TransformComp->GetForward(), "Direction", SpotLightElement);
+	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Ambient, Component->Ambient, "Ambient", SpotLightElement);
+	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Diffuse, Component->Diffuse, "Diffuse", SpotLightElement);
+	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Specular, Component->Specular, "Specular", SpotLightElement);
+
+	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].CutOff, Component->CutOff, "CutOff", SpotLightElement);
+	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].OuterCutOff, Component->OuterCutOff, "OuterCutOff", SpotLightElement);
+
+	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Constant, Component->Constant, "Constant", SpotLightElement);
+	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Linear, Component->Linear, "Linear", SpotLightElement);
+	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Quadratic, Component->Quadratic, "Quadratic", SpotLightElement);
 }
