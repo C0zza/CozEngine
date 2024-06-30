@@ -11,7 +11,6 @@
 void LEditor::Initialize()
 {
 	CSystem.GetSubsystems().AddSubsystem<LImGuiSubsystem>();
-	bTickable = true;
 
 	Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 	assert(Renderer);
@@ -22,7 +21,7 @@ void LEditor::Initialize()
 	Renderer->SetCustomFrameBuffer(SceneFrameBuffer.get());
 }
 
-void LEditor::Tick()
+void LEditor::Draw()
 {
 	//ImGui::ShowDemoWindow();
 

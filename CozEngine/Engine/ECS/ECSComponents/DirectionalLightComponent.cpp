@@ -8,8 +8,6 @@
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Shader.h"
 
-CDirectionalLightComponent* CDirectionalLightComponent::ActiveDirectionalLight = nullptr;
-
 CDirectionalLightComponent::CDirectionalLightComponent()
 {
 	glm::vec3 ZeroVector = glm::vec3(0.f, 0.f, 0.f);
@@ -19,71 +17,79 @@ CDirectionalLightComponent::CDirectionalLightComponent()
 	Specular = ZeroVector;
 }
 
-void CDirectionalLightComponent::Init()
+void CDirectionalLightComponentSystem::OnComponentAdded(CDirectionalLightComponent& Component)
 {
-	assert(!ActiveDirectionalLight);
-	ActiveDirectionalLight = this;
-
-	LShader::SetGlobalBool("DirectionalLight.IsActive", true);
-	LShader::SetGlobalVec("DirectionalLight.Direction", Direction);
+	if (!ActiveDirectionalLight)
+	{
+		// TODO: Setup ECS component handles for future reference handling and serialization
+		ActiveDirectionalLight = &Component;
+		LShader::SetGlobalBool("DirectionalLight.IsActive", true);
+		LShader::SetGlobalVec("DirectionalLight.Direction", ActiveDirectionalLight->Direction);
+	}
 }
 
-void CDirectionalLightComponent::Destroy()
+void CDirectionalLightComponentSystem::OnComponentRemoved(CDirectionalLightComponent& Component)
 {
-	assert(ActiveDirectionalLight);
-	if (ActiveDirectionalLight == this)
+	if (!ActiveDirectionalLight || ActiveDirectionalLight != &Component)
 	{
-		ActiveDirectionalLight = nullptr;
+		return;
+	}
+	
+	CDirectionalLightComponent* TempActiveDirectionalLight = ActiveDirectionalLight;
+	ActiveDirectionalLight = nullptr;
+
+	LShader::SetGlobalBool("DirectionalLight.IsActive", false);
+	for (CDirectionalLightComponent& DirectionalLight : GetComponents())
+	{
+		if (&DirectionalLight != TempActiveDirectionalLight)
+		{
+			ActiveDirectionalLight = &DirectionalLight;
+		}
+	}
+
+	if (ActiveDirectionalLight)
+	{
+		LShader::SetGlobalBool("DirectionalLight.IsActive", true);
+	}
+	else
+	{
 		LShader::SetGlobalBool("DirectionalLight.IsActive", false);
 	}
 }
 
-void CDirectionalLightComponent::SetAmbient(const glm::vec3& i_Ambient)
-{
-	LLighting::AssertRGBVec(i_Ambient);
-	SetDirtyMember(Ambient, i_Ambient);
-}
-
-void CDirectionalLightComponent::SetDiffuse(const glm::vec3& i_Diffuse)
-{
-	LLighting::AssertRGBVec(i_Diffuse);
-	SetDirtyMember(Diffuse, i_Diffuse);
-}
-
-void CDirectionalLightComponent::SetSpecular(const glm::vec3& i_Specular)
-{
-	LLighting::AssertRGBVec(i_Specular);
-	SetDirtyMember(Specular, i_Specular);
-}
-
-void CDirectionalLightComponent::Update()
-{
-	assert(ECS);
-	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(EntityID);
-	assert(TransformComp);
-
-	std::stringstream DirectionalLightVar;
-	DirectionalLightVar << "DirectionalLight.";
-
-	if (TransformComp->GetForward() != Direction)
-	{
-		Direction = TransformComp->GetForward();
-		LShader::SetGlobalVec(DirectionalLightVar.str() + "Direction", Direction);
-	}
-
-	if (IsDirty)
-	{
-		LShader::SetGlobalVec(DirectionalLightVar.str() + "Ambient", Ambient);
-		LShader::SetGlobalVec(DirectionalLightVar.str() + "Diffuse", Diffuse);
-		LShader::SetGlobalVec(DirectionalLightVar.str() + "Specular", Specular);
-		IsDirty = false;
-	}
-}
-
-void CDirectionalLightComponent::UpdateDirectionalLight()
+void CDirectionalLightComponentSystem::UpdateDirectionalLight()
 {
 	if (ActiveDirectionalLight)
 	{
-		ActiveDirectionalLight->Update();
+		assert(ECS);
+		const CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(ActiveDirectionalLight->EntityID);
+		assert(TransformComp);
+
+		std::stringstream DirectionalLightVar;
+		DirectionalLightVar << "DirectionalLight.";
+
+		if (TransformComp->GetForward() != ActiveDirectionalLight->Direction)
+		{
+			ActiveDirectionalLight->Direction = TransformComp->GetForward();
+			LShader::SetGlobalVec(DirectionalLightVar.str() + "Direction", ActiveDirectionalLight->Direction);
+		}
+
+		if (ActiveDirectionalLight->Ambient != CurrentAmbient)
+		{
+			LShader::SetGlobalVec(DirectionalLightVar.str() + "Ambient", ActiveDirectionalLight->Ambient);
+			CurrentAmbient = ActiveDirectionalLight->Ambient;
+		}
+
+		if (ActiveDirectionalLight->Diffuse != CurrentDiffuse)
+		{
+			LShader::SetGlobalVec(DirectionalLightVar.str() + "Diffuse", ActiveDirectionalLight->Diffuse);
+			CurrentDiffuse = ActiveDirectionalLight->Diffuse;
+		}
+
+		if (ActiveDirectionalLight->Specular != CurrentSpecular)
+		{
+			LShader::SetGlobalVec(DirectionalLightVar.str() + "Specular", ActiveDirectionalLight->Specular);
+			CurrentSpecular = ActiveDirectionalLight->Specular;
+		}
 	}
 }

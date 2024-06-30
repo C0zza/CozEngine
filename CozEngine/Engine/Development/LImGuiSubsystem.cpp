@@ -13,14 +13,14 @@ bool LImGuiSubsystem::HasRequiredSubsystems() const
 	return CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 }
 
-void LImGuiSubsystem::PreTick()
+void LImGuiSubsystem::NewFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
-void LImGuiSubsystem::PostTick()
+void LImGuiSubsystem::Render()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -29,9 +29,9 @@ void LImGuiSubsystem::PostTick()
 void LImGuiSubsystem::Initialize()
 {
 	LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+	// Imgui init must be after our glfw input callbacks have been setup otherwise imgui is overriden.
 	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>(true);
 
-	// Imgui init must be after our glfw input callbacks have been setup otherwise imgui is overriden.
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -40,8 +40,6 @@ void LImGuiSubsystem::Initialize()
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	bTickable = true;
 }
 
 void LImGuiSubsystem::Deinitialize()

@@ -3,16 +3,18 @@
 #include <utility>
 
 #include "ECS/ECS.h"
-#include "ECS/ECSComponents/ECSComponentHeaders.h"
+#include "Rendering/Renderer.h"
+
+#if defined(COZ_EDITOR)
 #include "Editor/LEditor.h"
+#endif
+
+#include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/Movement.h"
 #include "Game/DirectionalLightEntity.h"
 #include "Game/PlayerEntity.h"
 #include "Game/SpotLightEntity.h"
 #include "Game/TestEntity.h"
-#include "Input/InputManager.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Window.h"
 
 void LSystem::Run()
 {
@@ -25,7 +27,7 @@ void LSystem::Run()
 	ECS->AddComponentSystem<LComponentSystem<CCameraComponent>, CCameraComponent>();
 	ECS->AddComponentSystem<LComponentSystem<CSpotLightComponent>, CSpotLightComponent>();
 	ECS->AddComponentSystem<LComponentSystem<CPointLightComponent>, CPointLightComponent>();
-	ECS->AddComponentSystem<LComponentSystem<CDirectionalLightComponent>, CDirectionalLightComponent>();
+	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
 	ECS->AddComponentSystem<CMovementSystem, CMovement>();
 
 	// TODO: No system cleaning entities up on shutdown
@@ -38,26 +40,16 @@ void LSystem::Run()
 	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();
 #endif
 
-	assert(Renderer->GetWindow());
-	while (!Renderer->GetWindow()->ShouldClose())
+	assert(Renderer);
+	bool bShouldWindowClose = true;
+	Renderer->GetShouldWindowClose(bShouldWindowClose);
+
+	while (!bShouldWindowClose)
 	{
-		Subsystems.ForEachSubsystem([](LSubsystem* Subsystem)
-			{
-				Subsystem->PreTick();
-			});
-
 		Renderer->Update();
-
-		Subsystems.ForEachSubsystem([](LSubsystem* Subsystem)
-			{
-				Subsystem->Tick();
-			});
-
-		Subsystems.ForEachSubsystem([](LSubsystem* Subsystem)
-			{
-				Subsystem->PostTick();
-			});
-
+		ECS->Update();
 		Renderer->Swap();
+
+		Renderer->GetShouldWindowClose(bShouldWindowClose);
 	}
 }

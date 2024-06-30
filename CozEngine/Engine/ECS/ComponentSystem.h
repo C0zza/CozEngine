@@ -56,6 +56,8 @@ public:
 		Components[ComponentIndex].EntityID = EntityID;
 		Components[ComponentIndex].InternalInit();
 
+		OnComponentAdded(Components[ComponentIndex]);
+
 		return &Components[ComponentIndex];
 	}
 
@@ -93,6 +95,13 @@ public:
 
 protected:
 	virtual void Init() override {}
+	virtual void OnComponentAdded(TComponentType& Component) {};
+	virtual void OnComponentRemoved(TComponentType& Component) {};
+
+	std::vector<TComponentType>& GetComponents()
+	{
+		return Components;
+	}
 
 	LECS* ECS = nullptr;
 

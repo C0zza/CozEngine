@@ -10,30 +10,11 @@
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
 
-//#if defined(COZ_EDITOR)
-//#include "imgui/imgui.h"
-//#include "imgui/imgui_impl_glfw.h"
-//#include "imgui/imgui_impl_opengl3.h"
-//#endif
-
 #include "FrameBuffer.h"
 #include "Globes.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
-
-//#if defined(COZ_EDITOR)
-//	ImGui_ImplOpenGL3_NewFrame();
-//	ImGui_ImplGlfw_NewFrame();
-//	ImGui::NewFrame();
-//
-//	ImGui::Begin("My name is window, ImGui window");
-//	ImGui::Text("Hello there!");
-//	ImGui::End();
-//
-//	ImGui::Render();
-//	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-//#endif
 
 void LRenderer::BindCustomFrameBuffer()
 {
@@ -89,7 +70,13 @@ void LRenderer::Update()
 {
 	CPointLightComponent::UpdatePointLights();
 	CSpotLightComponent::UpdateSpotLights();
-	CDirectionalLightComponent::UpdateDirectionalLight();
+
+	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CDirectionalLightComponent>();
+	CDirectionalLightComponentSystem* DirectionalLightCS = dynamic_cast<CDirectionalLightComponentSystem*>(ComponentSystem);
+	if (DirectionalLightCS)
+	{
+		DirectionalLightCS->UpdateDirectionalLight();
+	}
 
 	glClearColor(.0f, .0f, .0f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -108,4 +95,10 @@ void LRenderer::Swap()
 	assert(m_Window->m_Window);
 	glfwSwapBuffers(m_Window->m_Window);
 	glfwPollEvents();
+}
+
+void LRenderer::GetShouldWindowClose(bool& bClose)
+{
+	assert(m_Window);
+	bClose = m_Window->ShouldClose();
 }

@@ -7,7 +7,7 @@
 
 class LECS;
 
-struct CCameraComponent : LECSComponent
+struct CCameraComponent : public LECSComponent
 {
 	const glm::mat4& GetViewMatrix();
 	const glm::vec3& GetViewPos();

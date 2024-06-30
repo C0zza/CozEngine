@@ -12,7 +12,7 @@ class LEditor : public LSubsystem
 public:
 	virtual void Initialize() override;
 
-	virtual void Tick() override;
+	void Draw();
 
 	LFrameBuffer* GetSceneFrameBuffer() { return SceneFrameBuffer.get(); }
 

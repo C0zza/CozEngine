@@ -14,7 +14,7 @@ void LSubsystemCollection::ForEachSubsystem(std::function<void(LSubsystem*)>&& F
 {
 	for (std::pair<const LIDType, std::unique_ptr<LSubsystem>>& Pair : Subsystems)
 	{
-		if (Pair.second.get() && Pair.second->bTickable)
+		if (Pair.second.get())
 		{
 			Func(Pair.second.get());
 		}

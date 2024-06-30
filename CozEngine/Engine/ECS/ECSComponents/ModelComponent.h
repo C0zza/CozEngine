@@ -7,7 +7,7 @@
 #include "ResourceManagement/ResourceManager.h"
 
 // TODO: rename to something decent once we can get rid of the existing CModelComponent
-struct CModelComponent : LECSComponent
+struct CModelComponent : public LECSComponent
 {
 	LResourceHandle<LModel> Model;
 	LResourceHandle<LMaterial> Material;

@@ -7,8 +7,8 @@ class LImGuiSubsystem : public LSubsystem
 public:
 	virtual bool HasRequiredSubsystems() const override;
 
-	virtual void PreTick() override;
-	virtual void PostTick() override;
+	void NewFrame();
+	void Render();
 
 protected:
 	virtual void Initialize() override;

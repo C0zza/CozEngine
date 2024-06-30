@@ -8,7 +8,7 @@
 
 struct CTransformComponent;
 
-struct CMovement : LECSComponent
+struct CMovement : public LECSComponent
 {
 public:
 	CMovement();

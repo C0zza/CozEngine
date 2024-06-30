@@ -36,6 +36,19 @@ public:
 
 	// TODO: RemoveComponentSystem.
 
+	template<typename TComponentType>
+	LComponentSystemBase* GetComponentSystemFor()
+	{
+		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		if (!ComponentSystems.contains(TypeID))
+		{
+			Log(LLogLevel::INFO, "LECS::GetComponentSystemFor - Unable to get " + std::string(typeid(TComponentType).name()) + "'s component systems as there's none currently registered.");
+			return nullptr;
+		}
+
+		return ComponentSystems[TypeID].get();
+	}
+
 	template<typename TComponentType, typename... TArgs>
 	TComponentType* AddComponent(const LEntityID EntityID, TArgs&... Args)
 	{
@@ -92,9 +105,7 @@ public:
 		}
 	}
 
-	virtual void Initialize() override { bTickable = true; }
-
-	virtual void Tick() override;
+	void Update();
 
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;

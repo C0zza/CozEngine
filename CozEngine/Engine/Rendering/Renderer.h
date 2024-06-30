@@ -21,6 +21,8 @@ public:
 	void Swap();
 
 	LWindow* GetWindow() { return m_Window; }
+	void GetShouldWindowClose(bool& bClose);
+
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
 	void BindCustomFrameBuffer();

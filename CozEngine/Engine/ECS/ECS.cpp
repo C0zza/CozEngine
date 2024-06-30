@@ -1,6 +1,6 @@
 #include "ECS.h"
 
-void LECS::Tick()
+void LECS::Update()
 {
 	for (LComponentSystemBase* ComponentSystem : TickableComponentSystems)
 	{
