@@ -24,7 +24,7 @@ void LSystem::Run()
 	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
 	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
 	ECS->AddComponentSystem<LComponentSystem<CTransformComponent>, CTransformComponent>();
-	ECS->AddComponentSystem<LComponentSystem<CCameraComponent>, CCameraComponent>();
+	ECS->AddComponentSystem<CCameraComponentSystem, CCameraComponent>();
 	ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
 	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
 	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();

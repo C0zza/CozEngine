@@ -5,29 +5,25 @@
 
 #include "ECS/ECS.h"
 #include "Globes.h"
+#include "Misc/Logging.h"
 #include "TransformComponent.h"
 
-LEntityID CCameraComponent::ActiveCameraEntityID = 0;
-
-const glm::mat4& CCameraComponent::GetViewMatrix()
+const glm::mat4& CCameraComponentSystem::GetViewMatrix()
 {
-    assert(ECS);
-    CTransformComponent* EntityTransform = ECS->GetComponent<CTransformComponent>(EntityID);
-    assert(EntityTransform);
+    CCameraComponent* CameraComponent = ECS->GetComponent<CCameraComponent>(ActiveCameraEntityID);
+    CTransformComponent* CameraTransform = ECS->GetComponent<CTransformComponent>(ActiveCameraEntityID);
+    assert(CameraComponent && CameraTransform);
 
-    if(EntityTransform)
-    {
-        EntityTransform->UpdateTransformationMatrix();
-        CachedViewMatrix = glm::lookAt(EntityTransform->GetPosition(), EntityTransform->GetPosition() + EntityTransform->GetForward(), glm::vec3(0.f, 1.f, 0.f));
-    }
+    CameraTransform->UpdateTransformationMatrix();
+    CameraComponent->CachedViewMatrix = glm::lookAt(CameraTransform->GetPosition(), CameraTransform->GetPosition() + CameraTransform->GetForward(), glm::vec3(0.f, 1.f, 0.f));
 
-    return CachedViewMatrix;
+    return CameraComponent->CachedViewMatrix;
 }
 
-const glm::vec3& CCameraComponent::GetViewPos()
+const glm::vec3& CCameraComponentSystem::GetViewPos()
 {
     assert(ECS);
-    CTransformComponent* EntityTransform = ECS->GetComponent<CTransformComponent>(EntityID);
-    assert(EntityTransform);
-    return EntityTransform->GetPosition();
+    CTransformComponent* CameraTransform = ECS->GetComponent<CTransformComponent>(ActiveCameraEntityID);
+    assert(CameraTransform);
+    return CameraTransform->GetPosition();
 }

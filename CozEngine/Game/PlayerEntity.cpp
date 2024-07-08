@@ -9,10 +9,27 @@
 
 CPlayerEntity::CPlayerEntity()
 {
-	AddComponent<CCameraComponent>();
-	if (CCameraComponent* CameraComponent = GetComponent<CCameraComponent>())
+	CCameraComponent* CameraComponent = AddComponent<CCameraComponent>();
+	if (CameraComponent)
 	{
-		CameraComponent->ActivateCamera();
+		CCameraComponentSystem* CameraComponentSys = nullptr;
+		if (LECS* ECS = GetECS())
+		{
+			CameraComponentSys = dynamic_cast<CCameraComponentSystem*>(ECS->GetComponentSystemFor<CCameraComponent>());
+		}
+
+		if (CameraComponentSys)
+		{
+			CameraComponentSys->ActivateCamera(*CameraComponent);
+		}
+		else
+		{
+			Log(LLogLevel::WARNING, "CPlayerEntity::CPlayerEntity - Failed to activate camera");
+		}
+	}
+	else
+	{
+		Log(LLogLevel::WARNING, "CPlayerEntity::CPlayerEntity - Failed to add camera component");
 	}
 
 	if (CTransformComponent* TransformComponent = GetComponent<CTransformComponent>())

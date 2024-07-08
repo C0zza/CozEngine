@@ -5,6 +5,7 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
+#include "Rendering/Lighting/Lighting.h"
 
 // Should match number in shader.fs
 #define MAX_NUM_POINT_LIGHT 4

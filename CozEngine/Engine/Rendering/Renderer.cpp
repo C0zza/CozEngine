@@ -68,6 +68,8 @@ bool LRenderer::HasRequiredSubsystems() const
 
 void LRenderer::Update()
 {
+	assert(ECS);
+
 	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CPointLightComponent>();
 	if (CPointLightComponentSystem* PointLightCS = dynamic_cast<CPointLightComponentSystem*>(ComponentSystem))
 	{
@@ -90,12 +92,19 @@ void LRenderer::Update()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// TODO update automatically by delegate. I.e, setup delegates
-	assert(ECS);
-	CCameraComponent* ActiveCamera = ECS->GetComponent<CCameraComponent>(CCameraComponent::GetActiveCameraEntityID());
-
-	LShader::SetGlobalVec("ViewPos", ActiveCamera->GetViewPos());
-	LShader::SetGlobalMat4("View", ActiveCamera->GetViewMatrix());
-	LShader::SetGlobalMat4("Projection", GetProjectionMatrix());
+	ComponentSystem = ECS->GetComponentSystemFor<CCameraComponent>();
+	CCameraComponentSystem* CameraCS = dynamic_cast<CCameraComponentSystem*>(ComponentSystem);
+	
+	if (CameraCS)
+	{
+		LShader::SetGlobalVec("ViewPos", CameraCS->GetViewPos());
+		LShader::SetGlobalMat4("View", CameraCS->GetViewMatrix());
+		LShader::SetGlobalMat4("Projection", GetProjectionMatrix());
+	}
+	else
+	{
+		Log(LLogLevel::WARNING, "Failed to update view shader data");
+	}
 }
 
 void LRenderer::Swap()

@@ -32,6 +32,5 @@ public:
 protected:
 	LEntityID ID;
 
-private:
 	LECS* GetECS() const;
 };
