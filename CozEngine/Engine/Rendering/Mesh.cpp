@@ -67,6 +67,14 @@ LMesh::LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned i
 	 SetupMesh();
 }
 
+LMesh::LMesh(std::vector<Vertex>&& i_Vertices, std::vector<unsigned int>&& i_Indices)
+{
+	Vertices = std::move(i_Vertices);
+	Indices = std::move(i_Indices);
+
+	SetupMesh();
+}
+
 void LMesh::Draw(const LShader& Shader, const glm::mat4& Transform) const
 {
 	Shader.SetMat4("Model", Transform);

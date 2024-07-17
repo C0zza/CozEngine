@@ -40,7 +40,7 @@ void LRenderer::Initialize()
 	assert(m_Window);
 	m_Window->Init();
 
-	ProjectionMatrix = glm::perspective(glm::radians(60.0f), 1280.f / 720.f, 0.1f, 100.f);
+	ProjectionMatrix = glm::perspective(glm::radians(60.0f), 1280.f / 720.f, 0.1f, 500.f);
 
 	LTexture::SetFlipVerticallyOnLoad(true);
 

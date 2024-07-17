@@ -15,6 +15,7 @@
 #include "Game/PlayerEntity.h"
 #include "Game/SpotLightEntity.h"
 #include "Game/TestEntity.h"
+#include "Game/LandscapeEntity.h"
 
 void LSystem::Run()
 {
@@ -29,8 +30,10 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
 	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
 	ECS->AddComponentSystem<CMovementSystem, CMovement>();
+	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
 
 	// TODO: No system cleaning entities up on shutdown
+	LEntity* LandscapeEntity = new CLandscapeEntity();
 	LEntity* TestEntity = new CTestEntity();
 	LEntity* CameraEntity = new CPlayerEntity();
 	LEntity* SpotLightEntity = new CSpotLightEntity();

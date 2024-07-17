@@ -18,7 +18,10 @@ public:
 
 	void Use(const unsigned int TextureUnit) const;
 
+	unsigned int GetTextureID() const { return TextureID; }
 	ETextureType GetTextureType() const { return TextureType; }
+	int GetWidth() const { return Width; }
+	int GetHeight() const { return Height; }
 
 	static void SetFlipVerticallyOnLoad(const bool Flip);
 

@@ -33,9 +33,6 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -139,6 +136,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Rendering\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECSComponents\LandscapeComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\LandscapeEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -305,6 +311,12 @@
     <ClInclude Include="Engine\Rendering\FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ECS\ECSComponents\LandscapeComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\LandscapeEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
@@ -314,5 +326,25 @@
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
+    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
+    <None Include="Game\Content\Textures\TestHeightMap.casset" />
+    <None Include="Game\Content\Textures\Ground.casset" />
+    <None Include="Game\Content\Textures\Wall.casset" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Game\Assets\TestHeightMap.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Game\Assets\grass.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Game\Assets\ground.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Game\Assets\grass03.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

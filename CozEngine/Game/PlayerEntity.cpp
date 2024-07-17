@@ -37,5 +37,6 @@ CPlayerEntity::CPlayerEntity()
 		TransformComponent->Move(glm::vec3(0.f, 0.f, 10.0f));
 	}
 
-	AddComponent<CMovement>();
+	CMovement* Movement = AddComponent<CMovement>();
+	Movement->Speed = 0.5f;
 }

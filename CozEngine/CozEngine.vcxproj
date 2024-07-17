@@ -233,6 +233,7 @@
     <ClCompile Include="Engine\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Game\DirectionalLightEntity.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\PointLightComponent.cpp" />
@@ -253,12 +254,13 @@
     <ClCompile Include="Engine\Rendering\Lighting\Lighting.cpp" />
     <ClCompile Include="Engine\Development\LImGuiSubsystem.cpp" />
     <ClCompile Include="Engine\Editor\LEditor.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\LandscapeComponent.cpp" />
+    <ClCompile Include="Game\LandscapeEntity.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Engine\System.cpp" />
-    <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\Rendering\Window.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
     <ClCompile Include="Engine\Rendering\Material.cpp" />
@@ -331,6 +333,8 @@
     <ClInclude Include="Engine\SubsystemCollection.h" />
     <ClInclude Include="Engine\Development\LImGuiSubsystem.h" />
     <ClInclude Include="Engine\Editor\LEditor.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\LandscapeComponent.h" />
+    <ClInclude Include="Game\LandscapeEntity.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +342,21 @@
     <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
+    <None Include="Game\Content\Textures\Ground.casset" />
+    <None Include="Game\Content\Textures\TestHeightMap.casset" />
+    <None Include="Game\Content\Textures\Wall.casset" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Game\Assets\grass.jpg" />
+    <Image Include="Game\Assets\grass03.png" />
+    <Image Include="Game\Assets\ground.jpg" />
+    <Image Include="Game\Assets\TestHeightMap.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
