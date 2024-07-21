@@ -39,6 +39,11 @@ void LTexture::Load()
 	stbi_image_free(data);
 }
 
+void LTexture::Unload()
+{
+	glDeleteTextures(1, &TextureID);
+}
+
 void LTexture::Use(const unsigned int TextureUnit) const
 {
 	glActiveTexture(GL_TEXTURE0 + TextureUnit);

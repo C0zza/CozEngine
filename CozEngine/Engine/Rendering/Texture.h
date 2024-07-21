@@ -14,7 +14,7 @@ class LTexture : public LResource
 {
 public:
 	virtual void Load() override;
-	virtual void Unload() override {};
+	virtual void Unload() override;
 
 	void Use(const unsigned int TextureUnit) const;
 

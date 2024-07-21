@@ -108,6 +108,8 @@ void LShader::Unload()
 	{
 		Shaders.erase(Shaders.begin() + Index);
 	}
+
+	glDeleteProgram(ID);
 }
 
 void LShader::Use()
