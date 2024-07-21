@@ -1,5 +1,5 @@
 {
-  "TextureFile": "ground.jpg",
+  "TextureFiles": [ "ground.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false
 }

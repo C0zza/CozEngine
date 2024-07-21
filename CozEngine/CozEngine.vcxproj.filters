@@ -147,6 +147,12 @@
     <ClCompile Include="Game\LandscapeEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\CubeMapTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\CubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -317,6 +323,12 @@
     <ClInclude Include="Game\LandscapeEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Rendering\CubeMapTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\CubeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
@@ -332,15 +344,13 @@
     <None Include="Game\Content\Textures\TestHeightMap.casset" />
     <None Include="Game\Content\Textures\Ground.casset" />
     <None Include="Game\Content\Textures\Wall.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
+    <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
+    <None Include="Game\Content\Skybox.casset" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Game\Assets\grass.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Game\Assets\ground.jpg">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Game\Assets\grass03.png">

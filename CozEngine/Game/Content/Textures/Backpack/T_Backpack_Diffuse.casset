@@ -1,5 +1,5 @@
 {
-  "TextureFile": "backpack/diffuse.jpg",
+  "TextureFiles": [ "backpack/diffuse.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false
 }

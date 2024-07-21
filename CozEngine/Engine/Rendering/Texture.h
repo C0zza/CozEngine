@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "ResourceManagement/ResourceHandleHelper.h"
 
@@ -25,18 +26,21 @@ public:
 
 	static void SetFlipVerticallyOnLoad(const bool Flip);
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LTexture, TextureType, TextureFile, bHasAlpha)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LTexture, TextureType, TextureFiles, bHasAlpha)
+
+protected:
+	virtual void SetupTexture();
+
+	std::vector<std::string> TextureFiles;
+	ETextureType TextureType;
+	bool bHasAlpha;
+
+	static const char* TextureDirectory;
 
 private:
 	unsigned int TextureID;
 	int Width;
 	int Height;
-
-	ETextureType TextureType;
-	std::string TextureFile;
-	bool bHasAlpha;
-
-	static const char* TextureDirectory;
 };
 
 inline void to_json(nlohmann::json& J, const LResourceHandle<LTexture>& ResourceHandle)

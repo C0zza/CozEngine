@@ -1,5 +1,5 @@
 {
-  "TextureFile": "TestHeightMap.jpg",
+  "TextureFiles": [ "TestHeightMap.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false
 }

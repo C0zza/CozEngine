@@ -1,0 +1,4 @@
+{
+  "FragmentShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.fs",
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.vs"
+}

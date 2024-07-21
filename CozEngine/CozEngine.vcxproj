@@ -219,6 +219,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Rendering\CubeMap.cpp" />
+    <ClCompile Include="Engine\Rendering\CubeMapTexture.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\ECSComponent.cpp" />
     <ClCompile Include="Engine\Globes.cpp" />
     <ClCompile Include="Engine\include\imgui\imgui.cpp" />
@@ -280,6 +282,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Rendering\CubeMap.h" />
+    <ClInclude Include="Engine\Rendering\CubeMapTexture.h" />
     <ClInclude Include="Engine\Globes.h" />
     <ClInclude Include="Engine\include\imgui\imconfig.h" />
     <ClInclude Include="Engine\include\imgui\imgui.h" />
@@ -342,20 +346,22 @@
     <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
+    <None Include="Game\Content\Skybox.casset" />
     <None Include="Game\Content\Textures\Ground.casset" />
     <None Include="Game\Content\Textures\TestHeightMap.casset" />
     <None Include="Game\Content\Textures\Wall.casset" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Game\Assets\grass.jpg" />
     <Image Include="Game\Assets\grass03.png" />
-    <Image Include="Game\Assets\ground.jpg" />
     <Image Include="Game\Assets\TestHeightMap.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

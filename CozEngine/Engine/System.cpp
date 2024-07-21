@@ -9,6 +9,8 @@
 #include "Editor/LEditor.h"
 #endif
 
+#include "Rendering/CubeMap.h"
+
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/Movement.h"
 #include "Game/DirectionalLightEntity.h"
@@ -32,6 +34,8 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CMovementSystem, CMovement>();
 	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
 
+	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset");
+
 	// TODO: No system cleaning entities up on shutdown
 	LEntity* LandscapeEntity = new CLandscapeEntity();
 	LEntity* TestEntity = new CTestEntity();
@@ -50,7 +54,11 @@ void LSystem::Run()
 	while (!bShouldWindowClose)
 	{
 		Renderer->Update();
+
+		TestCubeMap->Draw();
+
 		ECS->Update();
+
 		Renderer->Swap();
 
 		Renderer->GetShouldWindowClose(bShouldWindowClose);

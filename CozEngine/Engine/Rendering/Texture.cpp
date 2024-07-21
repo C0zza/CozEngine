@@ -12,31 +12,8 @@ const char* LTexture::TextureDirectory = "Game/Assets/";
 void LTexture::Load()
 {
 	glGenTextures(1, &TextureID);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int nrChannels;
-	std::string FullTexturePath = TextureDirectory;
-	FullTexturePath += TextureFile;
-
-	unsigned char* data = stbi_load(FullTexturePath.c_str(), &Width, &Height, &nrChannels, 0);
-
-	if (data)
-	{
-		int Format = bHasAlpha ? GL_RGBA : GL_RGB;
-		glTexImage2D(GL_TEXTURE_2D, 0, Format, Width, Height, 0, Format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		Log(LLogLevel::ERROR, "LTexture::Load - Failed to load texture" + FullTexturePath);
-	}
-
-	stbi_image_free(data);
+	SetupTexture();
 }
 
 void LTexture::Unload()
@@ -53,4 +30,43 @@ void LTexture::Use(const unsigned int TextureUnit) const
 void LTexture::SetFlipVerticallyOnLoad(const bool Flip)
 {
 	stbi_set_flip_vertically_on_load(Flip);
+}
+
+void LTexture::SetupTexture()
+{
+	glBindTexture(GL_TEXTURE_2D, TextureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (TextureFiles.empty())
+	{
+		return;
+	}
+
+	if (TextureFiles.size() > 1)
+	{
+		Log(LLogLevel::WARNING, "LTexture::SetupTexture - More than 1 texture file defined for default texture. Using first.");
+	}
+
+	int nrChannels;
+	std::string FullTexturePath = TextureDirectory;
+	FullTexturePath += TextureFiles[0];
+
+	unsigned char* data = stbi_load(FullTexturePath.c_str(), &Width, &Height, &nrChannels, 0);
+
+	if (data)
+	{
+		int Format = bHasAlpha ? GL_RGBA : GL_RGB;
+		glTexImage2D(GL_TEXTURE_2D, 0, Format, Width, Height, 0, Format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		Log(LLogLevel::ERROR, "LTexture::SetupTexture - Failed to load texture" + FullTexturePath);
+	}
+
+	stbi_image_free(data);
 }

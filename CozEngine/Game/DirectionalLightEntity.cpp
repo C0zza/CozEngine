@@ -6,8 +6,8 @@
 CDirectionalLightEntity::CDirectionalLightEntity()
 {
 	CDirectionalLightComponent* DirectionalLight = AddComponent<CDirectionalLightComponent>();
-	DirectionalLight->Ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-	DirectionalLight->Diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+	DirectionalLight->Ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+	DirectionalLight->Diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	DirectionalLight->Specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	CTransformComponent* TransformComp = GetComponent<CTransformComponent>();
