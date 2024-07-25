@@ -356,11 +356,16 @@
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
     <None Include="Game\Content\Skybox.casset" />
+    <None Include="Game\Content\Textures\Backpack\T_Backpack_Normal.casset" />
+    <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Diffuse.casset" />
+    <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Normal.casset" />
     <None Include="Game\Content\Textures\Ground.casset" />
     <None Include="Game\Content\Textures\TestHeightMap.casset" />
     <None Include="Game\Content\Textures\Wall.casset" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Game\Assets\brickwall\diffuse.jpg" />
+    <Image Include="Game\Assets\brickwall\normal.jpg" />
     <Image Include="Game\Assets\grass03.png" />
     <Image Include="Game\Assets\TestHeightMap.png" />
   </ItemGroup>

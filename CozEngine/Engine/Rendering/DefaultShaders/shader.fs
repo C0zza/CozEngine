@@ -4,11 +4,13 @@ out vec4 FragColor;
 in vec2 TexCoord;
 in vec3 FragPos;
 in vec3 Normal;
+in mat3 TBN;
 
 struct LMaterial
 {
 	sampler2D Diffuse;
 	sampler2D Specular;
+	sampler2D NormalMap;
 	float Shininess;
 };
 
@@ -70,7 +72,10 @@ uniform vec3 ViewPos;
 
 void main()
 { 
-	vec3 Norm = normalize(Normal);
+	vec3 Norm = texture(Material.NormalMap, TexCoord).rgb;
+	Norm = Norm * 2.0 - 1.0;
+	Norm = normalize(TBN * Norm);
+
 	vec3 ViewDir = normalize(ViewPos - FragPos);
 
 	vec3 Result = vec3(0.0, 0.0, 0.0);

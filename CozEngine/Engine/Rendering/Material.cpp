@@ -27,6 +27,11 @@ void LMaterial::Load()
 		Log(LLogLevel::WARNING, "WARNING - Invalid specular texture for " + GetAssetPath() + ". Whatever specular texture is bound before this will end up being used on draw.");
 		bAnyError = true;
 	}
+
+	if (!NormalMap.Get())
+	{
+		Log(LLogLevel::WARNING, "Invalid normal map for " + GetAssetPath() + ".");
+	}
 	
 	if (!Shader.Get())
 	{
@@ -39,6 +44,7 @@ void LMaterial::Load()
 		Shader.Get()->Use();
 		Shader.Get()->SetInt("Material.Diffuse", 0);
 		Shader.Get()->SetInt("Material.Specular", 1);
+		Shader.Get()->SetInt("Material.NormalMap", 2);
 	}
 }
 
@@ -57,5 +63,10 @@ void LMaterial::Use() const
 	{
 		Specular.Get()->Use(1);
 		Shader.Get()->SetFloat("Material.Shininess", SpecularShininess);
+	}
+
+	if (NormalMap.Get())
+	{
+		NormalMap.Get()->Use(2);
 	}
 }

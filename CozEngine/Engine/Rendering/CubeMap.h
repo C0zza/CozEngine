@@ -3,13 +3,13 @@
 #include "Rendering/CubeMapTexture.h"
 #include "ResourceManagement/ResourceHandle.h"
 
-class LMesh;
+class LModel;
 class LShader;
 
 class LCubeMap
 {
 public:
-	LCubeMap(const char* i_CubeMapTexture);
+	LCubeMap(const char* i_CubeMapTexture, const char* i_CubeModel);
 
 	void Draw();
 
@@ -17,6 +17,6 @@ public:
 
 private:
 	LResourceHandle<LShader> CubeMapShader;
-	std::unique_ptr<LMesh> CubeMesh;
+	LResourceHandle<LModel> CubeModel;
 };
 

@@ -348,12 +348,21 @@
     <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
     <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Game\Content\Skybox.casset" />
+    <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Diffuse.casset" />
+    <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Normal.casset" />
+    <None Include="Game\Content\Textures\Backpack\T_Backpack_Normal.casset" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Game\Assets\grass03.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Game\Assets\brickwall\diffuse.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Game\Assets\brickwall\normal.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

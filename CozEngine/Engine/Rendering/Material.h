@@ -16,9 +16,11 @@ public:
 
 	LResourceHandle<LTexture> Diffuse;
 	LResourceHandle<LTexture> Specular;
+	LResourceHandle<LTexture> NormalMap;
+
 	float SpecularShininess = 1.f;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Diffuse, Specular, SpecularShininess, Shader)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Diffuse, Specular, SpecularShininess, NormalMap, Shader)
 
 private:
 	LResourceHandle<LShader> Shader;

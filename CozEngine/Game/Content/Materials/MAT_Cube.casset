@@ -1,12 +1,15 @@
 {
   "Diffuse": {
-    "AssetPath": "Game/Content/Textures/Container.casset"
+    "AssetPath": "Game/Content/Textures/BrickWall/T_Brickwall_Diffuse.casset"
   },
   "Shader": {
     "AssetPath": "Engine/Content/Shaders/DefaultShader.casset"
   },
   "Specular": {
     "AssetPath": "Game/Content/Textures/NullSpecular.casset"
+  },
+  "NormalMap": {
+    "AssetPath": "Game/Content/Textures/BrickWall/T_Brickwall_Normal.casset"
   },
   "SpecularShininess": 1.0
 }

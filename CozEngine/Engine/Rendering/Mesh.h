@@ -10,6 +10,8 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
 };
 
 inline void to_json(nlohmann::json& J, const Vertex& V)
@@ -47,7 +49,7 @@ class LShader;
 class LMesh
 {
 public:
-	LMesh();
+	LMesh() {}
 	LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices);
 	LMesh(std::vector<Vertex>&& i_Vertices, std::vector<unsigned int>&& i_Indices);
 

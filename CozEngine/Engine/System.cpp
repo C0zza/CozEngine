@@ -34,7 +34,7 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CMovementSystem, CMovement>();
 	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
 
-	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset");
+	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");
 
 	// TODO: No system cleaning entities up on shutdown
 	LEntity* LandscapeEntity = new CLandscapeEntity();

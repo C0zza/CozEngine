@@ -8,5 +8,8 @@
   "Specular": {
     "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Specular.casset"
   },
+  "NormalMap": {
+    "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Normal.casset"
+  },
   "SpecularShininess": 32.0
 }

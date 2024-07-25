@@ -6,59 +6,6 @@
 
 #include "Shader.h"
 
-// Dummy cube data
-std::vector<Vertex> TestVertices = 
-{
-	{{-0.5f, -0.5f, -0.5f}, {0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}},
-	{{0.5f, -0.5f, -0.5f}, {0.0f,  0.0f, -1.0f}, { 1.0f, 0.0f}},
-	{{0.5f,  0.5f, -0.5f}, {0.0f,  0.0f, -1.0f}, { 1.0f, 1.0f}},
-	{{0.5f,  0.5f, -0.5f }, {0.0f,  0.0f, -1.0f}, { 1.0f, 1.0f}},
-	{{-0.5f,  0.5f, -0.5f }, {0.0f,  0.0f, -1.0f}, { 0.0f, 1.0f}},
-	{{-0.5f, -0.5f, -0.5f }, {0.0f,  0.0f, -1.0f}, { 0.0f, 0.0f}},
-
-	{{-0.5f, -0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 0.0f, 0.0f}},
-	{{0.5f, -0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 1.0f, 0.0f}},
-	{{0.5f,  0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 1.0f, 1.0f}},
-	{{0.5f,  0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 1.0f, 1.0f}},
-	{{-0.5f,  0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 0.0f, 1.0f}},
-	{{-0.5f, -0.5f,  0.5f }, {0.0f,  0.0f,  1.0f}, { 0.0f, 0.0f}},
-
-	{{-0.5f,  0.5f,  0.5f }, {-1.0f,  0.0f,  0.0f}, { 1.0f, 1.0f}},
-	{{-0.5f,  0.5f, -0.5f }, {-1.0f,  0.0f,  0.0f}, { 0.0f, 1.0f}},
-	{{-0.5f, -0.5f, -0.5f }, {-1.0f,  0.0f,  0.0f}, { 0.0f, 0.0f}},
-	{{-0.5f, -0.5f, -0.5f }, {-1.0f,  0.0f,  0.0f}, { 0.0f, 0.0f}},
-	{{-0.5f, -0.5f,  0.5f }, {-1.0f,  0.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{-0.5f,  0.5f,  0.5f }, {-1.0f,  0.0f,  0.0f}, { 1.0f, 1.0f}},
-
-	{{0.5f,  0.5f,  0.5f }, {1.0f,  0.0f,  0.0f}, { 0.0f, 1.0f}},
-	{{0.5f,  0.5f, -0.5f }, {1.0f,  0.0f,  0.0f}, { 1.0f, 1.0f}},
-	{{0.5f, -0.5f, -0.5f }, {1.0f,  0.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{0.5f, -0.5f, -0.5f }, {1.0f,  0.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{0.5f, -0.5f,  0.5f }, {1.0f,  0.0f,  0.0f}, { 0.0f, 0.0f}},
-	{{0.5f,  0.5f,  0.5f }, {1.0f,  0.0f,  0.0f}, { 0.0f, 1.0f}},
-
-	{{-0.5f, -0.5f, -0.5f }, {0.0f, -1.0f,  0.0f}, { 0.0f, 1.0f}},
-	{{0.5f, -0.5f, -0.5f }, {0.0f, -1.0f,  0.0f}, { 1.0f, 1.0f}},
-	{{0.5f, -0.5f,  0.5f }, {0.0f, -1.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{0.5f, -0.5f,  0.5f }, {0.0f, -1.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{-0.5f, -0.5f,  0.5f }, {0.0f, -1.0f,  0.0f}, { 0.0f, 0.0f}},
-	{{-0.5f, -0.5f, -0.5f }, {0.0f, -1.0f,  0.0f}, { 0.0f, 1.0f}},
-
-	{{-0.5f,  0.5f, -0.5f }, {0.0f,  1.0f,  0.0f}, { 0.0f, 1.0f}},
-	{{0.5f,  0.5f, -0.5f }, {0.0f,  1.0f,  0.0f}, { 1.0f, 1.0f}},
-	{{0.5f,  0.5f,  0.5f }, {0.0f,  1.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{0.5f,  0.5f,  0.5f }, {0.0f,  1.0f,  0.0f}, { 1.0f, 0.0f}},
-	{{-0.5f,  0.5f,  0.5f }, {0.0f,  1.0f,  0.0f}, { 0.0f, 0.0f}},
-	{{-0.5f,  0.5f, -0.5f }, {0.0f,  1.0f,  0.0f}, { 0.0f, 1.0f}}
-};
-
-LMesh::LMesh(/*const std::vector<Vertex>& i_Vertices , const std::vector<unsigned int> i_Indices*/)
-{
-	Vertices = TestVertices;
-
-	SetupMesh();
-}
-
 LMesh::LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices)
 {
 	 Vertices = i_Vertices;
@@ -120,6 +67,12 @@ void LMesh::SetupMesh()
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+	glEnableVertexAttribArray(3);
+
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+	glEnableVertexAttribArray(4);
 
 	glBindVertexArray(0);
 }

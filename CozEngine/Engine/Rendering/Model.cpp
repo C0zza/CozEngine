@@ -12,8 +12,7 @@ void LModel::Load()
 {
 	if (ObjFile.empty())
 	{
-		Log(LLogLevel::INFO, "LModel::Load - Empty LModel object loaded. Adding default cube.");
-		Meshes.push_back(LMesh());
+		Log(LLogLevel::WARNING, "LModel::Load - Empty LModel object.");
 		return;
 	}
 
@@ -31,7 +30,7 @@ void LModel::Draw(const LShader& Shader, const glm::mat4& Transform) const
 void LModel::LoadModel(const std::string& ModelPath)
 {
 	Assimp::Importer Importer;
-	const aiScene* Scene = Importer.ReadFile(ModelPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* Scene = Importer.ReadFile(ModelPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 	if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
 	{
@@ -78,6 +77,16 @@ LMesh LModel::ProcessMesh(aiMesh* Mesh, const aiScene* Scene)
 		Vec3.y = Mesh->mNormals[i].y;
 		Vec3.z = Mesh->mNormals[i].z;
 		Vert.Normal = Vec3;
+
+		Vec3.x = Mesh->mTangents[i].x;
+		Vec3.y = Mesh->mTangents[i].y;
+		Vec3.z = Mesh->mTangents[i].z;
+		Vert.Tangent = Vec3;
+
+		Vec3.x = Mesh->mBitangents[i].x;
+		Vec3.y = Mesh->mBitangents[i].y;
+		Vec3.z = Mesh->mBitangents[i].z;
+		Vert.Bitangent = Vec3;
 
 		// Assimp allows vertices to have 8 sets of texture coords per vertex. We only want the first
 		if (Mesh->mTextureCoords[0])
