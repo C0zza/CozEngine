@@ -16,19 +16,20 @@
 #include "Texture.h"
 #include "Window.h"
 
-void LRenderer::BindCustomFrameBuffer()
+void LRenderer::BindFrameBuffer(const LFrameBuffer* Buffer)
 {
-	if (CustomFrameBuffer)
-	{
-		CustomFrameBuffer->Bind();
-		glClearColor(.0f, .0f, .0f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
+	Buffer->Bind();
 }
 
-void LRenderer::UnbindCustomFrameBuffer()
+void LRenderer::BindDefaultFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void LRenderer::ClearFrameBuffer(const float& R, const float& G, const float& B, const float& A, GLbitfield ClearFlags)
+{
+	glClearColor(R, G, B, A);
+	glClear(ClearFlags);
 }
 
 void LRenderer::Initialize()
@@ -87,9 +88,6 @@ void LRenderer::Update()
 	{
 		DirectionalLightCS->UpdateDirectionalLight();
 	}
-
-	glClearColor(.0f, .0f, .0f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// TODO update automatically by delegate. I.e, setup delegates
 	ComponentSystem = ECS->GetComponentSystemFor<CCameraComponent>();

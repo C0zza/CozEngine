@@ -153,6 +153,9 @@
     <ClCompile Include="Engine\Rendering\CubeMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBufferSubsystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -329,24 +332,18 @@
     <ClInclude Include="Engine\Rendering\CubeMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBufferSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
     <Text Include="Engine\Rendering\DefaultShaders\shader.vs.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
-    <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
-    <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
-    <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
-    <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
-    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
     <None Include="Game\Content\Textures\TestHeightMap.casset" />
     <None Include="Game\Content\Textures\Ground.casset" />
     <None Include="Game\Content\Textures\Wall.casset" />
-    <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
-    <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
-    <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Game\Content\Skybox.casset" />
     <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Diffuse.casset" />
     <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Normal.casset" />

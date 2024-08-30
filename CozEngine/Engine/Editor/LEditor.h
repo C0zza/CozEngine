@@ -5,6 +5,7 @@
 #include "Rendering/FrameBuffer.h"
 #include "Subsystem.h"
 
+class LInputManager;
 class LRenderer;
 
 class LEditor : public LSubsystem
@@ -17,6 +18,7 @@ public:
 	LFrameBuffer* GetSceneFrameBuffer() { return SceneFrameBuffer.get(); }
 
 private:
+	LInputManager* InputManager = nullptr;
 	LRenderer* Renderer = nullptr;
 
 	std::unique_ptr<LFrameBuffer> SceneFrameBuffer;

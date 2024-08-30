@@ -2,7 +2,9 @@
 
 #include <utility>
 
+#include "Development/LImGuiSubsystem.h"
 #include "ECS/ECS.h"
+#include "Rendering/FrameBufferSubsystem.h"
 #include "Rendering/Renderer.h"
 
 #if defined(COZ_EDITOR)
@@ -22,6 +24,10 @@
 void LSystem::Run()
 {
 	LRenderer* Renderer = Subsystems.GetSubsystem<LRenderer>(true);
+#if defined(COZ_EDITOR)
+	LImGuiSubsystem* ImGuiSubsystem = Subsystems.GetSubsystem<LImGuiSubsystem>(true);
+	LFrameBufferSubsystem* FrameBufferSubsystem = Subsystems.GetSubsystem<LFrameBufferSubsystem>(true);
+#endif
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
@@ -53,11 +59,29 @@ void LSystem::Run()
 
 	while (!bShouldWindowClose)
 	{
+
 		Renderer->Update();
 
-		TestCubeMap->Draw();
+#if defined(COZ_EDITOR)
+		ImGuiSubsystem->NewFrame();
+		Renderer->BindFrameBuffer(Editor->GetSceneFrameBuffer());
+#endif
+		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glEnable(GL_DEPTH_TEST);
+		TestCubeMap->Draw();
 		ECS->Update();
+
+#if defined(COZ_EDITOR)
+		Renderer->BindDefaultFrameBuffer();
+		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT);
+
+		// Something like this will be needed for post processing, but for now the editor is drawn inside an imgui window via LEditor::Draw
+		//FrameBufferSubsystem->DrawFrameBuffer(Editor->GetSceneFrameBuffer());
+
+		Editor->Draw();
+		ImGuiSubsystem->Render();
+#endif
 
 		Renderer->Swap();
 

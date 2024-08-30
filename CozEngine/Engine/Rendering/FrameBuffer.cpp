@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-LFrameBuffer::LFrameBuffer(const float Width, const float Height)
+LFrameBuffer::LFrameBuffer(const int Width, const int Height)
 {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -39,7 +39,7 @@ LFrameBuffer::~LFrameBuffer()
 	glDeleteRenderbuffers(1, &rbo);
 }
 
-void LFrameBuffer::RescaleBuffer(const float Width, const float Height)
+void LFrameBuffer::RescaleBuffer(const int Width, const int Height)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);

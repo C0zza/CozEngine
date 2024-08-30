@@ -1,0 +1,4 @@
+{
+  "FragmentShaderPath": "Engine/Rendering/DefaultShaders/ScreenTexture.fs",
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/ScreenTexture.vs"
+}

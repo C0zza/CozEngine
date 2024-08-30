@@ -72,6 +72,10 @@ public:
 	void OnCursorFocusChanged(GLFWwindow* window, int entered);
 	bool bMouseFocused = false;
 
+#if defined(COZ_EDITOR)
+	bool bEditorSceneFocused = false;
+#endif
+
 	virtual bool HasRequiredSubsystems() const override;
 
 	void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event);

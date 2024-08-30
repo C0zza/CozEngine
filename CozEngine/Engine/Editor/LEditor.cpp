@@ -10,15 +10,16 @@
 
 void LEditor::Initialize()
 {
-	CSystem.GetSubsystems().AddSubsystem<LImGuiSubsystem>();
+	assert(CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>());
 
 	Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 	assert(Renderer);
 
-	SceneFrameBuffer = std::make_unique<LFrameBuffer>(800, 600);
+	SceneFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
 	glfwSetFramebufferSizeCallback(Renderer->GetWindow()->GetWindow(), 0);
 
-	Renderer->SetCustomFrameBuffer(SceneFrameBuffer.get());
+	InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
+	assert(InputManager);
 }
 
 void LEditor::Draw()
@@ -33,11 +34,13 @@ void LEditor::Draw()
 
 	ImGui::Begin("Scene");
 	{
+		InputManager->bEditorSceneFocused = ImGui::IsWindowFocused();
+
 		const ImVec2 ContentRegionAvail = ImGui::GetContentRegionAvail();
 		if (SceneFrameBuffer->GetWidth() != ContentRegionAvail.x || SceneFrameBuffer->GetHeight() != ContentRegionAvail.y)
 		{
-			glViewport(0, 0, ContentRegionAvail.x, ContentRegionAvail.y);
-			SceneFrameBuffer->RescaleBuffer(ContentRegionAvail.x, ContentRegionAvail.y);
+			glViewport(0, 0, (int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
+			SceneFrameBuffer->RescaleBuffer((int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
 		}
 
 		ImGui::Image(

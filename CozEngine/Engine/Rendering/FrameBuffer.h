@@ -3,18 +3,17 @@
 class LFrameBuffer
 {
 public:
-	LFrameBuffer(const float Width, const float Height);
+	LFrameBuffer(const int Width, const int Height);
 	~LFrameBuffer();
 
-	unsigned int GetTexture() { return texture; }
+	unsigned int GetTexture() const { return texture; }
 	
-	void RescaleBuffer(const float Width, const float Height);
+	void RescaleBuffer(const int Width, const int Height);
 	void Bind() const;
 	void Unbind() const;
 
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
-
+	int GetWidth() const { return m_Width; }
+	int GetHeight() const { return m_Height; }
 private:
 	unsigned int fbo;
 	unsigned int texture;

@@ -5,22 +5,6 @@
 #include "Rendering/Renderer.h"
 #include "TransformComponent.h"
 
-void CModelComponentSystem::PreRun()
-{
-	if (LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>())
-	{
-		Renderer->BindCustomFrameBuffer();
-	}
-}
-
-void CModelComponentSystem::PostRun()
-{
-	if (LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>())
-	{
-		Renderer->UnbindCustomFrameBuffer();
-	}
-}
-
 void CModelComponentSystem::RunComponent(CModelComponent& Component)
 {
 	if (Component.Model.Get() && Component.Material.Get())

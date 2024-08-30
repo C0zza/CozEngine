@@ -25,10 +25,9 @@ public:
 
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
-	void BindCustomFrameBuffer();
-	void UnbindCustomFrameBuffer();
-
-	void SetCustomFrameBuffer(LFrameBuffer* FrameBuffer) { CustomFrameBuffer = FrameBuffer; }
+	void BindFrameBuffer(const LFrameBuffer* Buffer);
+	void BindDefaultFrameBuffer();
+	void ClearFrameBuffer(const float& R, const float& G, const float& B, const float& A, GLbitfield ClearFlags);
 
 protected:
 	virtual void Initialize() override;

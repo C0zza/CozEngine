@@ -68,7 +68,7 @@ void LInputManager::Initialize()
 void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 #if defined(COZ_EDITOR)
-	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureKeyboard)
+	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureKeyboard && !bEditorSceneFocused)
 	{
 		return;
 	}
@@ -97,7 +97,7 @@ void LInputManager::ProcessMouseMove(GLFWwindow* window, double xpos, double ypo
 	}
 
 #if defined(COZ_EDITOR)
-	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureMouse)
+	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureMouse && !bEditorSceneFocused)
 	{
 		return;
 	}
