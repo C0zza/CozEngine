@@ -3,6 +3,7 @@
 #include "LEditor.h"
 
 #include "Development/LImGuiSubsystem.h"
+#include "Editor/EditorWindows/EditorSceneWindow.h"
 #include "Globes.h"
 #include "imgui/imgui.h"
 #include "Rendering/Renderer.h"
@@ -18,38 +19,35 @@ void LEditor::Initialize()
 	SceneFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
 	glfwSetFramebufferSizeCallback(Renderer->GetWindow()->GetWindow(), 0);
 
-	InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
-	assert(InputManager);
+	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), "Scene");
+	EditorWindows.emplace_back(std::move(EditorSceneWindow));
 }
 
 void LEditor::Draw()
 {
-	//ImGui::ShowDemoWindow();
-
 	ImGui::DockSpaceOverViewport();
 	if (ImGui::BeginMainMenuBar())
 	{
 		ImGui::EndMainMenuBar();
 	}
 
-	ImGui::Begin("Scene");
+	for (std::unique_ptr<LEditorWindow>& EditorWindow : EditorWindows)
 	{
-		InputManager->bEditorSceneFocused = ImGui::IsWindowFocused();
-
-		const ImVec2 ContentRegionAvail = ImGui::GetContentRegionAvail();
-		if (SceneFrameBuffer->GetWidth() != ContentRegionAvail.x || SceneFrameBuffer->GetHeight() != ContentRegionAvail.y)
+		assert(EditorWindow.get());
+		ImGui::Begin(EditorWindow->GetWindowName());
 		{
-			glViewport(0, 0, (int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
-			SceneFrameBuffer->RescaleBuffer((int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
+			EditorWindow->Draw();
+			ImGui::End();
 		}
+	}
 
-		ImGui::Image(
-			(ImTextureID)SceneFrameBuffer->GetTexture(),
-			ContentRegionAvail,
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
+	ImGui::Begin("Test1");
+	{
+		ImGui::End();
+	}
 
+	ImGui::Begin("Test2");
+	{
 		ImGui::End();
 	}
 }

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
+#include "Editor/EditorWindow.h"
 #include "Rendering/FrameBuffer.h"
 #include "Subsystem.h"
 
-class LInputManager;
+class LEditorWindow;
 class LRenderer;
 
 class LEditor : public LSubsystem
@@ -18,11 +20,9 @@ public:
 	LFrameBuffer* GetSceneFrameBuffer() { return SceneFrameBuffer.get(); }
 
 private:
-	LInputManager* InputManager = nullptr;
 	LRenderer* Renderer = nullptr;
 
 	std::unique_ptr<LFrameBuffer> SceneFrameBuffer;
-	int SceneFrameBufferWidth;
-	int SceneFrameBufferHeight;
+	std::vector<std::unique_ptr<LEditorWindow>> EditorWindows;
 };
 
