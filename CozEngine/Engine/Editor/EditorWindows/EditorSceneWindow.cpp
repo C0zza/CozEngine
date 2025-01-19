@@ -3,7 +3,6 @@
 #include "EditorSceneWindow.h"
 
 #include "Globes.h"
-#include "Input/InputManager.h"
 #include "Rendering/FrameBuffer.h"
 
 LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, const char* iWindowName)
@@ -13,13 +12,15 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, const ch
 
 	InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
 	assert(InputManager);
+
+	ToggleFocusEvent.Init(this, &LEditorSceneWindow::OnToggleFocus);
+	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_U, GLFW_PRESS), &ToggleFocusEvent);
+
 }
 
 void LEditorSceneWindow::Draw()
 {
-#if defined(COZ_EDITOR)
-	InputManager->bEditorSceneFocused = ImGui::IsWindowFocused();
-#endif
+	OnFocusUpdate(ImGui::IsWindowFocused());
 
 	const ImVec2 ContentRegionAvail = ImGui::GetContentRegionAvail();
 	if (SceneFrameBuffer->GetWidth() != ContentRegionAvail.x || SceneFrameBuffer->GetHeight() != ContentRegionAvail.y)
@@ -34,4 +35,48 @@ void LEditorSceneWindow::Draw()
 		ImVec2(0, 1),
 		ImVec2(1, 0)
 	);
+}
+
+void LEditorSceneWindow::OnToggleFocus()
+{
+#if defined(COZ_EDITOR)
+	if (InputManager->bInputEnabled)
+	{
+		OnFocusUpdate(false);
+	}
+	else
+	{
+		OnFocusUpdate(true);
+	}
+#endif
+}
+
+void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
+{
+#if defined(COZ_EDITOR)
+	bool bIsNewValue = bIsFocused != InputManager->bInputEnabled;
+
+	if (bIsFocused)
+	{
+		if (bIsNewValue)
+		{
+			ImGui::SetWindowFocus(GetWindowName());
+			InputManager->ResetMousePositionData();
+			// InputManager->OnInputEnabledChanged(bIsFocused);
+		}
+
+		InputManager->bInputEnabled = true;
+	}
+	else
+	{
+		if (bIsNewValue)
+		{
+			ImGui::SetWindowFocus(NULL);
+			InputManager->ResetMousePositionData();
+			// InputManager->OnInputEnabledChanged(bIsFocused);
+		}
+
+		InputManager->bInputEnabled = false;
+	}
+#endif
 }

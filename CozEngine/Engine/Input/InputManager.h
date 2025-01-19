@@ -60,6 +60,8 @@ private:
 
 	static std::map<void*, LInputManager*> InputManagers;
 
+	GLFWwindow* GetWindow() const;
+
 protected:
 	virtual void Initialize() override;
 
@@ -72,8 +74,12 @@ public:
 	void OnCursorFocusChanged(GLFWwindow* window, int entered);
 	bool bMouseFocused = false;
 
+	void ResetMousePositionData();
+
 #if defined(COZ_EDITOR)
-	bool bEditorSceneFocused = false;
+	// TODO: This has a bug when using GLFW_CURSOR_DISABLED. For some reason the mouse is reset to an old position.
+	// void OnInputEnabledChanged(const bool bEnabled);
+	bool bInputEnabled = false;
 #endif
 
 	virtual bool HasRequiredSubsystems() const override;

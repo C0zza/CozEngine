@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Rendering/Renderer.h"
 #include "Rendering/Window.h"
 
 #include "Development/LImGuiSubsystem.h"
@@ -37,6 +38,27 @@ namespace CE::InputManager
 			LInputManager::GetInputManagers().at(window)->ProcessMouseMove(window, xpos, ypos);
 		}
 	}
+
+	void WindowFocusCallback(GLFWwindow* window, int focused)
+	{
+		if (!window)
+		{
+			Log(LLogLevel::ERROR, "CE::InputManager::WindowFocusFallback - Invalid window");
+			return;
+		}
+
+		if (!focused)
+		{
+			ImGui::SetWindowFocus(NULL);
+		}
+	}
+}
+
+GLFWwindow* LInputManager::GetWindow() const
+{
+	LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+	LWindow* Window = Renderer ? Renderer->GetWindow() : nullptr;
+	return Window ? Window->m_Window : nullptr;
 }
 
 void LInputManager::Initialize()
@@ -60,7 +82,8 @@ void LInputManager::Initialize()
 	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(Window->m_Window, CE::InputManager::MouseMoveCallback);
 	glfwSetCursorEnterCallback(Window->m_Window, CE::InputManager::CursorEnterCallback);
-	glfwSetInputMode(Window->m_Window, GLFW_RAW_MOUSE_MOTION, GLFW_CURSOR_NORMAL);
+	glfwSetWindowFocusCallback(Window->m_Window, CE::InputManager::WindowFocusCallback);
+	glfwSetInputMode(Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	IsInitialized = true;
 }
@@ -68,7 +91,7 @@ void LInputManager::Initialize()
 void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 #if defined(COZ_EDITOR)
-	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureKeyboard && !bEditorSceneFocused)
+	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureKeyboard && !bInputEnabled)
 	{
 		return;
 	}
@@ -91,13 +114,14 @@ void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int ac
 
 void LInputManager::ProcessMouseMove(GLFWwindow* window, double xpos, double ypos)
 {
+	// TODO: Not sure if this is needed anymore. Behaviour doesn't seem to change when removed.
 	if (!bMouseFocused)
 	{
 		return;
 	}
 
 #if defined(COZ_EDITOR)
-	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureMouse && !bEditorSceneFocused)
+	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureMouse && !bInputEnabled)
 	{
 		return;
 	}
@@ -127,6 +151,39 @@ void LInputManager::OnCursorFocusChanged(GLFWwindow* window, int entered)
 		bMouseFocused = false;
 	}
 }
+
+void LInputManager::ResetMousePositionData()
+{
+	GLFWwindow* GlfwWindow = GetWindow();
+	if (!GlfwWindow)
+	{
+		Log(LLogLevel::ERROR, "LInputManager::ResetMousePositionData - Unable to obtain GLFWwindow. Cannot reset mouse position data.");
+		return;
+	}
+
+	glfwGetCursorPos(GlfwWindow, &PreviousMouseX, &PreviousMouseY);
+}
+
+//#if defined(COZ_EDITOR)
+//void LInputManager::OnInputEnabledChanged(const bool bEnabled)
+//{
+//	GLFWwindow* GlfwWindow = GetWindow();
+//	if (!GlfwWindow)
+//	{
+//		Log(LLogLevel::ERROR, "LInputManager::OnInputEnabledChanged - Unable to obtain GLFWwindow.");
+//		return;
+//	}
+//
+//	if (bEnabled)
+//	{
+//		glfwSetInputMode(GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//	}
+//	else
+//	{
+//		glfwSetInputMode(GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+//	}
+//}
+//#endif
 
 bool LInputManager::HasRequiredSubsystems() const
 {
