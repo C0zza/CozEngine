@@ -12,10 +12,12 @@
 class LECS : public LSubsystem
 {
 public:
+	LECS();
+
 	template<typename TComponentSystem, typename TComponentType>
 	void AddComponentSystem()
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		const LIDType TypeID = TypeIdGenerator->GetTypeID<TComponentType>();
 
 		if (ComponentSystems.contains(TypeID))
 		{
@@ -39,7 +41,7 @@ public:
 	template<typename TComponentType>
 	LComponentSystemBase* GetComponentSystemFor()
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		const LIDType TypeID = TypeIdGenerator->GetTypeID<TComponentType>();
 		if (!ComponentSystems.contains(TypeID))
 		{
 			Log(LLogLevel::INFO, "LECS::GetComponentSystemFor - Unable to get " + std::string(typeid(TComponentType).name()) + "'s component systems as there's none currently registered.");
@@ -52,7 +54,7 @@ public:
 	template<typename TComponentType, typename... TArgs>
 	TComponentType* AddComponent(const LEntityID EntityID, TArgs&... Args)
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		const LIDType TypeID = TypeIdGenerator->GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
@@ -70,7 +72,7 @@ public:
 	template<typename TComponentType>
 	void RemoveComponent(const LEntityID EntityID)
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		const LIDType TypeID = TypeIdGenerator->GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
@@ -84,7 +86,7 @@ public:
 	template<typename TComponentType>
 	TComponentType* GetComponent(const LEntityID EntityID)
 	{
-		const LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<TComponentType>();
+		const LIDType TypeID = TypeIdGenerator->GetTypeID<TComponentType>();
 
 		if (!ComponentSystems.contains(TypeID))
 		{
@@ -99,6 +101,7 @@ public:
 
 	void RemoveEntity(const LEntityID EntityID)
 	{
+		// TODO: Could do with a better way of going about this
 		for (auto& ComponentSystem : ComponentSystems)
 		{
 			ComponentSystem.second->RemoveComponent(EntityID);
@@ -110,5 +113,7 @@ public:
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
 	std::vector<LComponentSystemBase*> TickableComponentSystems;
+
+	class LTypeIdGenerator* TypeIdGenerator = nullptr;
 };
 

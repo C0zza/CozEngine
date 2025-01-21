@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "FrameBufferSubsystem.h"
-
+#include "Globes.h"
 #include "Rendering/FrameBuffer.h"
 
 namespace
@@ -30,7 +30,8 @@ void LFrameBufferSubsystem::Initialize()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-    ScreenTextureShader = LResourceManager::GetResource<LShader>("Engine/Content/Shaders/ScreenTextureShader.casset");
+    LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+    ResourceManager->GetResource<LShader>("Engine/Content/Shaders/ScreenTextureShader.casset", ScreenTextureShader);
 }
 
 void LFrameBufferSubsystem::Deinitialize()

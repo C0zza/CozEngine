@@ -33,7 +33,7 @@ public:
 	// TODO: As expected std::vector is unsafe with our AddComponent and GetComponent returning pointers to components.
 	// Either return references which will be safer (but not completely) or change to array.
 	LComponentSystem() { Components.reserve(100); }
-	~LComponentSystem()
+	virtual ~LComponentSystem()
 	{
 		for (auto& Component : Components)
 		{
@@ -69,7 +69,11 @@ public:
 			TComponentType& LastComponent = Components[Components.size() - 1];
 
 			Components[IndexToRemove].Destroy();
-			Components[IndexToRemove] = LastComponent;
+
+			if (&Components[IndexToRemove] != &LastComponent)
+			{
+				Components[IndexToRemove] = LastComponent;
+			}
 
 			Components.pop_back();
 			EntityIdToComponentIndex[LastComponent.EntityID] = IndexToRemove;

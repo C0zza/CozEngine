@@ -82,6 +82,7 @@ void LInputManager::Initialize()
 	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(Window->m_Window, CE::InputManager::MouseMoveCallback);
 	glfwSetCursorEnterCallback(Window->m_Window, CE::InputManager::CursorEnterCallback);
+	// TODO: Investigate why having this callback causes a crash when alt tabbing in Release config
 	glfwSetWindowFocusCallback(Window->m_Window, CE::InputManager::WindowFocusCallback);
 	glfwSetInputMode(Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -260,5 +261,49 @@ void LInputManager::UnregisterMouseMoveEvent(MouseMoveEvent* i_Event)
 	else
 	{
 		Log(LLogLevel::WARNING, "LInputManager::UnregisterMouseMoveEvent - Could not find MouseMoveEvent to unregister.");
+	}
+}
+
+void LInputManager::UnregisterEvent(void* i_Event)
+{
+	KeyAction Ka;
+	int FoundIndex = -1;
+
+	for (std::pair<const KeyAction, std::vector<KeyEvent*>>& Pair : Events)
+	{
+		for (int i = 0; i < Pair.second.size(); ++i)
+		{
+			if (Pair.second[i] == i_Event)
+			{
+				FoundIndex = i;
+				break;
+			}
+		}
+
+		if (FoundIndex != -1)
+		{
+			Ka = Pair.first;
+			break;
+		}
+	}
+
+	if (FoundIndex != -1)
+	{
+		Events[Ka].erase(Events[Ka].begin() + FoundIndex);
+		return;
+	}
+
+	for (int i = 0; i < MouseMoveEvents.size(); ++i)
+	{
+		if (MouseMoveEvents[i] == i_Event)
+		{
+			FoundIndex = i;
+			break;
+		}
+	}
+
+	if (FoundIndex != -1)
+	{
+		MouseMoveEvents.erase(MouseMoveEvents.begin() + FoundIndex);
 	}
 }

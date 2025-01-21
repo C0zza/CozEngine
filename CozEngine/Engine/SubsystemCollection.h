@@ -14,12 +14,13 @@ class LSubsystem;
 class LSubsystemCollection
 {
 public:
+	LSubsystemCollection();
 	~LSubsystemCollection();
 
 	template<typename T>
 	T* AddSubsystem()
 	{
-		LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<T>();
+		LIDType TypeID = TypeIdGenerator->GetTypeID<T>();
 		if (Subsystems.contains(TypeID))
 		{
 			Log(LLogLevel::INFO, "LSubsystemCollection::AddSubsystem - Subsystem, " + std::string(typeid(T).name()) + ", already exists.");
@@ -44,7 +45,7 @@ public:
 	template<typename T>
 	T* GetSubsystem(const bool bAddIfNotFound = false)
 	{
-		LIDType TypeID = LUniqueTypeIdGenerator::GetTypeID<T>();
+		LIDType TypeID = TypeIdGenerator->GetTypeID<T>();
 		if (Subsystems.contains(TypeID))
 		{
 			if (T* Subsystem = dynamic_cast<T*>(Subsystems.at(TypeID).get()))
@@ -79,6 +80,36 @@ public:
 	void ForEachSubsystem(std::function<void(LSubsystem*)>&& Func);
 
 private:
-	std::unordered_map<LIDType, std::unique_ptr<LSubsystem>> Subsystems;
+	template<typename T>
+	void RegisterSubsystem(T* Subsystem)
+	{
+		if (!Subsystem)
+		{
+			Log(LLogLevel::ERROR, "LSubsystemCollection::RegisterSubsystem - Invalid subsystem provided");
+			return;
+		}
+
+		LIDType TypeID = TypeIdGenerator->GetTypeID<T>();
+		if (Subsystems.contains(TypeID))
+		{
+			Log(LLogLevel::INFO, "LSubsystemCollection::RegisterSubsystem - Subsystem, " + std::string(typeid(T).name()) + ", already exists.");
+			return;
+		}
+
+		Subsystems.insert({ TypeID, std::unique_ptr<T>(Subsystem) });
+
+#if defined(_DEBUG)
+		if (!Subsystems[TypeID]->HasRequiredSubsystems())
+		{
+			Log(LLogLevel::ERROR, "LSubsystemCollection::RegisterSubsystem - Unable to add " + std::string(typeid(T).name()) + " as subsystem dependencies have not been added.");
+			return;
+		}
+#endif
+
+		return;
+	}
+
+	std::map<LIDType, std::unique_ptr<LSubsystem>> Subsystems;
+	class LTypeIdGenerator* TypeIdGenerator;
 };
 

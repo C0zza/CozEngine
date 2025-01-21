@@ -23,6 +23,7 @@
 
 void LSystem::Run()
 {
+	LResourceManager* ResourceManager = Subsystems.GetSubsystem<LResourceManager>(true);
 	LRenderer* Renderer = Subsystems.GetSubsystem<LRenderer>(true);
 #if defined(COZ_EDITOR)
 	LImGuiSubsystem* ImGuiSubsystem = Subsystems.GetSubsystem<LImGuiSubsystem>(true);
@@ -42,12 +43,12 @@ void LSystem::Run()
 
 	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");
 
-	// TODO: No system cleaning entities up on shutdown
-	LEntity* LandscapeEntity = new CLandscapeEntity();
-	LEntity* TestEntity = new CTestEntity();
-	LEntity* CameraEntity = new CPlayerEntity();
-	LEntity* SpotLightEntity = new CSpotLightEntity();
-	LEntity* DirectionalLightEntity = new CDirectionalLightEntity();
+	// TODO: No system cleaning entities up on shutdown. Will eventually be handled by the "world"
+	std::unique_ptr<LEntity> LandscapeEntity = std::make_unique<CLandscapeEntity>();
+	std::unique_ptr<LEntity> TestEntity = std::make_unique<CTestEntity>();
+	std::unique_ptr<LEntity> CameraEntity = std::make_unique<CPlayerEntity>();
+	std::unique_ptr<LEntity> SpotLightEntity = std::make_unique<CSpotLightEntity>();
+	std::unique_ptr<LEntity> DirectionalLightEntity = std::make_unique<CDirectionalLightEntity>();
 
 #if defined(COZ_EDITOR)
 	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();

@@ -6,19 +6,20 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "Serializable.h"
+#include "Subsystem.h"
 
-class LResourceManager
+class LResourceManager : public LSubsystem
 {
 public:
-	static void Shutdown();
+	virtual void Deinitialize() override;
 
 	template<typename T>
-	static LResourceHandle<T> GetResource(const std::string& Asset)
+	void GetResource(const std::string& Asset, LResourceHandle<T>& OutResourceHandle)
 	{
 		if (Asset.empty())
 		{
 			Log(LLogLevel::INFO, "LResourceManager::GetResource - Empty Asset provided. Returning empty LResourceHandle.");
-			return LResourceHandle<T>();
+			return;
 		}
 
 		if (!Resources.contains(Asset))
@@ -31,12 +32,12 @@ public:
 			Resource->Load();
 		}
 
-		return LResourceHandle<T>(Resources[Asset]);
+		OutResourceHandle.Init(Resources[Asset]);
 	}
 
-	static void UnloadResource(const std::string Asset);
+	void UnloadResource(const std::string Asset);
 
 private:
-	static std::unordered_map<std::string, LResource*> Resources;
+	std::unordered_map<std::string, LResource*> Resources;
 };
 

@@ -10,18 +10,16 @@ class LResourceHandle
 public:
 	LResourceHandle() : Resource{ nullptr } {};
 
-	// TODO: Remove this. Resources should only be accessible through the LResourceManager
-	LResourceHandle(LResource* i_Resource)
-		: Resource{nullptr}
+	~LResourceHandle()
+	{
+		SetResource(nullptr);
+	}
+
+	void Init(LResource* i_Resource)
 	{
 		T* NewResource = dynamic_cast<T*>(i_Resource);
 		SetResource(NewResource);
 		assert(Resource);
-	}
-
-	~LResourceHandle()
-	{
-		SetResource(nullptr);
 	}
 
 	T* Get() const

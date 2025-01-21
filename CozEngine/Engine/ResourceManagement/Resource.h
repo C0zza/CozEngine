@@ -5,6 +5,8 @@
 class LResource
 {
 public:
+	virtual ~LResource() {}
+
 	virtual void Load() = 0;
 	virtual void Unload() = 0;
 

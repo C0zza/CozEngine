@@ -1,14 +1,15 @@
 #include "ResourceManager.h"
 
-std::unordered_map<std::string, LResource*> LResourceManager::Resources{};
-
-void LResourceManager::Shutdown()
+void LResourceManager::Deinitialize()
 {
-	for (auto& Resource : Resources)
+	if (!Resources.empty())
 	{
-		Resource.second->Unload();
-		delete Resource.second;
-		Resource.second = nullptr;
+		std::string ErrorString = "LResourceManager::Deinitialize - Resources have not been released:";
+		for (const std::pair<std::string, LResource*>& Pair : Resources)
+		{
+			ErrorString += "\n - " + Pair.first;
+		}
+		Log(LLogLevel::ERROR, ErrorString);
 	}
 }
 

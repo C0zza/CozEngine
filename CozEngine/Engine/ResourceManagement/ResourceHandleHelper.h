@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 
+#include "Globes.h"
 #include "json.hpp"
 
 class LResourceHandleHelper
@@ -24,7 +25,9 @@ public:
 		std::string AssetPath;
 		J.at("AssetPath").get_to(AssetPath);
 
-		ResourceHandle = LResourceManager::GetResource<T>(AssetPath);
+		LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+
+		ResourceManager->GetResource<T>(AssetPath, ResourceHandle);
 	}
 };
 

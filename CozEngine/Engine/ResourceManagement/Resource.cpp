@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "Globes.h"
 #include "ResourceManager.h"
 
 void LResource::IncrementRefs()
@@ -14,9 +15,10 @@ void LResource::DecrementRefs()
 	assert(RefCount > 0);
 	--RefCount;
 
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 	if (!RefCount)
 	{
-		LResourceManager::UnloadResource(AssetPath);
+		ResourceManager->UnloadResource(AssetPath);
 	}
 }
 

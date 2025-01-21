@@ -4,6 +4,7 @@
 
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Globes.h"
 #include "Rendering/Mesh.h"
 #include "ResourceManagement/ResourceManager.h"
 
@@ -16,7 +17,8 @@ CLandscapeComponentSystem::CLandscapeComponentSystem()
 	: Width{ 512 }, Height{ 100 }, Length{ 512 }
 {
 	GenerateMesh();
-	LandscapeShader = LResourceManager::GetResource<LShader>(LandscapeShaderPath);
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	ResourceManager->GetResource<LShader>(LandscapeShaderPath, LandscapeShader);
 
 	if (!LandscapeShader.Get())
 	{
@@ -106,19 +108,20 @@ void CLandscapeComponentSystem::GenerateMesh()
 
 CLandscapeComponent::CLandscapeComponent(const std::string& i_HeightMap, const std::string& i_GroundTexture, const std::string& i_WallTexture)
 {
-	HeightMap = LResourceManager::GetResource<LTexture>(i_HeightMap);
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	ResourceManager->GetResource<LTexture>(i_HeightMap, HeightMap);
 	if (!HeightMap.Get())
 	{
 		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load height map: " + i_HeightMap);
 	}
 
-	GroundTexture = LResourceManager::GetResource<LTexture>(i_GroundTexture);
+	ResourceManager->GetResource<LTexture>(i_GroundTexture, GroundTexture);
 	if (!GroundTexture.Get())
 	{
 		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load ground texture: " + i_GroundTexture);
 	}
 
-	WallTexture = LResourceManager::GetResource<LTexture>(i_WallTexture);
+	ResourceManager->GetResource<LTexture>(i_WallTexture, WallTexture);
 	if (!WallTexture.Get())
 	{
 		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load wall texture: " + i_WallTexture);

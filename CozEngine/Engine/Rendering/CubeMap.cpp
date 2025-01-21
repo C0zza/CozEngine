@@ -17,19 +17,20 @@ namespace
 
 LCubeMap::LCubeMap(const char* i_CubeMapTexture, const char* i_CubeModel)
 {
-	CubeMapTexture = LResourceManager::GetResource<LCubeMapTexture>(i_CubeMapTexture);
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	ResourceManager->GetResource<LCubeMapTexture>(i_CubeMapTexture, CubeMapTexture);
 	if (!CubeMapTexture.Get())
 	{
 		Log(LLogLevel::ERROR, "LCubeMap::LCubeMap - Failed to load CubeMapTexture: " + std::string(i_CubeMapTexture));
 	}
 
-	CubeMapShader = LResourceManager::GetResource<LShader>(CubeMapShaderPath);
+	ResourceManager->GetResource<LShader>(CubeMapShaderPath, CubeMapShader);
 	if (!CubeMapShader.Get())
 	{
 		Log(LLogLevel::ERROR, "LCubeMap::LCubeMap - Failed to load CubeMapShader: " + std::string(CubeMapShaderPath));
 	}
 
-	CubeModel = LResourceManager::GetResource<LModel>(i_CubeModel);
+	ResourceManager->GetResource<LModel>(i_CubeModel, CubeModel);
 	if (!CubeModel.Get())
 	{
 		Log(LLogLevel::ERROR, "LCubeMap::LCubeMap - Failed to lkoad CubeModel: " + std::string(i_CubeModel));

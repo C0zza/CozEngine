@@ -6,14 +6,16 @@
 #include <string>
 
 #include "ECS/ECSDefinitions.h"
+#include "Logging.h"
+#include "Subsystem.h"
 
-class LUniqueTypeIdGenerator
+class LTypeIdGenerator : public LSubsystem
 {
 public:
 	template<typename T>
-	static LIDType GetTypeID()
+	LIDType GetTypeID()
 	{
-		std::string TypeID = typeid(T).name();
+		const std::string TypeID = typeid(T).name();
 
 		if (!TypeIDs.contains(TypeID))
 		{
@@ -25,55 +27,45 @@ public:
 	}
 
 private:
-	static std::unordered_map<std::string, LIDType> TypeIDs;
+	std::unordered_map<std::string, LIDType> TypeIDs;
 };
 
-template<typename T>
-class LTypeIdGenerator
+class LTypeInstanceIdGenerator : public LSubsystem
 {
 public:
-	static LIDType GetNewID()
+	template<typename T>
+	LIDType GetNewID()
 	{
-		if (!StaleIDs.empty())
+		const std::string TypeID = typeid(T).name();
+
+		if (!TypeData.contains(TypeID))
 		{
-			LIDType& StaleID = StaleIDs.front();
-			StaleIDs.pop();
+			TypeData.emplace(TypeID, std::pair<int, std::queue<LIDType>>());
+		}
+		else if (!TypeData[TypeID].second.empty())
+		{
+			LIDType StaleID = TypeData[TypeID].second.front();
+			TypeData[TypeID].second.pop();
 			return StaleID;
 		}
-		else
-		{
-			return ++IdCount;
-		}
+
+		return TypeData[TypeID].first++;
 	}
 
-	static void UnregisterID(const LIDType ID)
+	template<typename T>
+	void UnregisterID(const LIDType ID)
 	{
-		assert(IdCount > ID);
-		StaleIDs.push(ID);
+		const std::string TypeID = typeid(T).name();
+		if (!TypeData.contains(TypeID))
+		{
+			Log(LLogLevel::ERROR, "LTypeInstanceIdGenerator::UnregisterID - TypeID " + TypeID + " hs not been registered yet.");
+			return;
+		}
+
+		assert(TypeData[TypeID].first > ID);
+		TypeData[TypeID].second.push(ID);
 	}
 
 private:
-	static LIDType IdCount;
-	static std::queue<LIDType> StaleIDs;
+	std::map<std::string, std::pair<int, std::queue<LIDType>>> TypeData;
 };
-
-template<typename T>
-LIDType LTypeIdGenerator<T>::IdCount = 0;
-
-template<typename T>
-std::queue<LIDType> LTypeIdGenerator<T>::StaleIDs = {};
-
-// TODO: Will probably also be useful to be able to access LEntity by ID. Wait for use case.
-
-//template<typename T>
-//class LTypeManager : public LTypeIdGenerator<T>
-//{
-//public:
-//	static LIDType RegisterNewObject()
-//	{
-//
-//	}
-//
-//private:
-//	static std::unordered_map<
-//};

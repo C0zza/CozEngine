@@ -1,12 +1,22 @@
 #include "SubsystemCollection.h"
 
+#include "Globes.h"
 #include "Subsystem.h"
+
+LSubsystemCollection::LSubsystemCollection()
+{
+	TypeIdGenerator = new LTypeIdGenerator();
+	RegisterSubsystem(TypeIdGenerator);
+
+	RegisterSubsystem(new LTypeInstanceIdGenerator());
+}
 
 LSubsystemCollection::~LSubsystemCollection()
 {
-	for (auto& Subsystem : Subsystems)
+	std::map<LIDType, std::unique_ptr<LSubsystem>>::reverse_iterator it;
+	for (it = Subsystems.rbegin(); it != Subsystems.rend(); ++it)
 	{
-		Subsystem.second->Deinitialize();
+		it->second->Deinitialize();
 	}
 }
 

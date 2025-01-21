@@ -7,7 +7,7 @@ class LEntity
 {
 public:
 	LEntity();
-	~LEntity();
+	virtual ~LEntity();
 
 	LEntityID GetID() const { return ID; }
 

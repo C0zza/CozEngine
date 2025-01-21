@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 
+#include "Globes.h"
 #include "Misc/Logging.h"
 #include "Subsystem.h"
 
@@ -22,6 +23,7 @@ class LInputEvent : public IInputEvent<CallbackArgs...>
 {
 public:
 	LInputEvent() {}
+	virtual ~LInputEvent();
 
 	void Init(ParentType* i_Object, Callback i_Event)
 	{
@@ -89,4 +91,19 @@ public:
 
 	void RegisterMouseMoveEvent(MouseMoveEvent* i_Event);
 	void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event);
+
+	void UnregisterEvent(void* i_Event);
 };
+
+template<typename ParentType, typename Callback, typename ...CallbackArgs>
+inline LInputEvent<ParentType, Callback, CallbackArgs...>::~LInputEvent()
+{
+	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
+	if (!InputManager)
+	{
+		Log(LLogLevel::ERROR, "LInputEvent::~LInputEvent - Failed to get InputManager. Event will not be unregistered.");
+		return;
+	}
+
+	InputManager->UnregisterEvent(this);
+}

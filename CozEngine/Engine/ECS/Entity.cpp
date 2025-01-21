@@ -1,18 +1,27 @@
 #include "Entity.h"
 
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Globes.h"
 #include "Misc/TypeIdGenerator.h"
 
 LEntity::LEntity()
-	: ID {LTypeIdGenerator<LEntityID>::GetNewID()}
 {
+	LTypeInstanceIdGenerator* TypeInstanceIdGenerator = CSystem.GetSubsystems().GetSubsystem<LTypeInstanceIdGenerator>();
+	assert(TypeInstanceIdGenerator);
+	
+	ID = TypeInstanceIdGenerator->GetNewID<LEntity>();
+
 	AddComponent<CTransformComponent>();
 }
 
 LEntity::~LEntity()
 {
 	GetECS()->RemoveEntity(ID);
-	LTypeIdGenerator<LEntity>::UnregisterID(ID);
+
+	LTypeInstanceIdGenerator* TypeInstanceIdGenerator = CSystem.GetSubsystems().GetSubsystem<LTypeInstanceIdGenerator>();
+	assert(TypeInstanceIdGenerator);
+
+	TypeInstanceIdGenerator->UnregisterID<LEntity>(ID);
 }
 
 LECS* LEntity::GetECS() const

@@ -95,7 +95,7 @@ void LShader::Load()
 
 void LShader::Unload()
 {
-	unsigned int Index = -1;
+	int Index = -1;
 	for (unsigned int i = 0; i < Shaders.size(); i++)
 	{
 		if (Shaders[i] == this)
