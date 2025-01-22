@@ -82,8 +82,9 @@ void LInputManager::Initialize()
 	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(Window->m_Window, CE::InputManager::MouseMoveCallback);
 	glfwSetCursorEnterCallback(Window->m_Window, CE::InputManager::CursorEnterCallback);
-	// TODO: Investigate why having this callback causes a crash when alt tabbing in Release config
+#if defined(COZ_EDITOR)
 	glfwSetWindowFocusCallback(Window->m_Window, CE::InputManager::WindowFocusCallback);
+#endif
 	glfwSetInputMode(Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	IsInitialized = true;
