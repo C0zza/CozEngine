@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "Misc/Logging.h"
+#include "Renderer.h"
 
 std::vector<LShader*> LShader::Shaders = {};
 
@@ -91,6 +92,12 @@ void LShader::Load()
 	glDeleteShader(FragmentShaderID);
 
 	Shaders.push_back(this);
+
+	if (bUsesMatricesUBO)
+	{
+		LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+		Renderer->RegisterMatricesUBOToShader(ID);
+	}
 }
 
 void LShader::Unload()

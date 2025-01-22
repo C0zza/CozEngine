@@ -1,4 +1,5 @@
 {
   "FragmentShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.fs",
-  "VertexShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.vs"
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.vs",
+  "bUsesMatricesUBO": true
 }

@@ -1,4 +1,5 @@
 {
   "FragmentShaderPath": "Engine/Rendering/DefaultShaders/shader.fs",
-  "VertexShaderPath": "Engine/Rendering/DefaultShaders/shader.vs"
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/shader.vs",
+  "bUsesMatricesUBO": true
 }

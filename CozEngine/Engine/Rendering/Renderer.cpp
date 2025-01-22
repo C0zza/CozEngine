@@ -32,6 +32,12 @@ void LRenderer::ClearFrameBuffer(const float& R, const float& G, const float& B,
 	glClear(ClearFlags);
 }
 
+void LRenderer::RegisterMatricesUBOToShader(const unsigned int ShaderID)
+{
+	unsigned int UniformBlockIndex = glGetUniformBlockIndex(ShaderID, "Matrices");
+	glUniformBlockBinding(ShaderID, UniformBlockIndex, 0);
+}
+
 void LRenderer::Initialize()
 {
 	// Utility library for OpenGL
@@ -46,10 +52,17 @@ void LRenderer::Initialize()
 	LTexture::SetFlipVerticallyOnLoad(true);
 
 	ECS = CSystem.GetSubsystems().GetSubsystem<LECS>(true);
+
+	glGenBuffers(1, &MatricesUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(glm::vec3), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, MatricesUBO, 0, 2 * sizeof(glm::mat4) + sizeof(glm::vec3));
 }
 
 void LRenderer::Deinitialize()
 {
+	glDeleteBuffers(1, &MatricesUBO);
 	glfwTerminate();
 }
 
@@ -95,9 +108,11 @@ void LRenderer::Update()
 	
 	if (CameraCS)
 	{
-		LShader::SetGlobalVec("ViewPos", CameraCS->GetViewPos());
-		LShader::SetGlobalMat4("View", CameraCS->GetViewMatrix());
-		LShader::SetGlobalMat4("Projection", GetProjectionMatrix());
+		glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &GetProjectionMatrix());
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &CameraCS->GetViewMatrix());
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &CameraCS->GetViewPos());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	else
 	{

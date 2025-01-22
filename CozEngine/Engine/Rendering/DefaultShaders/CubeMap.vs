@@ -7,11 +7,17 @@ layout (location = 4) in vec3 aBitangent;
 
 out vec3 TexCoords;
 
-uniform mat4 View;
-uniform mat4 Projection;
+layout (std140) uniform Matrices
+{
+    mat4 Projection;
+    mat4 View;
+    vec3 ViewPos;
+};
+
+uniform mat4 CubeMapView;
 
 void main() 
 { 
 	TexCoords = aPos;
-    gl_Position = Projection * View * vec4(aPos, 1.0);
+    gl_Position = Projection * CubeMapView * vec4(aPos, 1.0);
 }

@@ -58,7 +58,12 @@ uniform LPointLight PointLights[MAX_NUM_POINT_LIGHT];
 uniform int ActiveSpotLights;
 uniform LSpotLight SpotLights[MAX_NUM_SPOT_LIGHT];
 
-uniform vec3 ViewPos;
+layout (std140) uniform Matrices
+{
+    mat4 Projection;
+    mat4 View;
+	vec3 ViewPos;
+};
 
 uniform sampler2D GroundTexture;
 uniform sampler2D WallTexture;

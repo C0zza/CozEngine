@@ -9,9 +9,14 @@ out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
 
+layout (std140) uniform Matrices
+{
+    mat4 Projection;
+    mat4 View;
+	vec3 ViewPos;
+};
+
 uniform mat4 Model;
-uniform mat4 View;
-uniform mat4 Projection;
 uniform mat3 NormalMatrix;
 
 uniform vec3 LandscapeSize;

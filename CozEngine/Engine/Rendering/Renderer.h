@@ -29,6 +29,8 @@ public:
 	void BindDefaultFrameBuffer();
 	void ClearFrameBuffer(const float& R, const float& G, const float& B, const float& A, GLbitfield ClearFlags);
 
+	void RegisterMatricesUBOToShader(const unsigned int ShaderID);
+
 protected:
 	virtual void Initialize() override;
 	virtual void Deinitialize() override;
@@ -40,6 +42,8 @@ private:
 	LFrameBuffer* CustomFrameBuffer = nullptr;
 
 	LECS* ECS = nullptr;
+
+	unsigned int MatricesUBO = 0;
 };
 
 

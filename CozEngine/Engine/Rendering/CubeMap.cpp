@@ -49,8 +49,10 @@ void LCubeMap::Draw()
 
 	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
 	CCameraComponentSystem* CameraCS = dynamic_cast<CCameraComponentSystem*>(ECS->GetComponentSystemFor<CCameraComponent>());
-	glm::mat4 ViewMatrix = ViewMatrix = glm::mat4(glm::mat3(CameraCS->GetViewMatrix()));
-	CubeMapShader.Get()->SetMat4("View", ViewMatrix);
+	// Casting to mat3 removes the translation data of the view matrix so the cube map position
+	// is static relative to the camera.
+	glm::mat4 ViewMatrix = glm::mat4(glm::mat3(CameraCS->GetViewMatrix()));
+	CubeMapShader.Get()->SetMat4("CubeMapView", ViewMatrix);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapTexture->GetTextureID());
 	CubeModel->Draw(*CubeMapShader.Get(), glm::mat4());
