@@ -1,10 +1,10 @@
 #include "ResourceManager.h"
 
-void LResourceManager::Deinitialize()
+LResourceManager::~LResourceManager()
 {
 	if (!Resources.empty())
 	{
-		std::string ErrorString = "LResourceManager::Deinitialize - Resources have not been released:";
+		std::string ErrorString = "LResourceManager::~LResourceManager - Resources have not been released:";
 		for (const std::pair<std::string, LResource*>& Pair : Resources)
 		{
 			ErrorString += "\n - " + Pair.first;

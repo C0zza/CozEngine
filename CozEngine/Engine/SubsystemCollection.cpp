@@ -17,6 +17,7 @@ LSubsystemCollection::~LSubsystemCollection()
 	for (it = Subsystems.rbegin(); it != Subsystems.rend(); ++it)
 	{
 		it->second->Deinitialize();
+		it->second.reset();
 	}
 }
 

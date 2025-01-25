@@ -11,7 +11,7 @@
 class LResourceManager : public LSubsystem
 {
 public:
-	virtual void Deinitialize() override;
+	~LResourceManager();
 
 	template<typename T>
 	void GetResource(const std::string& Asset, LResourceHandle<T>& OutResourceHandle)

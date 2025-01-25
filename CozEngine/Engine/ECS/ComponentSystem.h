@@ -13,6 +13,8 @@ class LComponentSystemBase
 {
 	friend class LECS;
 public:
+	virtual ~LComponentSystemBase() {}
+
 	bool GetIsTickable() const { return IsTickable; }
 	virtual void RemoveComponent(const LEntityID EntityID) = 0;
 
