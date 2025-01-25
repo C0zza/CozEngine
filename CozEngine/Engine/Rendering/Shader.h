@@ -32,7 +32,7 @@ public:
 	static void SetGlobalMat4(const std::string& name, const glm::mat4& mat);
 	static void SetGlobalVec(const std::string& name, const glm::vec3& vec);
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LShader, VertexShaderPath, FragmentShaderPath, bUsesMatricesUBO)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LShader, VertexShaderPath, FragmentShaderPath, bUsesMatricesUBO, bUsesLightingUBO)
 
 private:
 	unsigned int ID;
@@ -42,6 +42,7 @@ private:
 
 	// TODO: Should rather have a list of UBOs this shader should register with. This'll require some UBO manager system.
 	bool bUsesMatricesUBO = false;
+	bool bUsesLightingUBO = false;
 
 	static std::vector<LShader*> Shaders;
 };

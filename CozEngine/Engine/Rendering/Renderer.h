@@ -30,6 +30,15 @@ public:
 	void ClearFrameBuffer(const float& R, const float& G, const float& B, const float& A, GLbitfield ClearFlags);
 
 	void RegisterMatricesUBOToShader(const unsigned int ShaderID);
+	void ReigsterLightingUBOToShader(const unsigned int ShaderID);
+
+	template<typename T>
+	void UpdateLightingUBOData(GLintptr Offset, GLsizeiptr Size, T& Value)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, LightingUBO);
+		glBufferSubData(GL_UNIFORM_BUFFER, Offset, Size, &Value);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
 
 protected:
 	virtual void Initialize() override;
@@ -44,6 +53,7 @@ private:
 	LECS* ECS = nullptr;
 
 	unsigned int MatricesUBO = 0;
+	unsigned int LightingUBO = 0;
 };
 
 

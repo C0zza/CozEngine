@@ -14,58 +14,64 @@ struct LMaterial
 	float Shininess;
 };
 
-struct LDirectionalLight
+struct LDirectionalLight // 80
 {
-	bool IsActive;
-	vec3 Direction;
-	vec3 Ambient;
-	vec3 Diffuse;
-	vec3 Specular;
+	vec3 Direction; // 0 - 12
+	float Padding1;
+	vec3 Ambient;	// 16 - 28
+	float Padding2;
+	vec3 Diffuse;	// 32 - 44
+	float Padding3;
+	vec3 Specular;  // 48 - 60
+	float Padding4;
+	bool IsActive;  // 64 - 68
 };
 
-struct LPointLight
+struct LPointLight // 80
 {
-	vec3 Position;
-	vec3 Ambient;
-	vec3 Diffuse;
-	vec3 Specular;
+	vec3 Position;		// 0 - 12
+	float Padding1;
+	vec3 Ambient;		// 16 - 28
+	float Padding2;
+	vec3 Diffuse;		// 32 - 44
+	float Padding3;
+	vec3 Specular;		// 48 - 60
+	float Padding4;
 
-	float Constant;
-	float Linear;
-	float Quadratic;
+	float Constant;		// 64 - 68
+	float Linear;		// 68 - 72
+	float Quadratic;	// 72 - 76
 };
 
-struct LSpotLight
+struct LSpotLight // 112
 {
-	vec3 Position;
-	vec3 Ambient;
-	vec3 Diffuse;
-	vec3 Specular;
+	vec3 Position;		// 0 - 12
+	float Padding1;
+	vec3 Ambient;		// 16 - 28
+	float Padding2;
+	vec3 Diffuse;		// 32 - 44
+	float Padding3;
+	vec3 Specular;		// 48 - 60
+	float Padding4;
 
-	vec3 Direction;
-	float CutOff;
-	float OuterCutOff;
+	vec3 Direction;		// 64 - 76
+	float Padding5;
+	float CutOff;		// 80 - 84
+	float OuterCutOff;  // 84 - 88
 
-	float Constant;
-	float Linear;
-	float Quadratic;
+	float Constant;		// 88 - 92
+	float Linear;		// 92 - 96
+	float Quadratic;    // 96 - 100
 };
 
 vec3 CalcDirectionalLight(LDirectionalLight Light, vec3 Normal, vec3 ViewDir, vec3 DiffuseSample, vec3 SpecularSample);
 vec3 CalcPointLight(LPointLight Light, vec3 Normal, vec3 FragPos, vec3 ViewDir, vec3 DiffuseSample, vec3 SpecularSample);
 vec3 CalcSpotLight(LSpotLight Light, vec3 Normal, vec3 FragPos, vec3 ViewDir, vec3 DiffuseSample, vec3 SpecularSample);
 
-uniform LDirectionalLight DirectionalLight;
-
 // Should match number in PointLightComponent.h
 #define MAX_NUM_POINT_LIGHT 4
-uniform int ActivePointLights;
-uniform LPointLight PointLights[MAX_NUM_POINT_LIGHT];
-
 // Should match number in SpotLightComponent.h
 #define MAX_NUM_SPOT_LIGHT 4
-uniform int ActiveSpotLights;
-uniform LSpotLight SpotLights[MAX_NUM_SPOT_LIGHT];
 
 uniform LMaterial Material;
 
@@ -74,6 +80,18 @@ layout (std140) uniform Matrices
     mat4 Projection;
     mat4 View;
 	vec3 ViewPos;
+};
+
+layout (std140) uniform Lights
+{
+	// It seems like std140 padding isn't applied properly to structs used in UBOs
+	// so make sure we manually do so for now
+
+	LDirectionalLight DirectionalLight;				// 0 - 80
+	LPointLight PointLights[MAX_NUM_POINT_LIGHT];	// 80 - 400
+	LSpotLight SpotLights[MAX_NUM_SPOT_LIGHT];		// 400 - 848
+	int ActivePointLights;							// 848 - 852
+	int ActiveSpotLights;							// 852 - 856
 };
 
 void main()

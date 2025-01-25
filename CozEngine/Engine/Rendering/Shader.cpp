@@ -93,10 +93,15 @@ void LShader::Load()
 
 	Shaders.push_back(this);
 
+	LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 	if (bUsesMatricesUBO)
 	{
-		LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 		Renderer->RegisterMatricesUBOToShader(ID);
+	}
+
+	if (bUsesLightingUBO)
+	{
+		Renderer->ReigsterLightingUBOToShader(ID);
 	}
 }
 

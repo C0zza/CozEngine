@@ -6,7 +6,54 @@
 #include "Globes.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
+#include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
+
+namespace CE::CSpotLightComponent
+{
+	struct CSpotLightComponentShaderStruct
+	{
+		void Update(const glm::vec3& Pos, const glm::vec3& Amb, const glm::vec3& Dif, const glm::vec3& Spec,
+			const glm::vec3& Dir, const float& COff, const float& OutCOff, const float& Const, const float& Lin,
+			const float& Quad)
+		{
+			Position = Pos;
+			Ambient = Amb;
+			Diffuse = Dif;
+			Specular = Spec;
+			Direction = Dir;
+			CutOff = COff;
+			OuterCutOff = OutCOff;
+			Constant = Const;
+			Linear = Lin;
+			Quadratic = Quad;
+		}
+
+		glm::vec3 Position;		// 0 - 12
+		float Padding1;
+		glm::vec3 Ambient;		// 16 - 28
+		float Padding2;
+		glm::vec3 Diffuse;		// 32 - 44
+		float Padding3;
+		glm::vec3 Specular;		// 48 - 60
+		float Padding4;
+		glm::vec3 Direction;	// 64 - 76
+		float Padding5;
+
+		float CutOff;		// 80 - 84
+		float OuterCutOff;  // 84 - 88
+		float Constant;		// 88 - 92
+		float Linear;		// 92 - 96
+		float Quadratic;    // 96 - 100
+	};
+
+	CSpotLightComponentShaderStruct ShaderDatas[MAX_NUM_SPOT_LIGHT];
+
+	const int SpotLightArrayOffset = 400;
+	const int SpotLightStructSize = 112;
+
+	LRenderer* Renderer = nullptr;
+}
 
 CSpotLightComponent::CSpotLightComponent()
 	: CutOff{ -1.f }, OuterCutOff{ -1.f }, Constant{ -1.f }, Linear{ -1.f }, Quadratic{ -1.f }
@@ -17,7 +64,17 @@ void CSpotLightComponentSystem::UpdateSpotLights()
 {
 	if (IsCountDirty)
 	{
-		LShader::SetGlobalInt("ActiveSpotLights", SpotLightCount);
+		using namespace CE::CSpotLightComponent;
+		if (!Renderer)
+		{
+			Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+		}
+
+		Renderer->UpdateLightingUBOData(
+			SpotLightArrayOffset + SpotLightStructSize * MAX_NUM_SPOT_LIGHT + sizeof(int),
+			sizeof(int),
+			SpotLightCount);
+
 		IsCountDirty = false;
 	}
 
@@ -88,19 +145,24 @@ void CSpotLightComponentSystem::UpdateSpotLight(CSpotLightComponent* Component, 
 
 	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(Component->EntityID);
 
-	std::stringstream SpotLightElement;
-	SpotLightElement << "SpotLights[" << Index << "].";
+	using namespace CE::CSpotLightComponent;
 
-	LLighting::UpdateLightComponentVec(Component->Position, TransformComp->GetPosition(), "Position", SpotLightElement);
-	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Direction, TransformComp->GetForward(), "Direction", SpotLightElement);
-	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Ambient, Component->Ambient, "Ambient", SpotLightElement);
-	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Diffuse, Component->Diffuse, "Diffuse", SpotLightElement);
-	LLighting::UpdateLightComponentVec(SpotLightCache[Index].Specular, Component->Specular, "Specular", SpotLightElement);
+	CSpotLightComponentShaderStruct& ShaderData = ShaderDatas[Index];
+	ShaderData.Update(
+		TransformComp->GetPosition(),
+		Component->Ambient,
+		Component->Diffuse,
+		Component->Specular,
+		TransformComp->GetForward(),
+		Component->CutOff,
+		Component->OuterCutOff,
+		Component->Constant,
+		Component->Linear,
+		Component->Quadratic
+	);
 
-	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].CutOff, Component->CutOff, "CutOff", SpotLightElement);
-	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].OuterCutOff, Component->OuterCutOff, "OuterCutOff", SpotLightElement);
-
-	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Constant, Component->Constant, "Constant", SpotLightElement);
-	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Linear, Component->Linear, "Linear", SpotLightElement);
-	LLighting::UpdateLightComponentFloat(SpotLightCache[Index].Quadratic, Component->Quadratic, "Quadratic", SpotLightElement);
+	Renderer->UpdateLightingUBOData(
+		SpotLightArrayOffset + SpotLightStructSize * Index,
+		sizeof(CSpotLightComponentShaderStruct),
+		ShaderData);
 }

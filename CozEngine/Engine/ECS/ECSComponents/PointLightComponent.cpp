@@ -6,7 +6,46 @@
 #include "Globes.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
+#include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
+
+namespace CE::CPointLightComponent
+{
+	struct CPointLightComponentShaderStruct
+	{
+		void Update(const glm::vec3& Pos, const glm::vec3& Amb, const glm::vec3& Dif,
+			const glm::vec3& Spec, const float& Const, const float& Lin, const float& Quad)
+		{
+			Position = Pos;
+			Ambient = Amb;
+			Diffuse = Dif;
+			Specular = Spec;
+			Constant = Const;
+			Linear = Lin;
+			Quadratic = Quad;
+		}
+
+		glm::vec3 Position;		// 0 - 12
+		float padding1 = 0.f;
+		glm::vec3 Ambient;		// 16 - 28
+		float padding2 = 0.f;
+		glm::vec3 Diffuse;		// 32 - 44
+		float padding3 = 0.f;
+		glm::vec3 Specular;		// 48 - 60
+		float padding4 = 0.f;
+
+		float Constant;		// 64 - 68
+		float Linear;		// 68 - 72
+		float Quadratic;	// 72 - 76
+	};
+
+	CPointLightComponentShaderStruct ShaderDatas[MAX_NUM_POINT_LIGHT];
+
+	LRenderer* Renderer = nullptr;
+
+	const int PointLightArrayOffset = 80;
+	const int PointLightStructSize = 80;
+}
 
 CPointLightComponent::CPointLightComponent()
 	: Constant{ -1.f }, Linear{ -1.f }, Quadratic{ -1.f }
@@ -22,7 +61,17 @@ void CPointLightComponentSystem::UpdatePointLights()
 {
 	if (IsCountDirty)
 	{
-		LShader::SetGlobalInt("ActivePointLights", PointLightCount);
+		using namespace CE::CPointLightComponent;
+		if (!Renderer)
+		{
+			Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+		}
+
+		Renderer->UpdateLightingUBOData(
+			848,
+			sizeof(int),
+			PointLightCount);
+
 		IsCountDirty = false;
 	}
 
@@ -93,15 +142,21 @@ void CPointLightComponentSystem::UpdatePointLight(CPointLightComponent* Componen
 	
 	CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(Component->EntityID);
 
-	std::stringstream PointLightElement;
-	PointLightElement << "PointLights[" << Index << "].";
+	using namespace CE::CPointLightComponent;
 
-	LLighting::UpdateLightComponentVec(Component->Position, TransformComp->GetPosition(), "Position", PointLightElement);
-	LLighting::UpdateLightComponentVec(PointLightCache[Index].Ambient, Component->Ambient, "Ambient", PointLightElement);
-	LLighting::UpdateLightComponentVec(PointLightCache[Index].Diffuse, Component->Diffuse, "Diffuse", PointLightElement);
-	LLighting::UpdateLightComponentVec(PointLightCache[Index].Specular, Component->Specular, "Specular", PointLightElement);
+	CPointLightComponentShaderStruct& ShaderData = ShaderDatas[Index];
+	ShaderData.Update(
+		TransformComp->GetPosition(),
+		Component->Ambient,
+		Component->Diffuse,
+		Component->Specular,
+		Component->Constant,
+		Component->Linear,
+		Component->Quadratic
+	);
 
-	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Constant, Component->Constant, "Constant", PointLightElement);
-	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Linear, Component->Linear, "Linear", PointLightElement);
-	LLighting::UpdateLightComponentFloat(PointLightCache[Index].Quadratic, Component->Quadratic, "Quadratic", PointLightElement);
+	Renderer->UpdateLightingUBOData(
+		PointLightArrayOffset + PointLightStructSize * Index,
+		sizeof(CPointLightComponentShaderStruct),
+		ShaderData);
 }

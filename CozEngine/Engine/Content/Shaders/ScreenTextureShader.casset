@@ -1,5 +1,6 @@
 {
   "FragmentShaderPath": "Engine/Rendering/DefaultShaders/ScreenTexture.fs",
   "VertexShaderPath": "Engine/Rendering/DefaultShaders/ScreenTexture.vs",
-  "bUsesMatricesUBO": false
+  "bUsesMatricesUBO": false,
+  "bUsesLightingUBO": false
 }

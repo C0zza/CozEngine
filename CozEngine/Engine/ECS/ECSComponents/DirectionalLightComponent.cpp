@@ -6,7 +6,13 @@
 #include "ECS/ECS.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
+#include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
+
+namespace CE::CDirectionalLightComponent
+{
+	static const int bIsActiveOffset = 64;
+}
 
 CDirectionalLightComponent::CDirectionalLightComponent()
 {
@@ -23,8 +29,9 @@ void CDirectionalLightComponentSystem::OnComponentAdded(CDirectionalLightCompone
 	{
 		// TODO: Setup ECS component handles for future reference handling and serialization
 		ActiveDirectionalLight = &Component;
-		LShader::SetGlobalBool("DirectionalLight.IsActive", true);
-		LShader::SetGlobalVec("DirectionalLight.Direction", ActiveDirectionalLight->Direction);
+		LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+		Renderer->UpdateLightingUBOData(CE::CDirectionalLightComponent::bIsActiveOffset, sizeof(bool), ActiveDirectionalLight);
+		Renderer->UpdateLightingUBOData(0, sizeof(glm::vec3), ActiveDirectionalLight->Direction);
 	}
 }
 
@@ -38,7 +45,12 @@ void CDirectionalLightComponentSystem::OnComponentRemoved(CDirectionalLightCompo
 	CDirectionalLightComponent* TempActiveDirectionalLight = ActiveDirectionalLight;
 	ActiveDirectionalLight = nullptr;
 
-	LShader::SetGlobalBool("DirectionalLight.IsActive", false);
+	LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+
+	static const bool FalseBool = false;
+	static const bool TrueBool = true;
+
+	Renderer->UpdateLightingUBOData(CE::CDirectionalLightComponent::bIsActiveOffset, sizeof(bool), FalseBool);
 	for (CDirectionalLightComponent& DirectionalLight : GetComponents())
 	{
 		if (&DirectionalLight != TempActiveDirectionalLight)
@@ -49,11 +61,11 @@ void CDirectionalLightComponentSystem::OnComponentRemoved(CDirectionalLightCompo
 
 	if (ActiveDirectionalLight)
 	{
-		LShader::SetGlobalBool("DirectionalLight.IsActive", true);
+		Renderer->UpdateLightingUBOData(CE::CDirectionalLightComponent::bIsActiveOffset, sizeof(bool), TrueBool);
 	}
 	else
 	{
-		LShader::SetGlobalBool("DirectionalLight.IsActive", false);
+		Renderer->UpdateLightingUBOData(CE::CDirectionalLightComponent::bIsActiveOffset, sizeof(bool), FalseBool);
 	}
 }
 
@@ -61,6 +73,8 @@ void CDirectionalLightComponentSystem::UpdateDirectionalLight()
 {
 	if (ActiveDirectionalLight)
 	{
+		static LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+
 		assert(ECS);
 		const CTransformComponent* TransformComp = ECS->GetComponent<CTransformComponent>(ActiveDirectionalLight->EntityID);
 		assert(TransformComp);
@@ -71,24 +85,24 @@ void CDirectionalLightComponentSystem::UpdateDirectionalLight()
 		if (TransformComp->GetForward() != ActiveDirectionalLight->Direction)
 		{
 			ActiveDirectionalLight->Direction = TransformComp->GetForward();
-			LShader::SetGlobalVec(DirectionalLightVar.str() + "Direction", ActiveDirectionalLight->Direction);
+			Renderer->UpdateLightingUBOData(0, sizeof(glm::vec3), ActiveDirectionalLight->Direction);
 		}
 
 		if (ActiveDirectionalLight->Ambient != CurrentAmbient)
 		{
-			LShader::SetGlobalVec(DirectionalLightVar.str() + "Ambient", ActiveDirectionalLight->Ambient);
+			Renderer->UpdateLightingUBOData(16, sizeof(glm::vec3), ActiveDirectionalLight->Ambient);
 			CurrentAmbient = ActiveDirectionalLight->Ambient;
 		}
 
 		if (ActiveDirectionalLight->Diffuse != CurrentDiffuse)
 		{
-			LShader::SetGlobalVec(DirectionalLightVar.str() + "Diffuse", ActiveDirectionalLight->Diffuse);
+			Renderer->UpdateLightingUBOData(32, sizeof(glm::vec3), ActiveDirectionalLight->Diffuse);
 			CurrentDiffuse = ActiveDirectionalLight->Diffuse;
 		}
 
 		if (ActiveDirectionalLight->Specular != CurrentSpecular)
 		{
-			LShader::SetGlobalVec(DirectionalLightVar.str() + "Specular", ActiveDirectionalLight->Specular);
+			Renderer->UpdateLightingUBOData(48, sizeof(glm::vec3), ActiveDirectionalLight->Specular);
 			CurrentSpecular = ActiveDirectionalLight->Specular;
 		}
 	}

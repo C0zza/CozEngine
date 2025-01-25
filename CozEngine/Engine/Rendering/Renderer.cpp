@@ -38,6 +38,12 @@ void LRenderer::RegisterMatricesUBOToShader(const unsigned int ShaderID)
 	glUniformBlockBinding(ShaderID, UniformBlockIndex, 0);
 }
 
+void LRenderer::ReigsterLightingUBOToShader(const unsigned int ShaderID)
+{
+	unsigned int UniformBlockIndex = glGetUniformBlockIndex(ShaderID, "Lights");
+	glUniformBlockBinding(ShaderID, UniformBlockIndex, 1);
+}
+
 void LRenderer::Initialize()
 {
 	// Utility library for OpenGL
@@ -58,10 +64,17 @@ void LRenderer::Initialize()
 	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(glm::vec3), NULL, GL_STATIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, MatricesUBO, 0, 2 * sizeof(glm::mat4) + sizeof(glm::vec3));
+
+	glGenBuffers(1, &LightingUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, LightingUBO);
+	glBufferData(GL_UNIFORM_BUFFER, 856, NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, LightingUBO, 0, 856);
 }
 
 void LRenderer::Deinitialize()
 {
+	glDeleteBuffers(1, &LightingUBO);
 	glDeleteBuffers(1, &MatricesUBO);
 	glfwTerminate();
 }
