@@ -4,6 +4,7 @@ class LEditorWindow
 {
 public:
 	LEditorWindow(const char* iWindowName) : WindowName{iWindowName} {}
+	virtual ~LEditorWindow() {}
 
 	virtual void Draw() = 0;
 

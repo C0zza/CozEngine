@@ -291,6 +291,12 @@ void LInputManager::UnregisterEvent(void* i_Event)
 	if (FoundIndex != -1)
 	{
 		Events[Ka].erase(Events[Ka].begin() + FoundIndex);
+		
+		if (Events[Ka].empty())
+		{
+			Events.erase(Ka);
+		}
+
 		return;
 	}
 
