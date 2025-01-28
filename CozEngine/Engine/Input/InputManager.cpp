@@ -11,6 +11,8 @@
 
 std::map<void*, LInputManager*> LInputManager::InputManagers{};
 
+LInputManager* LInputEventHandle::InputManager = nullptr;
+
 namespace CE::InputManager
 {
 	void CursorEnterCallback(GLFWwindow* window, int entered)
@@ -87,6 +89,8 @@ void LInputManager::Initialize()
 #endif
 	glfwSetInputMode(Window->m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
+	LInputEventHandle::InputManager = this;
+
 	IsInitialized = true;
 }
 
@@ -103,16 +107,14 @@ void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int ac
 	Ka.first = key;
 	Ka.second = action;
 
-	if (Events.find(Ka) != Events.end())
+	if (ActionEvents.contains(Ka))
 	{
-		for (unsigned int i = 0; i < Events[Ka].size(); i++)
+		for (std::function<void()>& Func : ActionEvents[Ka])
 		{
-			(*Events[Ka][i])();
+			Func();
 		}
-
-		// TODO: Test for recursion? If event consumes input?
 	}
-  }
+}
 
 void LInputManager::ProcessMouseMove(GLFWwindow* window, double xpos, double ypos)
 {
@@ -132,9 +134,9 @@ void LInputManager::ProcessMouseMove(GLFWwindow* window, double xpos, double ypo
 	double MovementX = xpos - PreviousMouseX;
 	double MovementY = ypos - PreviousMouseY;
 
-	for (auto& Event : MouseMoveEvents)
+	for (std::function<void(double, double)>& Event : MouseMoveEvents)
 	{
-		(*Event)(-MovementY, -MovementX);
+		Event(-MovementY, -MovementX);
 	}
 
 	PreviousMouseX = xpos;
@@ -192,125 +194,53 @@ bool LInputManager::HasRequiredSubsystems() const
 	return CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 }
 
-void LInputManager::RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event)
+void LInputManager::UnregisterHandle(LInputEventHandle* Handle)
 {
-	assert(i_Event);
-
-	if (Events.find(i_KeyAction) == Events.end())
+	if (!EventRefs.contains(Handle))
 	{
-		Events.insert({ i_KeyAction, {} });
-	}
-
-	std::vector<KeyEvent*>& KeyActionEvents = Events[i_KeyAction];
-
-	std::vector<KeyEvent*>::iterator it = std::find(KeyActionEvents.begin(), KeyActionEvents.end(), i_Event);
-	if (it == KeyActionEvents.end())
-	{
-		KeyActionEvents.push_back(i_Event);
-	}
-	else
-	{
-		// TODO: Check this makes sense. I.e. would i_Event point to the same place for multiple objects of the same type (assuming the same method).
-		assert(false);
-		Log(LLogLevel::INFO, "LInputManager::RegisterKeyEvent - Attempted to register duplicate KeyEvent. Ignoring.");
-	}
-}
-
-void LInputManager::UnregisterKeyEvent(KeyEvent* i_Event)
-{
-	assert(i_Event);
-
-	for (auto& Event : Events)
-	{
-		std::vector<KeyEvent*>::iterator it = std::find(Event.second.begin(), Event.second.end(), i_Event);
-		if (it != Event.second.end())
-		{
-			Event.second.erase(it);
-			return;
-		}
-	}
-
-	Log(LLogLevel::WARNING, "LInputManager::UnregisterKeyEvent - Could not find KeyEvent to unregister.");
-}
-
-void LInputManager::RegisterMouseMoveEvent(MouseMoveEvent* i_Event)
-{
-	assert(i_Event);
-
-	std::vector<MouseMoveEvent*>::iterator it = std::find(MouseMoveEvents.begin(), MouseMoveEvents.end(), i_Event);
-
-	if (it == MouseMoveEvents.end())
-	{
-		MouseMoveEvents.push_back(i_Event);
-	}
-	else
-	{
-		Log(LLogLevel::INFO, "LInputManager::RegisterMouseMoveEvent - Attempted to register duplicate MouseMoveEvent. Ignoring.");
-	}
-}
-
-void LInputManager::UnregisterMouseMoveEvent(MouseMoveEvent* i_Event)
-{
-	assert(i_Event);
-
-	std::vector<MouseMoveEvent*>::iterator it = std::find(MouseMoveEvents.begin(), MouseMoveEvents.end(), i_Event);
-
-	if (it != MouseMoveEvents.end())
-	{
-		MouseMoveEvents.erase(it);
-	}
-	else
-	{
-		Log(LLogLevel::WARNING, "LInputManager::UnregisterMouseMoveEvent - Could not find MouseMoveEvent to unregister.");
-	}
-}
-
-void LInputManager::UnregisterEvent(void* i_Event)
-{
-	KeyAction Ka;
-	int FoundIndex = -1;
-
-	for (std::pair<const KeyAction, std::vector<KeyEvent*>>& Pair : Events)
-	{
-		for (int i = 0; i < Pair.second.size(); ++i)
-		{
-			if (Pair.second[i] == i_Event)
-			{
-				FoundIndex = i;
-				break;
-			}
-		}
-
-		if (FoundIndex != -1)
-		{
-			Ka = Pair.first;
-			break;
-		}
-	}
-
-	if (FoundIndex != -1)
-	{
-		Events[Ka].erase(Events[Ka].begin() + FoundIndex);
-		
-		if (Events[Ka].empty())
-		{
-			Events.erase(Ka);
-		}
-
 		return;
 	}
 
-	for (int i = 0; i < MouseMoveEvents.size(); ++i)
+	const LEventRefData& EventRefData = EventRefs[Handle];
+	if (EventRefData.Index < 0)
 	{
-		if (MouseMoveEvents[i] == i_Event)
-		{
-			FoundIndex = i;
-			break;
-		}
+		return;
 	}
 
-	if (FoundIndex != -1)
+	std::vector<std::function<void()>>* Funcs = nullptr;
+	switch (EventRefData.Type)
 	{
-		MouseMoveEvents.erase(MouseMoveEvents.begin() + FoundIndex);
+	case EInputEventType::Action:
+		if (!ActionEvents.contains(EventRefData.Ka))
+		{
+			return;
+		}
+
+		Funcs = &ActionEvents[EventRefData.Ka];
+		
+		if (Funcs->size() > 0 && EventRefData.Index < Funcs->size())
+		{
+			Funcs->erase(Funcs->begin() + EventRefData.Index);
+			if (Funcs->empty())
+			{
+				ActionEvents.erase(EventRefData.Ka);
+			}
+		}
+		break;
+	case EInputEventType::Mouse:
+		if (MouseMoveEvents.size() > 0 && EventRefData.Index < MouseMoveEvents.size())
+		{
+			MouseMoveEvents.erase(MouseMoveEvents.begin() + EventRefData.Index);
+		}
+		break;
+	default:
+		break;
 	}
+
+	EventRefs.erase(Handle);
+}
+
+LInputEventHandle::~LInputEventHandle()
+{
+	InputManager->UnregisterHandle(this);
 }

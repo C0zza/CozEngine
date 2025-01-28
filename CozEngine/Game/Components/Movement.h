@@ -23,18 +23,18 @@ protected:
 	virtual void Init() override;
 
 private:
-	LKeyInputEvent<CMovement> MoveLeftEvent;
-	LKeyInputEvent<CMovement> MoveRightEvent;
-	LKeyInputEvent<CMovement> StopMoveLeftEvent;
-	LKeyInputEvent<CMovement> StopMoveRightEvent;
-	LKeyInputEvent<CMovement> MoveForwardEvent;
-	LKeyInputEvent<CMovement> StopMoveForwardEvent;
-	LKeyInputEvent<CMovement> MoveBackEvent;
-	LKeyInputEvent<CMovement> StopMoveBackEvent;
-	LKeyInputEvent<CMovement> MoveDownEvent;
-	LKeyInputEvent<CMovement> StopMoveDownEvent;
-	LKeyInputEvent<CMovement> MoveUpEvent;
-	LKeyInputEvent<CMovement> StopMoveUpEvent;
+	LInputEventHandle MoveLeftEvent;
+	LInputEventHandle MoveRightEvent;
+	LInputEventHandle StopMoveLeftEvent;
+	LInputEventHandle StopMoveRightEvent;
+	LInputEventHandle MoveForwardEvent;
+	LInputEventHandle StopMoveForwardEvent;
+	LInputEventHandle MoveBackEvent;
+	LInputEventHandle StopMoveBackEvent;
+	LInputEventHandle MoveDownEvent;
+	LInputEventHandle StopMoveDownEvent;
+	LInputEventHandle MoveUpEvent;
+	LInputEventHandle StopMoveUpEvent;
 
 	void MoveLeft();
 	void StopMoveLeft();
@@ -49,7 +49,7 @@ private:
 	void MoveUp();
 	void StopMoveUp();
 
-	LMouseMoveEvent<CMovement> MouseRotateEvent;
+	LInputEventHandle MouseRotateEvent;
 	void Rotate(double X, double Y);
 
 	// TODO: Pointer will become invalid if the component pool vector is moved :/

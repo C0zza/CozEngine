@@ -9,51 +9,49 @@
 #include "Subsystem.h"
 
 struct GLFWwindow;
-class LWindow;
-
-template<typename... CallbackArgs>
-class IInputEvent
-{
-public:
-	virtual void operator() (CallbackArgs... Args) = 0;
-};
-
-template<typename ParentType, typename Callback, typename... CallbackArgs>
-class LInputEvent : public IInputEvent<CallbackArgs...>
-{
-public:
-	LInputEvent() {}
-	virtual ~LInputEvent();
-
-	void Init(ParentType* i_Object, Callback i_Event)
-	{
-		Object = i_Object;
-		Event = i_Event;
-	}
-
-	virtual void operator () (CallbackArgs... Args) override { (Object->*Event)(Args...); }
-
-protected:
-	Callback Event = nullptr;
-	ParentType* Object = nullptr;
-};
-
 using KeyAction = std::pair<int, int>;
 
-template<typename T>
-using LKeyInputEvent = LInputEvent<T, void (T::*)()>;
+class LInputEventHandle
+{
+	friend class LInputManager;
+public:
+	LInputEventHandle() = default;
+	~LInputEventHandle();
 
-template<typename T>
-using LMouseMoveEvent = LInputEvent<T, void (T::*)(double X, double Y), double, double>;
+	// TODO: Add manual unbinding
 
-using KeyEvent = IInputEvent<>;
-using MouseMoveEvent = IInputEvent<double, double>;
+private:
+	static LInputManager* InputManager;
+};
 
 class LInputManager : public LSubsystem
 {
 private:
-	std::map<const KeyAction, std::vector<KeyEvent*>> Events;
-	std::vector<MouseMoveEvent*> MouseMoveEvents;
+	enum class EInputEventType
+	{
+		Action,
+		Mouse,
+		None
+	};
+
+	struct LEventRefData
+	{
+		LEventRefData() = default;
+		LEventRefData(const KeyAction& i_Ka, const int i_Index, const EInputEventType i_Type)
+			: Ka{i_Ka}, Index{i_Index}, Type{i_Type}
+		{
+		}
+
+		KeyAction Ka;
+		int Index = -1;
+		EInputEventType Type = EInputEventType::None;
+	};
+
+	std::map<const KeyAction, std::vector<std::function<void()>>> ActionEvents;
+	std::vector<std::function<void(double, double)>> MouseMoveEvents;
+
+	// To allow for RAII with LInputEventHandle
+	std::map<LInputEventHandle*, const LEventRefData> EventRefs;
 
 	bool IsInitialized = false;
 
@@ -85,25 +83,36 @@ public:
 #endif
 
 	virtual bool HasRequiredSubsystems() const override;
-
-	void RegisterKeyEvent(const KeyAction& i_KeyAction, KeyEvent* i_Event);
-	void UnregisterKeyEvent(KeyEvent* i_Event);
-
-	void RegisterMouseMoveEvent(MouseMoveEvent* i_Event);
-	void UnregisterMouseMoveEvent(MouseMoveEvent* i_Event);
-
-	void UnregisterEvent(void* i_Event);
-};
-
-template<typename ParentType, typename Callback, typename ...CallbackArgs>
-inline LInputEvent<ParentType, Callback, CallbackArgs...>::~LInputEvent()
-{
-	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
-	if (!InputManager)
+	
+	template<typename TCallerType, typename TFuncRef>
+	void RegisterActionEvent(TCallerType* Caller, KeyAction iKeyAction, TFuncRef&& FuncRef, LInputEventHandle& EventHandle)
 	{
-		Log(LLogLevel::ERROR, "LInputEvent::~LInputEvent - Failed to get InputManager. Event will not be unregistered.");
-		return;
+		if (!Caller)
+		{
+			return;
+		}
+
+		const int KeyActionsVecSize = ActionEvents[iKeyAction].size();
+
+		LEventRefData EventRefData(iKeyAction, KeyActionsVecSize, EInputEventType::Action);
+
+		ActionEvents[iKeyAction].emplace_back(std::bind(FuncRef, Caller));
+		EventRefs.emplace(&EventHandle, std::move(EventRefData));
 	}
 
-	InputManager->UnregisterEvent(this);
-}
+	template<typename TCallerType, typename TFuncRef>
+	void RegisterMouseMoveEvent(TCallerType* Caller, TFuncRef&& FuncRef, LInputEventHandle& EventHandle)
+	{
+		if (!Caller)
+		{
+			return;
+		}
+
+		LEventRefData EventRefData(KeyAction(), MouseMoveEvents.size(), EInputEventType::Mouse);
+
+		MouseMoveEvents.emplace_back(std::bind(FuncRef, Caller, std::placeholders::_1, std::placeholders::_2));
+		EventRefs.emplace(&EventHandle, std::move(EventRefData));
+	}
+
+	void UnregisterHandle(LInputEventHandle* Handle);
+};

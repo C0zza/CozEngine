@@ -13,9 +13,7 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, const ch
 	InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>();
 	assert(InputManager);
 
-	ToggleFocusEvent.Init(this, &LEditorSceneWindow::OnToggleFocus);
-	InputManager->RegisterKeyEvent(KeyAction(GLFW_KEY_U, GLFW_PRESS), &ToggleFocusEvent);
-
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_T, GLFW_PRESS), &LEditorSceneWindow::OnToggleFocus, ToggleFocusEventHandle);
 }
 
 void LEditorSceneWindow::Draw()

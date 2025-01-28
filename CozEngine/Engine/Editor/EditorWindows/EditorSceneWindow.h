@@ -16,7 +16,8 @@ private:
 	LFrameBuffer* SceneFrameBuffer = nullptr;
 	LInputManager* InputManager = nullptr;
 
-	LKeyInputEvent<LEditorSceneWindow> ToggleFocusEvent;
+	LInputEventHandle ToggleFocusEventHandle;
+
 	void OnToggleFocus();
 	void OnFocusUpdate(const bool bIsFocused);
 };
