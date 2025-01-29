@@ -18,7 +18,7 @@ public:
 	LInputEventHandle() = default;
 	~LInputEventHandle();
 
-	// TODO: Add manual unbinding
+	void Reset();
 
 private:
 	static LInputManager* InputManager;
@@ -48,10 +48,12 @@ private:
 	};
 
 	std::map<const KeyAction, std::vector<std::function<void()>>> ActionEvents;
+
+	static constexpr int MaxMouseEvents = 5;
 	std::vector<std::function<void(double, double)>> MouseMoveEvents;
 
-	// To allow for RAII with LInputEventHandle
-	std::map<LInputEventHandle*, const LEventRefData> EventRefs;
+	std::map<LInputEventHandle*, LEventRefData> EventRefs;
+	std::map<void*, LInputEventHandle*> FuncToHandleMap;
 
 	bool IsInitialized = false;
 
@@ -62,10 +64,37 @@ private:
 
 	GLFWwindow* GetWindow() const;
 
+	template<typename TVectorType>
+	void RemoveIndex(std::vector<TVectorType>& Vector, const int IndexToRemove)
+	{
+		if (Vector.size() > 0 && IndexToRemove < Vector.size())
+		{
+			const int LastIndex = Vector.size() - 1;
+			if (IndexToRemove != LastIndex)
+			{
+				TVectorType& LastRef = Vector[LastIndex];
+				TVectorType& RemovedRef = Vector[IndexToRemove];
+
+				EventRefs[FuncToHandleMap[&LastRef]].Index = IndexToRemove;
+				FuncToHandleMap[&RemovedRef] = FuncToHandleMap[&LastRef];
+				FuncToHandleMap.erase(&Vector[LastIndex]);
+				Vector[IndexToRemove] = Vector[LastIndex];
+			}
+			else
+			{
+				FuncToHandleMap.erase(&Vector[IndexToRemove]);
+			}
+
+			Vector.erase(Vector.begin() + LastIndex);
+		}
+	}
+
 protected:
 	virtual void Initialize() override;
 
 public:
+	LInputManager();
+
 	static const std::map<void*, LInputManager*>& GetInputManagers() { return InputManagers; }
 
 	void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -92,12 +121,31 @@ public:
 			return;
 		}
 
+		if (EventRefs.contains(&EventHandle))
+		{
+			Log(LLogLevel::WARNING, "LInputManager::RegisterActionEvent - EventHandle already registered. Reset it first.");
+			return;
+		}
+
+		if (!ActionEvents.contains(iKeyAction))
+		{
+			ActionEvents[iKeyAction].reserve(5);
+		}
+		else if (ActionEvents[iKeyAction].size() >= 50)
+		{
+			Log(LLogLevel::ERROR, "LInputManager::RegisterActionEvent - vector reallocation will invalidate existing bindings. Ignoring register request.");
+			return;
+		}
+
 		const int KeyActionsVecSize = ActionEvents[iKeyAction].size();
 
 		LEventRefData EventRefData(iKeyAction, KeyActionsVecSize, EInputEventType::Action);
 
 		ActionEvents[iKeyAction].emplace_back(std::bind(FuncRef, Caller));
 		EventRefs.emplace(&EventHandle, std::move(EventRefData));
+
+		std::function<void()>& FuncAdd = ActionEvents[iKeyAction][ActionEvents[iKeyAction].size() - 1];
+		FuncToHandleMap.emplace((void*)&FuncAdd, &EventHandle);
 	}
 
 	template<typename TCallerType, typename TFuncRef>
@@ -108,10 +156,25 @@ public:
 			return;
 		}
 
+		if (EventRefs.contains(&EventHandle))
+		{
+			Log(LLogLevel::WARNING, "LInputManager::RegisterActionEvent - EventHandle already registered. Reset it first.");
+			return;
+		}
+
+		if (MouseMoveEvents.size() >= MaxMouseEvents)
+		{
+			Log(LLogLevel::ERROR, "LInputManager::RegisterMouseEvent - vector reallocation will invalidate existing bindings. Ignoring register request.");
+			return;
+		}
+
 		LEventRefData EventRefData(KeyAction(), MouseMoveEvents.size(), EInputEventType::Mouse);
 
 		MouseMoveEvents.emplace_back(std::bind(FuncRef, Caller, std::placeholders::_1, std::placeholders::_2));
 		EventRefs.emplace(&EventHandle, std::move(EventRefData));
+
+		std::function<void(double,double)>& FuncAdd = MouseMoveEvents[MouseMoveEvents.size() - 1];
+		FuncToHandleMap.emplace((void*)&FuncAdd, &EventHandle);
 	}
 
 	void UnregisterHandle(LInputEventHandle* Handle);

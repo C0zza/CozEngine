@@ -94,6 +94,11 @@ void LInputManager::Initialize()
 	IsInitialized = true;
 }
 
+LInputManager::LInputManager()
+{
+	MouseMoveEvents.reserve(MaxMouseEvents);
+}
+
 void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 #if defined(COZ_EDITOR)
@@ -207,40 +212,36 @@ void LInputManager::UnregisterHandle(LInputEventHandle* Handle)
 		return;
 	}
 
-	std::vector<std::function<void()>>* Funcs = nullptr;
-	switch (EventRefData.Type)
+	if (EventRefData.Type == EInputEventType::Action)
 	{
-	case EInputEventType::Action:
 		if (!ActionEvents.contains(EventRefData.Ka))
 		{
 			return;
 		}
 
-		Funcs = &ActionEvents[EventRefData.Ka];
-		
-		if (Funcs->size() > 0 && EventRefData.Index < Funcs->size())
+		std::vector<std::function<void()>>& Funcs = ActionEvents[EventRefData.Ka];
+
+		RemoveIndex(Funcs, EventRefData.Index);
+
+		if (Funcs.empty())
 		{
-			Funcs->erase(Funcs->begin() + EventRefData.Index);
-			if (Funcs->empty())
-			{
-				ActionEvents.erase(EventRefData.Ka);
-			}
+			ActionEvents.erase(EventRefData.Ka);
 		}
-		break;
-	case EInputEventType::Mouse:
-		if (MouseMoveEvents.size() > 0 && EventRefData.Index < MouseMoveEvents.size())
-		{
-			MouseMoveEvents.erase(MouseMoveEvents.begin() + EventRefData.Index);
-		}
-		break;
-	default:
-		break;
+	}
+	else if (EventRefData.Type == EInputEventType::Mouse)
+	{
+		RemoveIndex(MouseMoveEvents, EventRefData.Index);
 	}
 
 	EventRefs.erase(Handle);
 }
 
 LInputEventHandle::~LInputEventHandle()
+{
+	InputManager->UnregisterHandle(this);
+}
+
+void LInputEventHandle::Reset()
 {
 	InputManager->UnregisterHandle(this);
 }
