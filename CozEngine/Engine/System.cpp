@@ -14,7 +14,7 @@
 #include "Rendering/CubeMap.h"
 
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
-#include "Game/Components/Movement.h"
+#include "Game/Components/MovementComponent.h"
 #include "Game/DirectionalLightEntity.h"
 #include "Game/PlayerEntity.h"
 #include "Game/SpotLightEntity.h"
@@ -38,7 +38,7 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
 	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
 	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
-	ECS->AddComponentSystem<CMovementSystem, CMovement>();
+	ECS->AddComponentSystem<CMovementSystem, CMovementComponent>();
 	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
 
 	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");

@@ -271,7 +271,7 @@
     <ClCompile Include="Engine\Rendering\Model.cpp" />
     <ClCompile Include="Game\TestEntity.cpp" />
     <ClCompile Include="Game\PlayerEntity.cpp" />
-    <ClCompile Include="Game\Components\Movement.cpp" />
+    <ClCompile Include="Game\Components\MovementComponent.cpp" />
     <ClCompile Include="Game\SpotLightEntity.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resource.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp" />
@@ -329,7 +329,7 @@
     <ClInclude Include="Engine\Misc\TypeIdGenerator.h" />
     <ClInclude Include="Game\TestEntity.h" />
     <ClInclude Include="Game\PlayerEntity.h" />
-    <ClInclude Include="Game\Components\Movement.h" />
+    <ClInclude Include="Game\Components\MovementComponent.h" />
     <ClInclude Include="Game\SpotLightEntity.h" />
     <ClInclude Include="Engine\ResourceManagement\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourceManager.h" />
