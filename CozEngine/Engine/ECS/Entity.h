@@ -32,7 +32,5 @@ public:
 protected:
 	LEntityID ID;
 
-	virtual const char* GetTypeName() const = 0;
-
 	LECS* GetECS() const;
 };
