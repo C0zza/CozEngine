@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameFramework/EntityRegistration.h"
 #include "ECS/Entity.h"
 #include "Input/InputManager.h"
 
@@ -42,4 +43,4 @@ private:
 	struct CMovementComponent* MovementComponent = nullptr;
 	struct CTransformComponent* TransformComponent = nullptr;
 };
-
+REGISTER_ENTITY(CPlayerEntity);
