@@ -18,15 +18,15 @@ void CMovementSystem::RunComponent(CMovementComponent& Component)
 		{
 			return;
 		}
-	}
+	
+		if (bUpdateMovement)
+		{
+			TransformComponent->MoveRelative(glm::normalize(Component.Movement) * Component.Speed);
+		}
 
-	if (bUpdateMovement)
-	{
-		TransformComponent->MoveRelative(glm::normalize(Component.Movement) * Component.Speed);
-	}
-
-	if (bUpdateRotation)
-	{
-		TransformComponent->Rotate(Component.Rotation * Component.Sensitivity);
+		if (bUpdateRotation)
+		{
+			TransformComponent->Rotate(Component.Rotation * Component.Sensitivity);
+		}
 	}
 }

@@ -5,8 +5,6 @@
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
-struct CTransformComponent;
-
 struct CMovementComponent : public LECSComponent
 {
 	glm::vec3 Movement = glm::vec3(0.f, 0.f, 0.f);
