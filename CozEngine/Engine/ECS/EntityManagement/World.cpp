@@ -26,6 +26,7 @@ LWorld::LWorld(const FAssetPath& InEntitiesDataPath)
 	}
 }
 
+#if defined(COZ_EDITOR)
 void LWorld::SaveWorld(const FAssetPath& AssetPath)
 {
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
@@ -53,3 +54,4 @@ bool LWorld::HasAsset() const
 {
 	return EntitiesData.Get();
 }
+#endif
