@@ -4,6 +4,7 @@
 
 #include "ECS/ECS.h"
 #include "Globes.h"
+#include "Misc/GlmSerialization.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Renderer.h"
@@ -133,6 +134,28 @@ void CPointLightComponentSystem::OnComponentRemoved(CPointLightComponent& Compon
 			PointLights.pop_back();
 		}
 	}
+}
+
+void CPointLightComponentSystem::GetSerializedComponent(const CPointLightComponent& Component, nlohmann::json& J) const
+{
+	J["Ambient"] = Component.Ambient;
+	J["Constant"] = Component.Constant;
+	J["Diffuse"] = Component.Diffuse;
+	J["Linear"] = Component.Linear;
+	J["Position"] = Component.Position;
+	J["Quadratic"] = Component.Quadratic;
+	J["Specular"] = Component.Specular;
+}
+
+void CPointLightComponentSystem::DeserializeComponent(CPointLightComponent& Component, const nlohmann::json& J)
+{
+	Component.Ambient = J["Ambient"];
+	Component.Constant = J["Constant"];
+	Component.Diffuse = J["Diffuse"];
+	Component.Linear = J["Linear"];
+	Component.Position = J["Position"];
+	Component.Quadratic = J["Quadratic"];
+	Component.Specular = J["Specular"];
 }
 
 void CPointLightComponentSystem::UpdatePointLight(CPointLightComponent* Component, int Index)

@@ -34,6 +34,8 @@ public:
 		{
 			TickableComponentSystems.push_back(ComponentSystems[TypeID].get());
 		}
+
+		ComponentSystemsByName.emplace(ComponentSystem->GetComponentName(), ComponentSystem);
 	}
 
 	// TODO: RemoveComponentSystem.
@@ -110,9 +112,14 @@ public:
 
 	void Update();
 
+	void GetEntityComponentData(const LEntityID EntityID, nlohmann::json& ComponentData) const;
+	void InitEntityComponentData(const LEntityID EntityID, const std::string& ComponentSystemName, const nlohmann::json& ComponentData);
+
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
 	std::vector<LComponentSystemBase*> TickableComponentSystems;
+
+	std::map<std::string, LComponentSystemBase*> ComponentSystemsByName;
 
 	class LTypeIdGenerator* TypeIdGenerator = nullptr;
 };

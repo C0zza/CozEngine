@@ -30,9 +30,14 @@ class CPointLightComponentSystem : public LComponentSystem<CPointLightComponent>
 public:
 	void UpdatePointLights();
 
+	virtual const char* GetComponentName() const final { return "PointLightComponentSystem"; }
+
 protected:
 	virtual void OnComponentAdded(CPointLightComponent& Component) override;
 	virtual void OnComponentRemoved(CPointLightComponent& Component) override;
+
+	virtual void GetSerializedComponent(const CPointLightComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CPointLightComponent& Component, const nlohmann::json& J) final;
 
 private:
 	void UpdatePointLight(CPointLightComponent* Component, int Index);

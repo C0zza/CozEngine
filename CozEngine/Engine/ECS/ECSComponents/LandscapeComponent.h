@@ -15,6 +15,7 @@ struct CLandscapeComponent : public LECSComponent
 	LResourceHandle<LTexture> GroundTexture;
 	LResourceHandle<LTexture> WallTexture;
 
+	CLandscapeComponent() = default;
 	CLandscapeComponent(const std::string& i_HeightMap, const std::string& i_GroundTexture, const std::string& i_WallTexture);
 };
 
@@ -26,8 +27,13 @@ public:
 	virtual void PreRun() override;
 	virtual void RunComponent(CLandscapeComponent& Component) override;
 
+	virtual const char* GetComponentName() const final { return "LandscapeComponentSystem"; }
+
 protected:
 	virtual void Init() override { IsTickable = true; }
+
+	virtual void GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CLandscapeComponent& Component, const nlohmann::json& J) final;
 
 private:
 	void GenerateMesh();

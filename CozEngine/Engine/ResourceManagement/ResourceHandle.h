@@ -46,7 +46,12 @@ private:
 
 	void SetResource(T* NewResource)
 	{
-		if (Resource && NewResource != Resource)
+		if (NewResource == Resource)
+		{
+			return;
+		}
+
+		if (Resource)
 		{
 			Resource->DecrementRefs();
 		}

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+
+#include "EntityManagement/EntityRegistration.h"
 #include "ECS.h"
 #include "Globes.h"
 
@@ -29,8 +32,14 @@ public:
 		return GetECS()->GetComponent<TComponentType>(ID);
 	}
 
+#if defined(COZ_EDITOR)
+	virtual const char* GetTypeName() const = 0;
+#endif
+
 protected:
 	LEntityID ID;
 
 	LECS* GetECS() const;
 };
+
+using LEntityRegister = LFuncRegister<std::unique_ptr<LEntity>>;

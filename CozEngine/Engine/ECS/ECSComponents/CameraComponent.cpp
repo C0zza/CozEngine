@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 
 #include "ECS/ECS.h"
+#include "Misc/GlmSerialization.h"
 #include "Globes.h"
 #include "Misc/Logging.h"
 #include "TransformComponent.h"
@@ -26,4 +27,14 @@ const glm::vec3& CCameraComponentSystem::GetViewPos()
     CTransformComponent* CameraTransform = ECS->GetComponent<CTransformComponent>(ActiveCameraEntityID);
     assert(CameraTransform);
     return CameraTransform->GetPosition();
+}
+
+void CCameraComponentSystem::GetSerializedComponent(const CCameraComponent& Component, nlohmann::json& J) const
+{
+    J["CachedViewMatrix"] = Component.CachedViewMatrix;
+}
+
+void CCameraComponentSystem::DeserializeComponent(CCameraComponent& Component, const nlohmann::json& J)
+{
+    Component.CachedViewMatrix = J["CachedViewMatrix"];
 }

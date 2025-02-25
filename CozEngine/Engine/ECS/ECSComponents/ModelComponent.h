@@ -13,6 +13,7 @@ struct CModelComponent : public LECSComponent
 	LResourceHandle<LModel> Model;
 	LResourceHandle<LMaterial> Material;
 
+	CModelComponent() = default;
 	CModelComponent(const std::string& i_Model, const std::string& i_Material)
 	{
 		LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
@@ -26,7 +27,12 @@ class CModelComponentSystem : public LComponentSystem<CModelComponent>
 public:
 	virtual void RunComponent(CModelComponent& Component) override;
 
+	virtual const char* GetComponentName() const final { return "ModelComponentSystem"; }
+
 protected:
 	virtual void Init() override { IsTickable = true; }
+
+	virtual void GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CModelComponent& Component, const nlohmann::json& J) final;
 };
 

@@ -21,4 +21,16 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 	}
 }
 
+void CModelComponentSystem::GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const
+{
+	J["Model"] = Component.Model;
+	J["Material"] = Component.Material;
+}
+
+void CModelComponentSystem::DeserializeComponent(CModelComponent& Component, const nlohmann::json& J)
+{
+	Component.Model = J["Model"];
+	Component.Material = J["Material"];
+}
+
 

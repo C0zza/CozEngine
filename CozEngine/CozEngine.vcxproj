@@ -219,6 +219,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\EditorSceneWindow.cpp" />
     <ClCompile Include="Engine\Rendering\CubeMap.cpp" />
     <ClCompile Include="Engine\Rendering\CubeMapTexture.cpp" />
@@ -238,7 +239,7 @@
     <ClCompile Include="Engine\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\Rendering\FrameBufferSubsystem.cpp" />
-    <ClCompile Include="Engine\GameFramework\EntityFactory.cpp" />
+    <ClCompile Include="Engine\ECS\EntityManagement\EntityContainer.cpp" />
     <ClCompile Include="Game\DirectionalLightEntity.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\PointLightComponent.cpp" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Engine\Editor\LEditor.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\LandscapeComponent.cpp" />
     <ClCompile Include="Game\LandscapeEntity.cpp" />
+    <ClCompile Include="Engine\ECS\EntityManagement\EntityContainerAsset.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
@@ -282,10 +284,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Editor\EditorWindows\EditorSceneWindow.h" />
     <ClInclude Include="Engine\Editor\EditorWindow.h" />
+    <ClInclude Include="Engine\Misc\GlmSerialization.h" />
     <ClInclude Include="Engine\Rendering\CubeMap.h" />
     <ClInclude Include="Engine\Rendering\CubeMapTexture.h" />
     <ClInclude Include="Engine\Globes.h" />
@@ -301,8 +305,11 @@
     <ClInclude Include="Engine\include\json.hpp" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Rendering\FrameBufferSubsystem.h" />
-    <ClInclude Include="Engine\GameFramework\EntityFactory.h" />
-    <ClInclude Include="Engine\GameFramework\EntityRegistration.h" />
+    <ClInclude Include="Engine\ECS\EntityManagement\EntityRegistration.h" />
+    <ClInclude Include="Engine\ResourceManagement\SerializeHelpers.h" />
+    <ClInclude Include="Engine\ECS\EntityManagement\EntityContainer.h" />
+    <ClInclude Include="Engine\Misc\FuncRegister.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\EntityComponentList.h" />
     <ClInclude Include="Game\DirectionalLightEntity.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\PointLightComponent.h" />
@@ -346,7 +353,9 @@
     <ClInclude Include="Engine\Editor\LEditor.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\LandscapeComponent.h" />
     <ClInclude Include="Game\LandscapeEntity.h" />
+    <ClInclude Include="Engine\ECS\EntityManagement\EntityContainerAsset.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />

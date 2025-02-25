@@ -33,9 +33,14 @@ class CSpotLightComponentSystem : public LComponentSystem<CSpotLightComponent>
 public:
 	void UpdateSpotLights();
 
+	virtual const char* GetComponentName() const final { return "SpotLightComponentSystem"; }
+
 protected:
 	virtual void OnComponentAdded(CSpotLightComponent& Component) override;
 	virtual void OnComponentRemoved(CSpotLightComponent& Component) override;
+
+	virtual void GetSerializedComponent(const CSpotLightComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CSpotLightComponent& Component, const nlohmann::json& J) final;
 
 private:
 	void UpdateSpotLight(CSpotLightComponent* Component, int Index);

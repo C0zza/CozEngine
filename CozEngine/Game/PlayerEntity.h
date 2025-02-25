@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameFramework/EntityRegistration.h"
 #include "ECS/Entity.h"
 #include "Input/InputManager.h"
 
@@ -8,6 +7,10 @@ class CPlayerEntity : public LEntity
 {
 public:
 	CPlayerEntity();
+
+#if defined(COZ_EDITOR)
+	virtual const char* GetTypeName() const override { return "CPlayerEntity"; }
+#endif
 
 private:
 	LInputEventHandle MoveLeftEvent;
@@ -43,4 +46,4 @@ private:
 	struct CMovementComponent* MovementComponent = nullptr;
 	struct CTransformComponent* TransformComponent = nullptr;
 };
-REGISTER_ENTITY(CPlayerEntity);
+REGISTER_ENTITY(CPlayerEntity)

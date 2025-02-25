@@ -20,9 +20,14 @@ class CDirectionalLightComponentSystem : public LComponentSystem<CDirectionalLig
 public:
 	void UpdateDirectionalLight();
 
+	virtual const char* GetComponentName() const final { return "DirectionalLightComponentSystem"; }
+
 protected:
 	virtual void OnComponentAdded(CDirectionalLightComponent& Component) override;
 	virtual void OnComponentRemoved(CDirectionalLightComponent& Component) override;
+
+	virtual void GetSerializedComponent(const CDirectionalLightComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CDirectionalLightComponent& Component, const nlohmann::json& J) final;
 
 private:
 	// We assume 1 directional light existing at any 1 time. Could be better as simply a member of something?

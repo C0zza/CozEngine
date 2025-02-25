@@ -13,13 +13,10 @@
 
 #include "Rendering/CubeMap.h"
 
+#include "ECS/EntityManagement/World.h"
+
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/MovementComponent.h"
-#include "Game/DirectionalLightEntity.h"
-#include "Game/PlayerEntity.h"
-#include "Game/SpotLightEntity.h"
-#include "Game/TestEntity.h"
-#include "Game/LandscapeEntity.h"
 
 void LSystem::Run()
 {
@@ -33,7 +30,7 @@ void LSystem::Run()
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
 	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
-	ECS->AddComponentSystem<LComponentSystem<CTransformComponent>, CTransformComponent>();
+	ECS->AddComponentSystem<CTransformComponentSystem, CTransformComponent>();
 	ECS->AddComponentSystem<CCameraComponentSystem, CCameraComponent>();
 	ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
 	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
@@ -43,12 +40,7 @@ void LSystem::Run()
 
 	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");
 
-	// TODO: No system cleaning entities up on shutdown. Will eventually be handled by the "world"
-	std::unique_ptr<LEntity> LandscapeEntity = std::make_unique<CLandscapeEntity>();
-	std::unique_ptr<LEntity> TestEntity = std::make_unique<CTestEntity>();
-	std::unique_ptr<LEntity> CameraEntity = std::make_unique<CPlayerEntity>();
-	std::unique_ptr<LEntity> SpotLightEntity = std::make_unique<CSpotLightEntity>();
-	std::unique_ptr<LEntity> DirectionalLightEntity = std::make_unique<CDirectionalLightEntity>();
+	std::unique_ptr<LWorld> World = std::make_unique<LWorld>("Game/Content/Levels/TestLevel.casset");
 
 #if defined(COZ_EDITOR)
 	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();

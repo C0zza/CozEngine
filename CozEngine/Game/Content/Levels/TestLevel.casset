@@ -1,0 +1,217 @@
+{
+  "EntitiesData": [
+    {
+      "ComponentData": {
+        "LandscapeComponentSystem": {
+          "GroundTexture": {
+            "AssetPath": "Game/Content/Textures/Ground.casset"
+          },
+          "HeightMap": {
+            "AssetPath": "Game/Content/Textures/TestHeightMap.casset"
+          },
+          "WallTexture": {
+            "AssetPath": "Game/Content/Textures/Wall.casset"
+          }
+        },
+        "TransformComponentSystem": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      },
+      "TypeName": "CLandscapeEntity"
+    },
+    {
+      "ComponentData": {
+        "ModelComponentSystem": {
+          "Material": {
+            "AssetPath": "Game/Content/Materials/MAT_DefaultMaterial.casset"
+          },
+          "Model": {
+            "AssetPath": "Game/Content/Models/MOD_Backpack.casset"
+          }
+        },
+        "TransformComponentSystem": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      },
+      "TypeName": "CTestEntity"
+    },
+    {
+      "ComponentData": {
+        "CameraComponentSystem": {
+          "CachedViewMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "MovementSystem": {
+          "Movement": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "TransformComponentSystem": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 10.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      },
+      "TypeName": "CPlayerEntity"
+    },
+    {
+      "ComponentData": {
+        "ModelComponentSystem": {
+          "Material": {
+            "AssetPath": "Game/Content/Materials/MAT_Cube.casset"
+          },
+          "Model": {
+            "AssetPath": "Game/Content/Models/MOD_Cube.casset"
+          }
+        },
+        "SpotLightComponentSystem": {
+          "Ambient": {
+            "x": 0.0,
+            "y": 0.20000000298023224,
+            "z": 0.0
+          },
+          "Constant": 1.0,
+          "CutOff": 0.9762960076332092,
+          "Diffuse": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "Linear": 0.09000000357627869,
+          "OuterCutOff": 0.9537169337272644,
+          "Position": {
+            "x": -431602080.0,
+            "y": -431602080.0,
+            "z": -431602080.0
+          },
+          "Quadratic": 0.03200000151991844,
+          "Specular": {
+            "x": 0.0,
+            "y": 0.699999988079071,
+            "z": 0.0
+          }
+        },
+        "TransformComponentSystem": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 5.0
+          },
+          "Rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      },
+      "TypeName": "CSpotLightEntity"
+    },
+    {
+      "ComponentData": {
+        "DirectionalLightComponentSystem": {
+          "Ambient": {
+            "x": 0.30000001192092896,
+            "y": 0.30000001192092896,
+            "z": 0.30000001192092896
+          },
+          "Diffuse": {
+            "x": 0.5,
+            "y": 0.5,
+            "z": 0.5
+          },
+          "Direction": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        },
+        "TransformComponentSystem": {
+          "Position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "Rotation": {
+            "x": 345.0,
+            "y": 45.0,
+            "z": 0.0
+          },
+          "Scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      },
+      "TypeName": "CDirectionalLightEntity"
+    }
+  ]
+}

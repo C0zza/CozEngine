@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "ECS/ECSComponents/ECSComponent.h"
 #include "ECSDefinitions.h"
 #include "Misc/Logging.h"
 
@@ -16,8 +17,14 @@ public:
 	virtual ~LComponentSystemBase() {}
 
 	bool GetIsTickable() const { return IsTickable; }
+
+	virtual bool ContainsComponent(const LEntityID EntityID) const = 0;
+
 	virtual void RemoveComponent(const LEntityID EntityID) = 0;
 
+	virtual bool GetSerializedComponent(const LEntityID EntityID, nlohmann::json& J) const = 0;
+	virtual void DeserializeEntityComponentID(const LEntityID EntityID, const nlohmann::json& J) = 0;
+	virtual const char* GetComponentName() const = 0;
 protected:
 	bool IsTickable = false;
 
@@ -88,6 +95,21 @@ public:
 		}
 	}
 
+	virtual void DeserializeComponent(TComponentType& Component, const nlohmann::json& J) = 0;
+
+	virtual void DeserializeEntityComponentID(const LEntityID EntityID, const nlohmann::json& J) final
+	{
+		if (ContainsComponent(EntityID))
+		{
+			DeserializeComponent(*GetComponent(EntityID), J);
+		}
+	}
+
+	virtual bool ContainsComponent(const LEntityID EntityID) const final
+	{
+		return EntityIdToComponentIndex.contains(EntityID);
+	}
+
 	TComponentType* GetComponent(const LEntityID EntityID)
 	{
 		if (!EntityIdToComponentIndex.contains(EntityID))
@@ -99,6 +121,11 @@ public:
 		return &Components[EntityIdToComponentIndex[EntityID]];
 	}
 
+	const TComponentType* GetComponent(const LEntityID EntityID) const
+	{
+		return GetComponent(EntityID);
+	}
+
 protected:
 	virtual void Init() override {}
 	virtual void OnComponentAdded(TComponentType& Component) {};
@@ -108,6 +135,10 @@ protected:
 	{
 		return Components;
 	}
+
+	virtual void GetSerializedComponent(const TComponentType& Component, nlohmann::json& J) const = 0;
+
+	virtual const char* GetComponentName() const = 0;
 
 	LECS* ECS = nullptr;
 
@@ -131,6 +162,20 @@ private:
 	{
 		ECS = i_ECS;
 		Init();
+	}
+
+	virtual bool GetSerializedComponent(const LEntityID EntityID, nlohmann::json& J) const override
+	{
+		if (EntityIdToComponentIndex.contains(EntityID))
+		{
+			const TComponentType& Component = Components[EntityIdToComponentIndex.at(EntityID)];
+			GetSerializedComponent(Component, J);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	// TODO: reserve amount/ notify when reallocation of the vector occurs.

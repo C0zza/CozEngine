@@ -26,3 +26,13 @@ private:
 	LResourceHandle<LShader> Shader;
 };
 
+inline void to_json(nlohmann::json& J, const LResourceHandle<LMaterial>& ResourceHandle)
+{
+	LResourceHandleHelper::ToJsonHelper(J, ResourceHandle);
+}
+
+inline void from_json(const nlohmann::json& J, LResourceHandle<LMaterial>& ResourceHandle)
+{
+	LResourceHandleHelper::FromJsonHelper(J, ResourceHandle);
+}
+

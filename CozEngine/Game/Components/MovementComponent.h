@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-
+#include "json.hpp"
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
@@ -18,6 +18,12 @@ class CMovementSystem : public LComponentSystem<CMovementComponent>
 {
 public:
 	virtual void Init() override { IsTickable = true; }
+
+	virtual const char* GetComponentName() const final { return "MovementSystem"; }
+
+protected:
+	virtual void GetSerializedComponent(const CMovementComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CMovementComponent& Component, const nlohmann::json& J) final;
 
 private:
 	virtual void RunComponent(CMovementComponent& Component) override;

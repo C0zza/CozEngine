@@ -22,6 +22,12 @@ public:
 	void ActivateCamera(const CCameraComponent& Component) { ActiveCameraEntityID = Component.EntityID; }
 	LEntityID GetActiveCameraEntityID() { return ActiveCameraEntityID; }
 
+	virtual const char* GetComponentName() const final { return "CameraComponentSystem"; }
+
+protected:
+	virtual void GetSerializedComponent(const CCameraComponent& Component, nlohmann::json& J) const final;
+	virtual void DeserializeComponent(CCameraComponent& Component, const nlohmann::json& J) final;
+
 private:
 	LEntityID ActiveCameraEntityID = -1;
 };

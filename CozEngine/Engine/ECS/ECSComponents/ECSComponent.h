@@ -1,7 +1,11 @@
 #pragma once
 
 #include "ECS/ECSDefinitions.h"
+#include "json.hpp"
+#include "Misc/FuncRegister.h"
 
+using LComponentRegister = LFuncRegister<nlohmann::json>;
+	
 class LECS;
 
 struct LECSComponent

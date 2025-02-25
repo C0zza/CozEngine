@@ -4,6 +4,7 @@
 
 #include "ECS/ECS.h"
 #include "Globes.h"
+#include "Misc/GlmSerialization.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Renderer.h"
@@ -136,6 +137,32 @@ void CSpotLightComponentSystem::OnComponentRemoved(CSpotLightComponent& Componen
 			SpotLights.pop_back();
 		}
 	}
+}
+
+void CSpotLightComponentSystem::GetSerializedComponent(const CSpotLightComponent& Component, nlohmann::json& J) const
+{
+	J["Ambient"] = Component.Ambient;
+	J["Constant"] = Component.Constant;
+	J["Diffuse"] = Component.Diffuse;
+	J["Linear"] = Component.Linear;
+	J["Position"] = Component.Position;
+	J["Quadratic"] = Component.Quadratic;
+	J["Specular"] = Component.Specular;
+	J["CutOff"] = Component.CutOff;
+	J["OuterCutOff"] = Component.OuterCutOff;
+}
+
+void CSpotLightComponentSystem::DeserializeComponent(CSpotLightComponent& Component, const nlohmann::json& J)
+{
+	Component.Ambient = J["Ambient"];
+	Component.Constant = J["Constant"];
+	Component.Diffuse = J["Diffuse"];
+	Component.Linear = J["Linear"];
+	Component.Position = J["Position"];
+	Component.Quadratic = J["Quadratic"];
+	Component.Specular = J["Specular"];
+	Component.CutOff = J["CutOff"];
+	Component.OuterCutOff = J["OuterCutOff"];
 }
 
 void CSpotLightComponentSystem::UpdateSpotLight(CSpotLightComponent* Component, int Index)

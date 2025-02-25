@@ -4,6 +4,17 @@
 
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Misc/GlmSerialization.h"
+
+void CMovementSystem::GetSerializedComponent(const CMovementComponent& Component, nlohmann::json& J) const
+{
+	J["Movement"] = Component.Movement;
+}
+
+void CMovementSystem::DeserializeComponent(CMovementComponent& Component, const nlohmann::json& J)
+{
+	Component.Movement = J["Movement"];
+}
 
 void CMovementSystem::RunComponent(CMovementComponent& Component)
 {

@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "ECS/ECS.h"
+#include "Misc/GlmSerialization.h"
 #include "TransformComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 #include "Rendering/Renderer.h"
@@ -67,6 +68,22 @@ void CDirectionalLightComponentSystem::OnComponentRemoved(CDirectionalLightCompo
 	{
 		Renderer->UpdateLightingUBOData(CE::CDirectionalLightComponent::bIsActiveOffset, sizeof(bool), FalseBool);
 	}
+}
+
+void CDirectionalLightComponentSystem::GetSerializedComponent(const CDirectionalLightComponent& Component, nlohmann::json& J) const
+{
+	J["Ambient"] = Component.Ambient;
+	J["Diffuse"] = Component.Diffuse;
+	J["Direction"] = Component.Direction;
+	J["Specular"] = Component.Specular;
+}
+
+void CDirectionalLightComponentSystem::DeserializeComponent(CDirectionalLightComponent& Component, const nlohmann::json& J)
+{
+	Component.Ambient = J["Ambient"];
+	Component.Diffuse = J["Diffuse"];
+	Component.Direction = J["Direction"];
+	Component.Specular = J["Specular"];
 }
 
 void CDirectionalLightComponentSystem::UpdateDirectionalLight()

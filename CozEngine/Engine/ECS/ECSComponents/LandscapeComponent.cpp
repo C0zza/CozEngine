@@ -66,6 +66,20 @@ void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
 	LandscapeMesh->Draw(*LandscapeShader.Get(), Transform->GetUpdatedTransformationMatrix());
 }
 
+void CLandscapeComponentSystem::GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const
+{
+	J["HeightMap"] = Component.HeightMap;
+	J["GroundTexture"] = Component.GroundTexture;
+	J["WallTexture"] = Component.WallTexture;
+}
+
+void CLandscapeComponentSystem::DeserializeComponent(CLandscapeComponent& Component, const nlohmann::json& J)
+{
+	Component.HeightMap = J["HeightMap"];
+	Component.GroundTexture = J["GroundTexture"];
+	Component.WallTexture = J["WallTexture"];
+}
+
 void CLandscapeComponentSystem::GenerateMesh()
 {
 	using namespace std;
