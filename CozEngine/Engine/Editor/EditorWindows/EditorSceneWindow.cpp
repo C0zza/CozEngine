@@ -14,10 +14,13 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, const ch
 	assert(InputManager);
 
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_T, GLFW_PRESS), &LEditorSceneWindow::OnToggleFocus, ToggleFocusEventHandle);
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE), &LEditorSceneWindow::OnMouseClicked, MouseClickedEventHandle);
 }
 
 void LEditorSceneWindow::Draw()
 {
+	bWindowIsHovered = ImGui::IsWindowHovered();
+
 	OnFocusUpdate(ImGui::IsWindowFocused());
 
 	const ImVec2 ContentRegionAvail = ImGui::GetContentRegionAvail();
@@ -77,4 +80,12 @@ void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
 		InputManager->bInputEnabled = false;
 	}
 #endif
+}
+
+void LEditorSceneWindow::OnMouseClicked()
+{
+	if (bWindowIsHovered)
+	{
+		Log(LLogLevel::INFO, "Scene window click");
+	}
 }

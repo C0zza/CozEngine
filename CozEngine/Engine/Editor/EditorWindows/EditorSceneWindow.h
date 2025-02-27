@@ -17,8 +17,13 @@ private:
 	LInputManager* InputManager = nullptr;
 
 	LInputEventHandle ToggleFocusEventHandle;
+	LInputEventHandle MouseClickedEventHandle;
 
 	void OnToggleFocus();
 	void OnFocusUpdate(const bool bIsFocused);
+
+	void OnMouseClicked();
+
+	bool bWindowIsHovered = false;
 };
 

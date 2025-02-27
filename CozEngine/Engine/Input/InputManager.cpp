@@ -29,7 +29,15 @@ namespace CE::InputManager
 	{
 		if (window && LInputManager::GetInputManagers().contains(window))
 		{
-			LInputManager::GetInputManagers().at(window)->ProcessKey(window, key, scancode, action, mods);
+			LInputManager::GetInputManagers().at(window)->ProcessKey(window, key, action, mods);
+		}
+	}
+
+	void MouseButtonCallback(GLFWwindow* window, int key, int action, int mods)
+	{
+		if (window && LInputManager::GetInputManagers().contains(window))
+		{
+			LInputManager::GetInputManagers().at(window)->ProcessKey(window, key, action, mods);
 		}
 	}
 
@@ -80,6 +88,7 @@ void LInputManager::Initialize()
 	InputManagers.emplace(Window->m_Window, this);
 
 	glfwSetKeyCallback(Window->m_Window, CE::InputManager::KeyCallback);
+	glfwSetMouseButtonCallback(Window->m_Window, CE::InputManager::MouseButtonCallback);
 
 	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(Window->m_Window, CE::InputManager::MouseMoveCallback);
@@ -99,7 +108,7 @@ LInputManager::LInputManager()
 	MouseMoveEvents.reserve(MaxMouseEvents);
 }
 
-void LInputManager::ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods)
+void LInputManager::ProcessKey(GLFWwindow* window, int key, int action, int mods)
 {
 #if defined(COZ_EDITOR)
 	if (CSystem.GetSubsystems().GetSubsystem<LImGuiSubsystem>() && ImGui::GetIO().WantCaptureKeyboard && !bInputEnabled)

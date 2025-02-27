@@ -97,7 +97,7 @@ public:
 
 	static const std::map<void*, LInputManager*>& GetInputManagers() { return InputManagers; }
 
-	void ProcessKey(GLFWwindow* window, int key, int scancode, int action, int mods);
+	void ProcessKey(GLFWwindow* window, int key, int action, int mods);
 	void ProcessMouseMove(GLFWwindow* window, double xpos, double ypos);
 
 	void OnCursorFocusChanged(GLFWwindow* window, int entered);

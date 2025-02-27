@@ -58,7 +58,7 @@ CPlayerEntity::CPlayerEntity()
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_SPACE, GLFW_PRESS), &CPlayerEntity::MoveUp, MoveUpEvent);
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_SPACE, GLFW_RELEASE), &CPlayerEntity::StopMoveUp, StopMoveUpEvent);
 
-	InputManager->RegisterMouseMoveEvent(this, &CPlayerEntity::Rotate, MouseRotateEvent);
+	// InputManager->RegisterMouseMoveEvent(this, &CPlayerEntity::Rotate, MouseRotateEvent);
 }
 
 void CPlayerEntity::MoveLeft()
