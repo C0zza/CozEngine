@@ -55,29 +55,12 @@ void LEditorSceneWindow::OnToggleFocus()
 void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
 {
 #if defined(COZ_EDITOR)
-	bool bIsNewValue = bIsFocused != InputManager->bInputEnabled;
-
-	if (bIsFocused)
+	if (bIsFocused != InputManager->bInputEnabled)
 	{
-		if (bIsNewValue)
-		{
-			ImGui::SetWindowFocus(GetWindowName());
-			InputManager->ResetMousePositionData();
-			// InputManager->OnInputEnabledChanged(bIsFocused);
-		}
-
-		InputManager->bInputEnabled = true;
-	}
-	else
-	{
-		if (bIsNewValue)
-		{
-			ImGui::SetWindowFocus(NULL);
-			InputManager->ResetMousePositionData();
-			// InputManager->OnInputEnabledChanged(bIsFocused);
-		}
-
-		InputManager->bInputEnabled = false;
+		const char* WindowName = bIsFocused ? GetWindowName() : NULL;
+		ImGui::SetWindowFocus(WindowName);
+		InputManager->ResetMousePositionData();
+		InputManager->bInputEnabled = bIsFocused;
 	}
 #endif
 }
