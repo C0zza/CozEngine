@@ -63,7 +63,8 @@ void LSystem::Run()
 
 		glEnable(GL_DEPTH_TEST);
 		TestCubeMap->Draw();
-		ECS->Update();
+		ECS->UpdateComponentSystemTypes(EComponentSystemType::Ticker);
+		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
 
 #if defined(COZ_EDITOR)
 		Renderer->BindDefaultFrameBuffer();

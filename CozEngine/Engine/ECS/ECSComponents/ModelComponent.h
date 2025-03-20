@@ -27,10 +27,10 @@ class CModelComponentSystem : public LComponentSystem<CModelComponent>
 public:
 	virtual void RunComponent(CModelComponent& Component) override;
 
+	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Renderer; }
 	virtual const char* GetComponentName() const final { return "ModelComponentSystem"; }
 
 protected:
-	virtual void Init() override { IsTickable = true; }
 
 	virtual void GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const final;
 	virtual void DeserializeComponent(CModelComponent& Component, const nlohmann::json& J) final;

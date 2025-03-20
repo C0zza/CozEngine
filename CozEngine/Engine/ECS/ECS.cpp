@@ -8,9 +8,14 @@ LECS::LECS()
 	assert(TypeIdGenerator);
 }
 
-void LECS::Update()
+void LECS::UpdateComponentSystemTypes(const EComponentSystemType ComponentSystemType)
 {
-	for (LComponentSystemBase* ComponentSystem : TickableComponentSystems)
+	if (!SpecialzedComponentSystems.contains(ComponentSystemType) || SpecialzedComponentSystems.at(ComponentSystemType).empty())
+	{
+		return;
+	}
+
+	for (LComponentSystemBase* ComponentSystem : SpecialzedComponentSystems.at(ComponentSystemType))
 	{
 		ComponentSystem->InternalRun();
 	}

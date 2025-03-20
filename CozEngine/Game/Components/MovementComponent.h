@@ -17,8 +17,7 @@ struct CMovementComponent : public LECSComponent
 class CMovementSystem : public LComponentSystem<CMovementComponent>
 {
 public:
-	virtual void Init() override { IsTickable = true; }
-
+	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Ticker; }
 	virtual const char* GetComponentName() const final { return "MovementSystem"; }
 
 protected:

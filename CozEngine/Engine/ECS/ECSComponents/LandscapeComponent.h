@@ -27,10 +27,10 @@ public:
 	virtual void PreRun() override;
 	virtual void RunComponent(CLandscapeComponent& Component) override;
 
+	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Renderer; }
 	virtual const char* GetComponentName() const final { return "LandscapeComponentSystem"; }
 
 protected:
-	virtual void Init() override { IsTickable = true; }
 
 	virtual void GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const final;
 	virtual void DeserializeComponent(CLandscapeComponent& Component, const nlohmann::json& J) final;

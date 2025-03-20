@@ -10,13 +10,20 @@
 
 class LECS;
 
+enum class EComponentSystemType
+{
+	Default,
+	Ticker,
+	Renderer
+};
+
 class LComponentSystemBase
 {
 	friend class LECS;
 public:
 	virtual ~LComponentSystemBase() {}
 
-	bool GetIsTickable() const { return IsTickable; }
+	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Default; }
 
 	virtual bool ContainsComponent(const LEntityID EntityID) const = 0;
 
@@ -26,8 +33,6 @@ public:
 	virtual void DeserializeEntityComponentID(const LEntityID EntityID, const nlohmann::json& J) = 0;
 	virtual const char* GetComponentName() const = 0;
 protected:
-	bool IsTickable = false;
-
 	virtual void Init() = 0;
 
 private:
@@ -149,7 +154,7 @@ private:
 
 	virtual void InternalRun() final
 	{
-		assert(IsTickable);
+		assert(GetComponentSystemType() == EComponentSystemType::Ticker || GetComponentSystemType() == EComponentSystemType::Renderer);
 		PreRun();
 		for (TComponentType& Component : Components)
 		{

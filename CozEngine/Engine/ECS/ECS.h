@@ -29,10 +29,9 @@ public:
 		ComponentSystems.insert({ TypeID, std::unique_ptr<TComponentSystem>(ComponentSystem) });
 		ComponentSystems.at(TypeID)->InternalInit(this);
 		
-
-		if (ComponentSystems[TypeID]->GetIsTickable())
+		if (ComponentSystem->GetComponentSystemType() != EComponentSystemType::Default)
 		{
-			TickableComponentSystems.push_back(ComponentSystems[TypeID].get());
+			SpecialzedComponentSystems[ComponentSystem->GetComponentSystemType()].push_back(ComponentSystem);
 		}
 
 		ComponentSystemsByName.emplace(ComponentSystem->GetComponentName(), ComponentSystem);
@@ -110,14 +109,14 @@ public:
 		}
 	}
 
-	void Update();
+	void UpdateComponentSystemTypes(const EComponentSystemType ComponentSystemType);
 
 	void GetEntityComponentData(const LEntityID EntityID, nlohmann::json& ComponentData) const;
 	void InitEntityComponentData(const LEntityID EntityID, const std::string& ComponentSystemName, const nlohmann::json& ComponentData);
 
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
-	std::vector<LComponentSystemBase*> TickableComponentSystems;
+	std::map<EComponentSystemType, std::vector<LComponentSystemBase*>> SpecialzedComponentSystems;
 
 	std::map<std::string, LComponentSystemBase*> ComponentSystemsByName;
 
