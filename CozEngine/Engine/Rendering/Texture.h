@@ -42,13 +42,3 @@ private:
 	int Width;
 	int Height;
 };
-
-inline void to_json(nlohmann::json& J, const LResourceHandle<LTexture>& ResourceHandle)
-{
-	LResourceHandleHelper::ToJsonHelper(J, ResourceHandle);
-}
-
-inline void from_json(const nlohmann::json& J, LResourceHandle<LTexture>& ResourceHandle)
-{
-	LResourceHandleHelper::FromJsonHelper(J, ResourceHandle);
-}

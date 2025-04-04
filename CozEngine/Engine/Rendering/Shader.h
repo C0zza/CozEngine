@@ -37,13 +37,3 @@ private:
 	bool bUsesMatricesUBO = false;
 	bool bUsesLightingUBO = false;
 };
-
-inline void to_json(nlohmann::json& J, const LResourceHandle<LShader>& ResourceHandle)
-{
-	LResourceHandleHelper::ToJsonHelper(J, ResourceHandle);
-}
-
-inline void from_json(const nlohmann::json& J, LResourceHandle<LShader>& ResourceHandle)
-{
-	LResourceHandleHelper::FromJsonHelper(J, ResourceHandle);
-}

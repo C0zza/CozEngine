@@ -5,29 +5,25 @@
 #include "Globes.h"
 #include "json.hpp"
 
-class LResourceHandleHelper
+template<typename T>
+inline void to_json(nlohmann::json& J, const LResourceHandle<T>& ResourceHandle)
 {
-public:
-	template<typename T>
-	static void ToJsonHelper(nlohmann::json& J, const LResourceHandle<T>& ResourceHandle)
+	J = nlohmann::json{ {"AssetPath", ""} };
+
+	if (LResource* Resource = dynamic_cast<LResource*>(ResourceHandle.Get()))
 	{
-		J = nlohmann::json{ {"AssetPath", ""} };
-
-		if (LResource* Resource = dynamic_cast<LResource*>(ResourceHandle.Get()))
-		{
-			J["AssetPath"] = Resource->GetAssetPath();
-		}
+		J["AssetPath"] = Resource->GetAssetPath();
 	}
+}
 
-	template<typename T>
-	static void FromJsonHelper(const nlohmann::json& J, LResourceHandle<T>& ResourceHandle)
-	{
-		std::string AssetPath;
-		J.at("AssetPath").get_to(AssetPath);
+template<typename T>
+inline void from_json(const nlohmann::json& J, LResourceHandle<T>& ResourceHandle)
+{
+	std::string AssetPath;
+	J.at("AssetPath").get_to(AssetPath);
 
-		LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 
-		ResourceManager->GetResource<T>(AssetPath, ResourceHandle);
-	}
-};
+	ResourceManager->GetResource<T>(AssetPath, ResourceHandle);
+}
 
