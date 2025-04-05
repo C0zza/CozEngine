@@ -8,6 +8,7 @@
 #include "Rendering/Renderer.h"
 
 #if defined(COZ_EDITOR)
+#include "Editor/DebugFrameBufferSubsystem.h"
 #include "Editor/LEditor.h"
 #endif
 
@@ -27,6 +28,11 @@ void LSystem::Run()
 	LFrameBufferSubsystem* FrameBufferSubsystem = Subsystems.GetSubsystem<LFrameBufferSubsystem>(true);
 #endif
 
+#if defined(COZ_EDITOR)
+	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();
+	LDebugFrameBufferSubsystem* DebugFrameBufferSubsystem = Subsystems.GetSubsystem<LDebugFrameBufferSubsystem>();
+#endif
+
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
 	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
 	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
@@ -42,17 +48,12 @@ void LSystem::Run()
 
 	std::unique_ptr<LWorld> World = std::make_unique<LWorld>("Game/Content/Levels/TestLevel.casset");
 
-#if defined(COZ_EDITOR)
-	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();
-#endif
-
 	assert(Renderer);
 	bool bShouldWindowClose = true;
 	Renderer->GetShouldWindowClose(bShouldWindowClose);
 
 	while (!bShouldWindowClose)
 	{
-
 		Renderer->Update();
 
 #if defined(COZ_EDITOR)
@@ -67,6 +68,15 @@ void LSystem::Run()
 		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
 
 #if defined(COZ_EDITOR)
+		// TODO: This editor side frame buffer management feels like it should be abstraced into Editor->Draw somehow
+
+		Renderer->BindFrameBuffer(Editor->GetEntityFrameBuffer());
+		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		DebugFrameBufferSubsystem->SetActiveDebugFrameBuffer("EntityFrameBuffer");
+		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
+		DebugFrameBufferSubsystem->SetActiveDebugFrameBuffer("");
+
 		Renderer->BindDefaultFrameBuffer();
 		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT);
 

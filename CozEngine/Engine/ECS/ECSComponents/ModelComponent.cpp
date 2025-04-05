@@ -9,6 +9,11 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 {
 	if (Component.Model.Get() && Component.Material.Get())
 	{
+		if (!Component.Material->GetShader()->HasRelevantShader())
+		{
+			return;
+		}
+
 		// Only need the one Material->Use call while we have 1 mat per CModelComponent
 		Component.Material->Use();
 		assert(Component.Material->GetShader());

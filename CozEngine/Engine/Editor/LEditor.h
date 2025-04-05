@@ -18,11 +18,14 @@ public:
 	void Draw();
 
 	LFrameBuffer* GetSceneFrameBuffer() { return SceneFrameBuffer.get(); }
+	LFrameBuffer* GetEntityFrameBuffer() { return EntityFrameBuffer.get(); }
 
 private:
 	LRenderer* Renderer = nullptr;
 
 	std::unique_ptr<LFrameBuffer> SceneFrameBuffer;
+	std::unique_ptr<LFrameBuffer> EntityFrameBuffer;
+	
 	std::vector<std::unique_ptr<LEditorWindow>> EditorWindows;
 };
 

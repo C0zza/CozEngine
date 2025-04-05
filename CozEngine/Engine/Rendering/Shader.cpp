@@ -7,6 +7,10 @@
 #include "Misc/Logging.h"
 #include "Renderer.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/DebugFrameBufferSubsystem.h"
+#endif
+
 void LShader::Load()
 {
 	std::ifstream VertexFile;
@@ -106,37 +110,100 @@ void LShader::Unload()
 	glDeleteProgram(ID);
 }
 
+bool LShader::HasRelevantShader() const
+{
+#if defined(COZ_EDITOR)
+	LDebugFrameBufferSubsystem* DebugFrameBufferSubsystem = CSystem.GetSubsystems().GetSubsystem<LDebugFrameBufferSubsystem>();
+	const std::string& ActiveFrameBuffer = DebugFrameBufferSubsystem->GetActiveDebugFrameBuffer();
+
+	if (ActiveFrameBuffer.empty())
+	{
+		return true;
+	}
+
+	return DebugShaders.contains(ActiveFrameBuffer);
+#else
+	return true;
+#endif
+}
+
 void LShader::Use()
 {
-	glUseProgram(ID);
+	glUseProgram(GetActiveShaderID());
 }
 
 void LShader::SetBool(const std::string& name, bool value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+	glUniform1i(glGetUniformLocation(GetActiveShaderID(), name.c_str()), (int)value);
 }
 
 void LShader::SetInt(const std::string& name, int value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	glUniform1i(glGetUniformLocation(GetActiveShaderID(), name.c_str()), value);
 }
 
 void LShader::SetFloat(const std::string& name, float value) const
 {
-	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	glUniform1f(glGetUniformLocation(GetActiveShaderID(), name.c_str()), value);
 }
 
 void LShader::SetVec3(const std::string& name, const glm::vec3& vec) const
 {
-	glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &vec[0]);
+	glUniform3fv(glGetUniformLocation(GetActiveShaderID(), name.c_str()), 1, &vec[0]);
 }
 
 void LShader::SetMat3(const std::string& name, const glm::mat3& mat) const
 {
-	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix3fv(glGetUniformLocation(GetActiveShaderID(), name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
 void LShader::SetMat4(const std::string& name, const glm::mat4& mat) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(GetActiveShaderID(), name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+inline unsigned int LShader::GetActiveShaderID() const
+{
+#if defined(COZ_EDITOR)
+	LDebugFrameBufferSubsystem* DebugFrameBufferSubsystem = CSystem.GetSubsystems().GetSubsystem<LDebugFrameBufferSubsystem>();
+
+	const std::string& ActiveFrameBuffer = DebugFrameBufferSubsystem->GetActiveDebugFrameBuffer();
+
+	if (ActiveFrameBuffer.empty() || !DebugShaders.contains(ActiveFrameBuffer))
+	{
+		return ID;
+	}
+	else
+	{
+		return DebugShaders.at(ActiveFrameBuffer).Get()->GetID();
+	}
+#else
+	return ID;
+#endif
+}
+
+void to_json(nlohmann::json& J, const LShader& Shader)
+{
+	J = nlohmann::json{
+		{ "VertexShaderPath", Shader.VertexShaderPath },
+		{ "FragmentShaderPath", Shader.FragmentShaderPath },
+		{ "bUsesMatricesUBO", Shader.bUsesMatricesUBO },
+		{ "bUsesLightingUBO", Shader.bUsesLightingUBO }
+	};
+	
+#if defined(COZ_EDITOR)
+	J["DebugShaders"] = Shader.DebugShaders;
+#endif
+}
+
+void from_json(const nlohmann::json& J, LShader& Shader)
+{
+	Shader.VertexShaderPath = J.at("VertexShaderPath").get<std::string>();
+	Shader.FragmentShaderPath = J.at("FragmentShaderPath").get<std::string>();
+	Shader.bUsesMatricesUBO = J.at("bUsesMatricesUBO").get<bool>();
+	Shader.bUsesLightingUBO = J.at("bUsesLightingUBO").get<bool>();
+
+#if defined(COZ_EDITOR)
+	Shader.DebugShaders = J["DebugShaders"];
+#endif
 }

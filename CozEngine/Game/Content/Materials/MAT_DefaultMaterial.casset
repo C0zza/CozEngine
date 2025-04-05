@@ -3,7 +3,7 @@
     "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Diffuse.casset"
   },
   "Shader": {
-    "AssetPath": "Engine/Content/Shaders/DefaultShader.casset"
+    "AssetPath": "Engine/Content/Shaders/DefaultShader/DefaultShader.casset"
   },
   "Specular": {
     "AssetPath": "Game/Content/Textures/Backpack/T_Backpack_Specular.casset"

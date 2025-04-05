@@ -4,6 +4,7 @@
 
 #include "Development/LImGuiSubsystem.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
+#include "Editor/DebugFrameBufferSubsystem.h"
 #include "Globes.h"
 #include "imgui/imgui.h"
 #include "Rendering/Renderer.h"
@@ -19,8 +20,12 @@ void LEditor::Initialize()
 	SceneFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
 	glfwSetFramebufferSizeCallback(Renderer->GetWindow()->GetWindow(), 0);
 
-	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), "Scene");
+	EntityFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
+
+	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), EntityFrameBuffer.get(), "Scene");
 	EditorWindows.emplace_back(std::move(EditorSceneWindow));
+
+	CSystem.GetSubsystems().AddSubsystem<LDebugFrameBufferSubsystem>();
 }
 
 void LEditor::Draw()

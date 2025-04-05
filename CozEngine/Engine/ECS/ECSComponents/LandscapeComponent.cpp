@@ -56,6 +56,11 @@ void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
 		return;
 	}
 
+	if (!LandscapeShader->HasRelevantShader())
+	{
+		return;
+	}
+
 	assert(Component.HeightMap->GetWidth() == Component.HeightMap->GetHeight());
 	LandscapeShader->SetFloat("HeightMapSize", 512);
 

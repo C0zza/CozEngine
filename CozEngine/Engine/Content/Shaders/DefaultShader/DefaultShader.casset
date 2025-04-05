@@ -1,0 +1,11 @@
+{
+  "FragmentShaderPath": "Engine/Rendering/DefaultShaders/shader.fs",
+  "VertexShaderPath": "Engine/Rendering/DefaultShaders/shader.vs",
+  "bUsesMatricesUBO": true,
+  "bUsesLightingUBO": true,
+  "DebugShaders": {
+    "EntityFrameBuffer": {
+      "AssetPath": "Engine/Content/Shaders/DefaultShader/DefaultShader_EntityBuffer.casset"
+    }
+  }
+}

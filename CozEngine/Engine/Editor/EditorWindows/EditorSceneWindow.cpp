@@ -5,8 +5,8 @@
 #include "Globes.h"
 #include "Rendering/FrameBuffer.h"
 
-LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, const char* iWindowName)
-	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }
+LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBuffer* iEntityFrameBuffer, const char* iWindowName)
+	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }, EntityFrameBuffer{iEntityFrameBuffer}
 {
 	assert(SceneFrameBuffer);
 
@@ -26,8 +26,12 @@ void LEditorSceneWindow::Draw()
 	const ImVec2 ContentRegionAvail = ImGui::GetContentRegionAvail();
 	if (SceneFrameBuffer->GetWidth() != ContentRegionAvail.x || SceneFrameBuffer->GetHeight() != ContentRegionAvail.y)
 	{
-		glViewport(0, 0, (int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
-		SceneFrameBuffer->RescaleBuffer((int)ContentRegionAvail.x, (int)ContentRegionAvail.y);
+		const int X = (int)ContentRegionAvail.x;
+		const int Y = (int)ContentRegionAvail.y;
+
+		glViewport(0, 0, X, Y);
+		SceneFrameBuffer->RescaleBuffer(X, Y);
+		EntityFrameBuffer->RescaleBuffer(X, Y);
 	}
 
 	ImGui::Image(

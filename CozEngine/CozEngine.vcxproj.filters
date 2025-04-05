@@ -156,12 +156,6 @@
     <ClCompile Include="Engine\Editor\EditorWindows\EditorSceneWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameFramework\EntityFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ECS\EntityManagement\Level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\EntityContainerAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -169,6 +163,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\EntityContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -356,15 +353,6 @@
     <ClInclude Include="Engine\Editor\EditorWindows\EditorSceneWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameFramework\EntityFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameFramework\EntityRegistration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ECS\EntityManagement\Level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\SerializeHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -375,6 +363,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ECS\EntityManagement\EntityContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Misc\GlmSerialization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\EntityManagement\EntityRegistration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Misc\FuncRegister.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECSComponents\EntityComponentList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\DebugFrameBufferSubsystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -390,6 +393,30 @@
     <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Diffuse.casset" />
     <None Include="Game\Content\Textures\BrickWall\T_Brickwall_Normal.casset" />
     <None Include="Game\Content\Textures\Backpack\T_Backpack_Normal.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\Shader_EntityBuffer.fs" />
+    <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_EntityBuffer.casset" />
+    <None Include="Game\Content\Textures\Backpack\T_Backpack_Diffuse.casset" />
+    <None Include="Game\Content\Textures\Backpack\T_Backpack_Specular.casset" />
+    <None Include="Game\Content\Textures\Container.casset" />
+    <None Include="Game\Content\Textures\NullSpecular.casset" />
+    <None Include="Game\Content\Models\MOD_Cube.casset" />
+    <None Include="Game\Content\Models\MOD_Backpack.casset" />
+    <None Include="Game\Content\Materials\MAT_DefaultMaterial.casset" />
+    <None Include="Game\Content\Materials\MAT_Cube.casset" />
+    <None Include="Game\Content\Levels\TestLevel.casset" />
+    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
+    <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
+    <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader.casset" />
+    <None Include="Engine\Content\Shaders\ScreenTextureShader.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">
