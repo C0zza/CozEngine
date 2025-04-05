@@ -9,6 +9,11 @@ class LResourceHandle
 {
 public:
 	LResourceHandle() : Resource{ nullptr } {};
+	LResourceHandle(const LResourceHandle<T>& ResourceHandle)
+		: Resource{ nullptr }
+	{
+		*this = ResourceHandle;
+	}
 
 	~LResourceHandle()
 	{
@@ -30,6 +35,12 @@ public:
 	T* operator->()
 	{
 		return Resource;
+	}
+
+	LResourceHandle<T>& operator=(LResourceHandle<T>&& InResourceHandle)
+	{
+		SetResource(InResourceHandle.Resource);
+		return *this;
 	}
 
 	LResourceHandle<T>& operator=(const LResourceHandle<T>& InResourceHandle)
