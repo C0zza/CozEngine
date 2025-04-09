@@ -4,12 +4,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Editor/DrawModeSubsystem.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/CameraComponent.h"
 #include "ECS/ECSComponents/DirectionalLightComponent.h"
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
-
 #include "FrameBuffer.h"
 #include "Globes.h"
 #include "Shader.h"
@@ -70,6 +70,8 @@ void LRenderer::Initialize()
 	glBufferData(GL_UNIFORM_BUFFER, 856, NULL, GL_STATIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, LightingUBO, 0, 856);
+
+	CSystem.GetSubsystems().AddSubsystem<LDrawModeSubsystem>();
 }
 
 void LRenderer::Deinitialize()
