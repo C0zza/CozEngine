@@ -2,21 +2,18 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
-#include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
+#include "Rendering/Materials/LandscapeMaterial.h"
 #include "ResourceManagement/ResourceHandle.h"
 
 class LMesh;
-class LShader;
 
 struct CLandscapeComponent : public LECSComponent
 {
-	LResourceHandle<LTexture> HeightMap;
-	LResourceHandle<LTexture> GroundTexture;
-	LResourceHandle<LTexture> WallTexture;
+	LResourceHandle<LLandscapeMaterial> LandscapeMaterial;
 
 	CLandscapeComponent() = default;
-	CLandscapeComponent(const std::string& i_HeightMap, const std::string& i_GroundTexture, const std::string& i_WallTexture);
+	CLandscapeComponent(const std::string& i_LandscapeMaterial);
 };
 
 class CLandscapeComponentSystem : public LComponentSystem<CLandscapeComponent>

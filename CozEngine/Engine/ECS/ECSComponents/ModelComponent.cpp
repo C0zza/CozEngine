@@ -7,21 +7,19 @@
 
 void CModelComponentSystem::RunComponent(CModelComponent& Component)
 {
-	if (Component.Model.Get() && Component.Material.Get())
+	if (Component.Model.Get() && Component.ModelMaterial.Get())
 	{
-		if (!Component.Material->GetShader()->HasRelevantShader())
+		// Only need the one Material->Use call while we have 1 mat per CModelComponent
+		const LShader* ActiveShader = Component.ModelMaterial->Use();
+		if (!ActiveShader)
 		{
 			return;
 		}
-
-		// Only need the one Material->Use call while we have 1 mat per CModelComponent
-		Component.Material->Use();
-		assert(Component.Material->GetShader());
 		
 		assert(ECS);
 		if (CTransformComponent* EntityTransform = ECS->GetComponent<CTransformComponent>(Component.EntityID))
 		{
-			Component.Model->Draw(*Component.Material->GetShader(), EntityTransform->GetUpdatedTransformationMatrix());
+			Component.Model->Draw(*ActiveShader, EntityTransform->GetUpdatedTransformationMatrix());
 		}
 	}
 }
@@ -29,13 +27,13 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 void CModelComponentSystem::GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const
 {
 	J["Model"] = Component.Model;
-	J["Material"] = Component.Material;
+	J["ModelMaterial"] = Component.ModelMaterial;
 }
 
 void CModelComponentSystem::DeserializeComponent(CModelComponent& Component, const nlohmann::json& J)
 {
 	Component.Model = J["Model"];
-	Component.Material = J["Material"];
+	Component.ModelMaterial = J["ModelMaterial"];
 }
 
 

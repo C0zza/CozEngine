@@ -6,67 +6,24 @@
 #include "Shader.h"
 #include "Texture.h"
 
-void LMaterial::Load()
-{
-	// TODO: Add similar UE_LOG stuff so any usage of it can be defined out automatically in release
-	if (SpecularShininess < 1.0f)
-	{
-		SpecularShininess = 1.0f;
-		Log(LLogLevel::INFO, "Specular shininess for " + GetAssetPath() + " has been overriden. Min shininess is 1 otherwise no lighting will apply.");
-	}
-
-	bool bAnyError = false;
-	if (!Diffuse.Get())
-	{
-		Log(LLogLevel::WARNING, "Invalid diffuse texture for " + GetAssetPath() + ". Whatever diffuse texture is bound before this will end up being used on draw.");
-		bAnyError = true;
-	}
-
-	if (!Specular.Get())
-	{
-		Log(LLogLevel::WARNING, "WARNING - Invalid specular texture for " + GetAssetPath() + ". Whatever specular texture is bound before this will end up being used on draw.");
-		bAnyError = true;
-	}
-
-	if (!NormalMap.Get())
-	{
-		Log(LLogLevel::WARNING, "Invalid normal map for " + GetAssetPath() + ".");
-	}
-	
-	if (!Shader.Get())
-	{
-		Log(LLogLevel::WARNING, "Invalid shader for " + GetAssetPath() + ".");
-		bAnyError = true;
-	}
-
-	if (!bAnyError)
-	{
-		Shader.Get()->Use();
-		Shader.Get()->SetInt("Material.Diffuse", 0);
-		Shader.Get()->SetInt("Material.Specular", 1);
-		Shader.Get()->SetInt("Material.NormalMap", 2);
-	}
-}
-
-void LMaterial::Use() const
+const LShader* LMaterial::Use()
 {	
-	Shader.Get()->Use();
-
-	// Shader->SetVec3("Material.Ambient", Ambient);
-
-	if (Diffuse.Get())
+	LDrawModeSubsystem* DrawModeSubsystem = CSystem.GetSubsystems().GetSubsystem<LDrawModeSubsystem>();
+	if (!DrawModeSubsystem)
 	{
-		Diffuse.Get()->Use(0);
+		Log(LLogLevel::ERROR, "LMaterial::GetActiveShader - Failed to get DrawModeSubsystem.");
+		return nullptr;
 	}
 
-	if (Specular.Get())
+	const EDrawMode ActiveDrawMode = DrawModeSubsystem->GetActiveDrawMode();
+
+	LShader* ActiveShader = nullptr;
+	if (Shaders.contains(ActiveDrawMode))
 	{
-		Specular.Get()->Use(1);
-		Shader.Get()->SetFloat("Material.Shininess", SpecularShininess);
+		ActiveShader = Shaders.at(ActiveDrawMode).Get();
+		ActiveShader->Use();
+		BindResources(ActiveDrawMode);
 	}
 
-	if (NormalMap.Get())
-	{
-		NormalMap.Get()->Use(2);
-	}
+	return ActiveShader;
 }

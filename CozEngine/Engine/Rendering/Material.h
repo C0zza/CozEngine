@@ -1,28 +1,19 @@
 #pragma once
 
+#include "Editor/DrawModeSubsystem.h"
 #include "ResourceManagement/ResourceHandle.h"
-// Required for to_json, from_json LTexture/LShader definitions
-#include "Texture.h"
 #include "Shader.h"
 
 class LMaterial : public LResource
 {
 public:
-	virtual void Load() override;
-	virtual void Unload() override {}
+	const LShader* Use();
 
-	void Use() const;
-	const LShader* GetShader() const { return Shader.Get(); }
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Shaders)
 
-	LResourceHandle<LTexture> Diffuse;
-	LResourceHandle<LTexture> Specular;
-	LResourceHandle<LTexture> NormalMap;
+protected:
+	virtual void BindResources(const EDrawMode ActiveDrawMode) {}
 
-	float SpecularShininess = 1.f;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Diffuse, Specular, SpecularShininess, NormalMap, Shader)
-
-private:
-	LResourceHandle<LShader> Shader;
+	std::map<EDrawMode, LResourceHandle<LShader>> Shaders;
 };
 

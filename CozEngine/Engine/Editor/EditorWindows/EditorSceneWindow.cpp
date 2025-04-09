@@ -35,7 +35,7 @@ void LEditorSceneWindow::Draw()
 	}
 
 	ImGui::Image(
-		(ImTextureID)SceneFrameBuffer->GetTexture(),
+		(ImTextureID)EntityFrameBuffer->GetTexture(),
 		ContentRegionAvail,
 		ImVec2(0, 1),
 		ImVec2(1, 0)

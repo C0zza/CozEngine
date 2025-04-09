@@ -2,6 +2,5 @@
   "FragmentShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.fs",
   "VertexShaderPath": "Engine/Rendering/DefaultShaders/CubeMap.vs",
   "bUsesMatricesUBO": true,
-  "bUsesLightingUBO": false,
-  "DebugShaders": {}
+  "bUsesLightingUBO": false
 }

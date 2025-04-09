@@ -6,5 +6,5 @@
 
 CLandscapeEntity::CLandscapeEntity()
 {
-	AddComponent<CLandscapeComponent>("Game/Content/Textures/TestHeightMap.casset", "Game/Content/Textures/Ground.casset", "Game/Content/Textures/Wall.casset");
+	AddComponent<CLandscapeComponent>("Game/Content/Materials/MAT_LandscapeMaterial.casset");
 }

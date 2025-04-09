@@ -1,0 +1,19 @@
+{
+  "Shaders": [
+    [
+      "Default",
+      {
+        "AssetPath": "Engine/Content/Shaders/LandscapeShader.casset"
+      }
+    ]
+  ],
+  "GroundTexture": {
+    "AssetPath": "Game/Content/Textures/Ground.casset"
+  },
+  "HeightMap": {
+    "AssetPath": "Game/Content/Textures/TestHeightMap.casset"
+  },
+  "WallTexture": {
+    "AssetPath": "Game/Content/Textures/Wall.casset"
+  }
+}

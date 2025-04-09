@@ -8,7 +8,7 @@
 #include "Rendering/Renderer.h"
 
 #if defined(COZ_EDITOR)
-#include "Editor/DebugFrameBufferSubsystem.h"
+#include "Editor/DrawModeSubsystem.h"
 #include "Editor/LEditor.h"
 #endif
 
@@ -23,14 +23,12 @@ void LSystem::Run()
 {
 	LResourceManager* ResourceManager = Subsystems.GetSubsystem<LResourceManager>(true);
 	LRenderer* Renderer = Subsystems.GetSubsystem<LRenderer>(true);
+
 #if defined(COZ_EDITOR)
 	LImGuiSubsystem* ImGuiSubsystem = Subsystems.GetSubsystem<LImGuiSubsystem>(true);
 	LFrameBufferSubsystem* FrameBufferSubsystem = Subsystems.GetSubsystem<LFrameBufferSubsystem>(true);
-#endif
-
-#if defined(COZ_EDITOR)
 	LEditor* Editor = Subsystems.AddSubsystem<LEditor>();
-	LDebugFrameBufferSubsystem* DebugFrameBufferSubsystem = Subsystems.GetSubsystem<LDebugFrameBufferSubsystem>();
+	LDrawModeSubsystem* DrawModeSubsystem = Subsystems.GetSubsystem<LDrawModeSubsystem>();
 #endif
 
 	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
@@ -73,9 +71,9 @@ void LSystem::Run()
 		Renderer->BindFrameBuffer(Editor->GetEntityFrameBuffer());
 		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		DebugFrameBufferSubsystem->SetActiveDebugFrameBuffer("EntityFrameBuffer");
+		DrawModeSubsystem->SetActiveDrawMode(EDrawMode::EntityFrameBuffer);
 		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
-		DebugFrameBufferSubsystem->SetActiveDebugFrameBuffer("");
+		DrawModeSubsystem->SetActiveDrawMode(EDrawMode::Default);
 
 		Renderer->BindDefaultFrameBuffer();
 		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT);

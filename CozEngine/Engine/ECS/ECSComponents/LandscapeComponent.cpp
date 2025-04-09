@@ -38,7 +38,6 @@ void CLandscapeComponentSystem::PreRun()
 {
 	assert(LandscapeShader.Get());
 	LandscapeShader->Use();
-	LandscapeShader->SetInt("HeightMap", 0);
 }
 
 void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
@@ -50,39 +49,26 @@ void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
 		return;
 	}
 
-	if (!Component.HeightMap.Get())
-	{
-		Log(LLogLevel::ERROR, "CLandscapeComponentSystem::RunComponent - Height map is invalid. Unable to render.");
-		return;
-	}
-
-	if (!LandscapeShader->HasRelevantShader())
+	const LShader* ActiveShader = Component.LandscapeMaterial->Use();
+	if (!ActiveShader)
 	{
 		return;
 	}
 
-	assert(Component.HeightMap->GetWidth() == Component.HeightMap->GetHeight());
-	LandscapeShader->SetFloat("HeightMapSize", 512);
+	assert(Component.LandscapeMaterial->HeightMap->GetWidth() == Component.LandscapeMaterial->HeightMap->GetHeight());
+	LandscapeShader->SetFloat("HeightMapSize", Component.LandscapeMaterial->HeightMap->GetWidth());
 
-	Component.HeightMap->Use(0);
-	Component.GroundTexture->Use(1);
-	Component.WallTexture->Use(2);
-
-	LandscapeMesh->Draw(*LandscapeShader.Get(), Transform->GetUpdatedTransformationMatrix());
+	LandscapeMesh->Draw(*ActiveShader, Transform->GetUpdatedTransformationMatrix());
 }
 
 void CLandscapeComponentSystem::GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const
 {
-	J["HeightMap"] = Component.HeightMap;
-	J["GroundTexture"] = Component.GroundTexture;
-	J["WallTexture"] = Component.WallTexture;
+	J["LandscapeMaterial"] = Component.LandscapeMaterial;
 }
 
 void CLandscapeComponentSystem::DeserializeComponent(CLandscapeComponent& Component, const nlohmann::json& J)
 {
-	Component.HeightMap = J["HeightMap"];
-	Component.GroundTexture = J["GroundTexture"];
-	Component.WallTexture = J["WallTexture"];
+	Component.LandscapeMaterial = J["LandscapeMaterial"];
 }
 
 void CLandscapeComponentSystem::GenerateMesh()
@@ -125,24 +111,14 @@ void CLandscapeComponentSystem::GenerateMesh()
 	LandscapeMesh = make_unique<LMesh>(forward<vector<Vertex>>(Vertices), forward<vector<unsigned int>>(Indices));
 }
 
-CLandscapeComponent::CLandscapeComponent(const std::string& i_HeightMap, const std::string& i_GroundTexture, const std::string& i_WallTexture)
+CLandscapeComponent::CLandscapeComponent(const std::string& i_LandscapeMaterial)
 {
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
-	ResourceManager->GetResource<LTexture>(i_HeightMap, HeightMap);
-	if (!HeightMap.Get())
+	if (!ResourceManager)
 	{
-		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load height map: " + i_HeightMap);
+		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to get ResourceManager.");
+		return;
 	}
 
-	ResourceManager->GetResource<LTexture>(i_GroundTexture, GroundTexture);
-	if (!GroundTexture.Get())
-	{
-		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load ground texture: " + i_GroundTexture);
-	}
-
-	ResourceManager->GetResource<LTexture>(i_WallTexture, WallTexture);
-	if (!WallTexture.Get())
-	{
-		Log(LLogLevel::ERROR, "CLandscapeComponent::CLandscapeComponent - Failed to load wall texture: " + i_WallTexture);
-	}
+	ResourceManager->GetResource<LLandscapeMaterial>(i_LandscapeMaterial, LandscapeMaterial);
 }
