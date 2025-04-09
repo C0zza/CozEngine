@@ -15,6 +15,11 @@ public:
 
 	float SpecularShininess = 1.f;
 
+#if defined(COZ_EDITOR)
+	// TODO: Could be better to have some single var to call into. Both this and LandscapeMaterial have this atm.
+	LEntityID EntityID = 0;
+#endif
+
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_BASE(LModelMaterial, LMaterial, Diffuse, Specular, NormalMap, SpecularShininess)
 
 protected:

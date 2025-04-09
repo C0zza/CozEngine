@@ -10,16 +10,20 @@
 
 namespace
 {
-	const char* LandscapeShaderPath = "Engine/Content/Shaders/LandscapeShader.casset";
+	const char* LandscapeShaderPath = "Engine/Content/Shaders/LandscapeShaders/LandscapeShader.casset";
+#if defined(COZ_EDITOR)
+	const char* LandscapeEntityBufferShaderPath = "Engine/Content/Shaders/LandscapeShaders/LandscapeShader_EntityBuffer.casset";
+#endif
 }
 
 CLandscapeComponentSystem::CLandscapeComponentSystem()
 	: Width{ 512 }, Height{ 100 }, Length{ 512 }
 {
 	GenerateMesh();
-	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
-	ResourceManager->GetResource<LShader>(LandscapeShaderPath, LandscapeShader);
 
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+
+	ResourceManager->GetResource<LShader>(LandscapeShaderPath, LandscapeShader);
 	if (!LandscapeShader.Get())
 	{
 		Log(LLogLevel::ERROR, std::string("CLandscapeComponentSystem::CLandscapeComponentSystem - Failed to load landscape shader ") 
@@ -28,10 +32,26 @@ CLandscapeComponentSystem::CLandscapeComponentSystem()
 	}
 
 	LandscapeShader->Use();
-	LandscapeShader->SetVec3("LandscapeSize", glm::vec3(Width, Height, Length));
+
+	const glm::vec3 LandscapeSize(Width, Height, Length);
+	LandscapeShader->SetVec3("LandscapeSize", LandscapeSize);
+
 	LandscapeShader.Get()->SetInt("HeightMap", 0);
 	LandscapeShader.Get()->SetInt("GroundTexture", 1);
 	LandscapeShader.Get()->SetInt("WallTexture", 2);
+
+#if defined(COZ_EDITOR)
+	ResourceManager->GetResource<LShader>(LandscapeEntityBufferShaderPath, LandscapeEntityBufferShader);
+	if (!LandscapeEntityBufferShader.Get())
+	{
+		Log(LLogLevel::ERROR, std::string("CLandscapeComponentSystem::CLandscapeComponentSystem - Failed to load landscape entity buffer shader ")
+			+ LandscapeEntityBufferShaderPath + ". Unable to set landscape dimensions.");
+		return;
+	}
+
+	LandscapeEntityBufferShader->Use();
+	LandscapeEntityBufferShader->SetVec3("LandscapeSize", LandscapeSize);
+#endif
 }
 
 void CLandscapeComponentSystem::PreRun()
@@ -48,6 +68,16 @@ void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
 		Log(LLogLevel::ERROR, "CLandscapeComponentSystem::RunComponent - Failed to get transform component.");
 		return;
 	}
+
+	if (!Component.LandscapeMaterial.Get())
+	{
+		Log(LLogLevel::WARNING, "CLandscapeComponentSystem::RunComponent - Invalid LandscapeMaterial.");
+		return;
+	}
+
+#if defined(COZ_EDITOR)
+	Component.LandscapeMaterial->EntityID = Component.EntityID;
+#endif
 
 	const LShader* ActiveShader = Component.LandscapeMaterial->Use();
 	if (!ActiveShader)

@@ -36,6 +36,9 @@ private:
 	void GenerateMesh();
 
 	LResourceHandle<LShader> LandscapeShader;
+#if defined(COZ_EDITOR)
+	LResourceHandle<LShader> LandscapeEntityBufferShader;
+#endif
 
 	// Plane mesh used for all landscape components.
 	std::unique_ptr<LMesh> LandscapeMesh;

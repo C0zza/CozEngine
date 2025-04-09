@@ -10,6 +10,10 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 	if (Component.Model.Get() && Component.ModelMaterial.Get())
 	{
 		// Only need the one Material->Use call while we have 1 mat per CModelComponent
+#if defined(COZ_EDITOR)
+		Component.ModelMaterial->EntityID = Component.EntityID;
+#endif
+
 		const LShader* ActiveShader = Component.ModelMaterial->Use();
 		if (!ActiveShader)
 		{

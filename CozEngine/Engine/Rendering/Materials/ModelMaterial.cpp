@@ -45,19 +45,37 @@ void LModelMaterial::Load()
 
 void LModelMaterial::BindResources(const EDrawMode ActiveDrawMode)
 {
-	if (Diffuse.Get())
+	// TODO: Can we instead register relevant functors on startup stored on LMaterial? Saves extra switch logic, duplicate code for
+	// shared purpose draw mode shaders and also would prevent the need for vtable lookup.
+	switch (ActiveDrawMode)
 	{
-		Diffuse->Use(0);
-	}
+	case EDrawMode::Default:
+		if (Diffuse.Get())
+		{
+			Diffuse->Use(0);
+		}
 
-	if (Specular.Get())
-	{
-		Specular->Use(1);
-		Shaders.at(ActiveDrawMode)->SetFloat("Material.Shininess", SpecularShininess);
-	}
+		if (Specular.Get())
+		{
+			Specular->Use(1);
+			Shaders.at(ActiveDrawMode)->SetFloat("Material.Shininess", SpecularShininess);
+		}
 
-	if (NormalMap.Get())
-	{
-		NormalMap->Use(2);
+		if (NormalMap.Get())
+		{
+			NormalMap->Use(2);
+		}
+		break;
+#if defined(COZ_EDITOR)
+	case EDrawMode::EntityFrameBuffer:
+		if (Shaders.contains(EDrawMode::EntityFrameBuffer))
+		{
+			// Assumes EntityID has been updated appropriately
+			Shaders.at(EDrawMode::EntityFrameBuffer)->SetUInt("EntityID", EntityID);
+		}
+		break;
+#endif
+	default:
+		break;
 	}
 }

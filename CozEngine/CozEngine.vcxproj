@@ -371,12 +371,14 @@
     <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_EntityBuffer.casset" />
-    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
+    <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader.casset" />
+    <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader_EntityBuffer.casset" />
     <None Include="Engine\Content\Shaders\ScreenTextureShader.casset" />
     <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
     <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape.vs" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape_EntityBuffer.fs" />
     <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.fs" />
     <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />

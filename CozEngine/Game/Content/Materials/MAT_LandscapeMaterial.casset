@@ -3,7 +3,13 @@
     [
       "Default",
       {
-        "AssetPath": "Engine/Content/Shaders/LandscapeShader.casset"
+        "AssetPath": "Engine/Content/Shaders/LandscapeShaders/LandscapeShader.casset"
+      }
+    ],
+    [
+      "EntityFrameBuffer",
+      {
+        "AssetPath": "Engine/Content/Shaders/LandscapeShaders/LandscapeShader_EntityBuffer.casset"
       }
     ]
   ],

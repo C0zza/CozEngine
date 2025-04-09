@@ -13,6 +13,10 @@ public:
 	LResourceHandle<LTexture> GroundTexture;
 	LResourceHandle<LTexture> WallTexture;
 
+#if defined(COZ_EDITOR)
+	LEntityID EntityID = 0;
+#endif
+
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_BASE(LLandscapeMaterial, LMaterial, HeightMap, GroundTexture, WallTexture)
 
 protected:

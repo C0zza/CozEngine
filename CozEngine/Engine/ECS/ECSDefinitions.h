@@ -1,5 +1,5 @@
 #pragma once
 
-typedef unsigned int LIDType;
+typedef uint32_t LIDType;
 typedef LIDType LEntityID;
 typedef LIDType LComponentTypeID;
