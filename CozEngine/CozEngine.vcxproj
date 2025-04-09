@@ -307,6 +307,7 @@
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Rendering\FrameBufferSubsystem.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\EntityRegistration.h" />
+    <ClInclude Include="Engine\ResourceManagement\JsonHelper.h" />
     <ClInclude Include="Engine\ResourceManagement\SerializeHelpers.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\EntityContainer.h" />
     <ClInclude Include="Engine\Misc\FuncRegister.h" />
