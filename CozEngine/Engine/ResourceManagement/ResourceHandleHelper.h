@@ -14,6 +14,10 @@ inline void to_json(nlohmann::json& J, const LResourceHandle<T>& ResourceHandle)
 	{
 		J["AssetPath"] = Resource->GetAssetPath();
 	}
+	else
+	{
+		J["AssetPath"] = "null";
+	}
 }
 
 template<typename T>

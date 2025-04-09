@@ -16,7 +16,7 @@ public:
 	template<typename T>
 	void GetResource(const FAssetPath& Asset, LResourceHandle<T>& OutResourceHandle)
 	{
-		if (Asset.empty())
+		if (Asset.empty() || Asset == "null")
 		{
 			Log(LLogLevel::INFO, "LResourceManager::GetResource - Empty Asset provided. Returning empty LResourceHandle.");
 			return;
@@ -50,7 +50,6 @@ public:
 			if (File.good())
 			{
 				Log(LLogLevel::INFO, "LResourceManager::CreateResourceAsset - AssetPath: " + AssetPath + " already exists.");
-				GetResource<T>(AssetPath, OutResourceHandle);
 			}
 			else
 			{
