@@ -26,6 +26,7 @@ class LDelegateBase
 	friend LDelegateEventHandle;
 protected:
 	void InitDelegateEventHandle(LDelegateEventHandle& DelegateEventHandle) { DelegateEventHandle.BoundDelegate = this; }
+	void RawResetDelegateEventHandle(LDelegateEventHandle& DelegateEventHandle) { DelegateEventHandle.BoundDelegate = nullptr; }
 
 	virtual void RemoveEvent(LDelegateEventHandle* DelegateEventHandle) = 0;
 
@@ -64,7 +65,7 @@ inline LDelegate<Args...>::~LDelegate()
 	{
 		if (Pair.first)
 		{
-			Pair.first->Reset();
+			RawResetDelegateEventHandle(*Pair.first);
 		}
 	}
 }
