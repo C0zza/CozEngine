@@ -12,6 +12,9 @@ public:
 	
 	virtual void Draw() override;
 
+	virtual void PushWindowStyle() override;
+	virtual void PopWindowStyle() override;
+
 private:
 	// TODO: LEditor currently has ownership of these buffers for easy access from LSystem. This makes more sense to have ownership though
 	LFrameBuffer* SceneFrameBuffer = nullptr;
@@ -28,5 +31,9 @@ private:
 	void OnMouseClicked();
 
 	bool bWindowIsHovered = false;
+
+	ImVec2 MousePos;
+	ImVec2 TopLeft;
+	ImVec2 BottomRight;
 };
 

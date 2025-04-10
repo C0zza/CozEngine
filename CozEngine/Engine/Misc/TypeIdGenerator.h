@@ -41,6 +41,7 @@ public:
 		if (!TypeData.contains(TypeID))
 		{
 			TypeData.emplace(TypeID, std::pair<int, std::queue<LIDType>>());
+			TypeData[TypeID].first = 1;
 		}
 		else if (!TypeData[TypeID].second.empty())
 		{

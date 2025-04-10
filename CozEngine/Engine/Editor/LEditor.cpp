@@ -16,10 +16,10 @@ void LEditor::Initialize()
 	Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
 	assert(Renderer);
 
-	SceneFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
+	SceneFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720, GL_RGB);
 	glfwSetFramebufferSizeCallback(Renderer->GetWindow()->GetWindow(), 0);
 
-	EntityFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720);
+	EntityFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720, GL_RGBA);
 
 	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), EntityFrameBuffer.get(), "Scene");
 	EditorWindows.emplace_back(std::move(EditorSceneWindow));
@@ -36,11 +36,13 @@ void LEditor::Draw()
 	for (std::unique_ptr<LEditorWindow>& EditorWindow : EditorWindows)
 	{
 		assert(EditorWindow.get());
+		EditorWindow->PushWindowStyle();
 		ImGui::Begin(EditorWindow->GetWindowName());
 		{
 			EditorWindow->Draw();
 			ImGui::End();
 		}
+		EditorWindow->PopWindowStyle();
 	}
 
 	ImGui::Begin("Test1");

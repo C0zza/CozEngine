@@ -8,6 +8,9 @@ public:
 
 	virtual void Draw() = 0;
 
+	virtual void PushWindowStyle() {}
+	virtual void PopWindowStyle() {}
+
 	const char* GetWindowName() const { return WindowName; }
 
 private:

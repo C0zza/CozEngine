@@ -69,7 +69,8 @@ void LSystem::Run()
 		// TODO: This editor side frame buffer management feels like it should be abstraced into Editor->Draw somehow
 
 		Renderer->BindFrameBuffer(Editor->GetEntityFrameBuffer());
-		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 1.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Cleared to 0,0,0,0 as we'll use no color as no object. LTypeIdGenerator has been updated to start ID counts from 1.
+		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 0.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		DrawModeSubsystem->SetActiveDrawMode(EDrawMode::EntityFrameBuffer);
 		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
