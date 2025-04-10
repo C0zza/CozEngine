@@ -2,6 +2,7 @@
 
 #include "EditorSceneWindow.h"
 
+#include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
 #include "Rendering/FrameBuffer.h"
 
@@ -15,6 +16,8 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_T, GLFW_PRESS), &LEditorSceneWindow::OnToggleFocus, ToggleFocusEventHandle);
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE), &LEditorSceneWindow::OnMouseClicked, MouseClickedEventHandle);
+
+	CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
 }
 
 void LEditorSceneWindow::Draw()
@@ -87,41 +90,40 @@ void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
 
 void LEditorSceneWindow::OnMouseClicked()
 {
-	if (bWindowIsHovered)
+	if (!bWindowIsHovered || !EntityFrameBuffer)
 	{
-		if (!EntityFrameBuffer)
-		{
-			return;
-		}
-
-		const float XSize = BottomRight.x - TopLeft.x;
-		const float YSize = BottomRight.y - TopLeft.y;
-
-		// Flip y to match texture format and adjust for window start location
-		MousePos.y = YSize - MousePos.y + TopLeft.y;
-		MousePos.x += TopLeft.x;
-
-		const float XPos = MousePos.x * XSize / EntityFrameBuffer->GetWidth();
-		const float YPos = MousePos.y * YSize / EntityFrameBuffer->GetHeight();
-
-		EntityFrameBuffer->Bind();
-		glReadBuffer(GL_COLOR_ATTACHMENT0);
-
-		float Pixel[4];
-		glReadPixels(XPos, YPos, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
-
-		EntityFrameBuffer->Unbind();
-
-		LEntityID EntityID = static_cast<LEntityID>(Pixel[0] * 255) << 24 |
-							 static_cast<LEntityID>(Pixel[1] * 255) << 16 |
-							 static_cast<LEntityID>(Pixel[2] * 255) << 8 |
-							 static_cast<LEntityID>(Pixel[3] * 255);
-
-		// 0 Should represent no object has been drawn to the EntityFrameBuffer here. Dependent on the clear color of the buffer and that
-		// LTypeInstanceIdGenerator IDs start from 0.
-		if (EntityID != 0)
-		{
-			// TODO: Record this as the selected entity somewhere
-		}
+		return;
 	}
+
+	LSelectedEntitySubsystem* SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>();
+	if (!SelectedEntitySubsystem)
+	{
+		Log(LLogLevel::ERROR, "LEditorSceneWindow::OnMouseClicked - Invalid SelectedEntitySubsystem.");
+		return;
+	}
+
+	const float XSize = BottomRight.x - TopLeft.x;
+	const float YSize = BottomRight.y - TopLeft.y;
+
+	// Flip y to match texture format and adjust for window start location
+	MousePos.y = YSize - MousePos.y + TopLeft.y;
+	MousePos.x += TopLeft.x;
+
+	const float XPos = MousePos.x * XSize / EntityFrameBuffer->GetWidth();
+	const float YPos = MousePos.y * YSize / EntityFrameBuffer->GetHeight();
+
+	EntityFrameBuffer->Bind();
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+	float Pixel[4];
+	glReadPixels(XPos, YPos, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
+
+	EntityFrameBuffer->Unbind();
+
+	LEntityID EntityID = static_cast<LEntityID>(Pixel[0] * 255) << 24 |
+						static_cast<LEntityID>(Pixel[1] * 255) << 16 |
+						static_cast<LEntityID>(Pixel[2] * 255) << 8 |
+						static_cast<LEntityID>(Pixel[3] * 255);
+
+	SelectedEntitySubsystem->SetSelectedEntityID(EntityID);
 }

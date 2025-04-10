@@ -4,6 +4,7 @@
 
 #include "Development/LImGuiSubsystem.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
+#include "Editor/EditorWindows/InspectorWindow.h"
 #include "Globes.h"
 #include "imgui/imgui.h"
 #include "Rendering/Renderer.h"
@@ -23,6 +24,9 @@ void LEditor::Initialize()
 
 	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), EntityFrameBuffer.get(), "Scene");
 	EditorWindows.emplace_back(std::move(EditorSceneWindow));
+
+	std::unique_ptr<LInspectorWindow> InspectorWindow = std::make_unique<LInspectorWindow>("Inspector");
+	EditorWindows.emplace_back(std::move(InspectorWindow));
 }
 
 void LEditor::Draw()

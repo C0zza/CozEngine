@@ -219,6 +219,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Misc\Delegate.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\EditorSceneWindow.cpp" />
     <ClCompile Include="Engine\Rendering\CubeMap.cpp" />
@@ -264,6 +265,7 @@
     <ClCompile Include="Game\LandscapeEntity.cpp" />
     <ClCompile Include="Engine\ECS\EntityManagement\EntityContainerAsset.cpp" />
     <ClCompile Include="Engine\Rendering\Materials\LandscapeMaterial.cpp" />
+    <ClCompile Include="Engine\Editor\EditorWindows\InspectorWindow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
@@ -281,6 +283,7 @@
     <ClCompile Include="Engine\ResourceManagement\ResourceManager.cpp" />
     <ClCompile Include="Engine\SubsystemCollection.cpp" />
     <ClCompile Include="Engine\Rendering\Materials\ModelMaterial.cpp" />
+    <ClCompile Include="Engine\Editor\SelectedEntitySubsystem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
@@ -289,6 +292,7 @@
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Misc\Delegate.h" />
     <ClInclude Include="Engine\Editor\DrawModeSubsystem.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\EditorSceneWindow.h" />
     <ClInclude Include="Engine\Editor\EditorWindow.h" />
@@ -360,6 +364,8 @@
     <ClInclude Include="Engine\ECS\EntityManagement\EntityContainerAsset.h" />
     <ClInclude Include="Engine\Rendering\Materials\ModelMaterial.h" />
     <ClInclude Include="Engine\Rendering\Materials\LandscapeMaterial.h" />
+    <ClInclude Include="Engine\Editor\EditorWindows\InspectorWindow.h" />
+    <ClInclude Include="Engine\Editor\SelectedEntitySubsystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>

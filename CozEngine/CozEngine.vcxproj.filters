@@ -168,6 +168,21 @@
     <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\Materials\LandscapeMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Materials\ModelMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorWindows\InspectorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\SelectedEntitySubsystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Misc\Delegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -377,7 +392,25 @@
     <ClInclude Include="Engine\ECS\ECSComponents\EntityComponentList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Editor\DebugFrameBufferSubsystem.h">
+    <ClInclude Include="Engine\Editor\DrawModeSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\JsonHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Materials\ModelMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Materials\LandscapeMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorWindows\InspectorWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\SelectedEntitySubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Misc\Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -404,7 +437,6 @@
     <None Include="Game\Content\Materials\MAT_DefaultMaterial.casset" />
     <None Include="Game\Content\Materials\MAT_Cube.casset" />
     <None Include="Game\Content\Levels\TestLevel.casset" />
-    <None Include="Engine\Content\Shaders\LandscapeShader.casset" />
     <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader.casset" />
     <None Include="Engine\Content\Shaders\ScreenTextureShader.casset" />
@@ -417,6 +449,10 @@
     <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.fs" />
     <None Include="Engine\Rendering\DefaultShaders\ScreenTexture.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader.fs" />
+    <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader.casset" />
+    <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader_EntityBuffer.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\Landscape_EntityBuffer.fs" />
+    <None Include="Game\Content\Materials\MAT_LandscapeMaterial.casset" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">
