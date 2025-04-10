@@ -9,6 +9,8 @@ public:
 	LEntityID GetSelectedEntityID() const { return SelectedEntityID; }
 	void SetSelectedEntityID(const LEntityID iSelectedEntityID);
 
+	bool IsEntitySelected() const { return SelectedEntityID != 0; }
+
 	LDelegate<const LEntityID>& GetOnEntitySelectedDelegate() { return OnEntitySelectedDelegate; }
 
 private:

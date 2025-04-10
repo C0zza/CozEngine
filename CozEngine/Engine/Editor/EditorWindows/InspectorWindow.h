@@ -7,13 +7,8 @@
 class LInspectorWindow : public LEditorWindow
 {
 public:
-	LInspectorWindow(const char* iWindowName);
+	LInspectorWindow(const char* iWindowName) : LEditorWindow(iWindowName) {}
 
 	virtual void Draw();
-
-private:
-	void OnEntitySelected(const LEntityID EntityID);
-
-	LDelegateEventHandle OnEntitySelectedHandle;
 };
 
