@@ -3,7 +3,7 @@
 class LFrameBuffer
 {
 public:
-	LFrameBuffer(const int Width, const int Height);
+	LFrameBuffer(const int Width, const int Height, const int Format);
 	~LFrameBuffer();
 
 	unsigned int GetTexture() const { return texture; }
@@ -14,6 +14,8 @@ public:
 
 	int GetWidth() const { return m_Width; }
 	int GetHeight() const { return m_Height; }
+
+	int m_Format;
 private:
 	unsigned int fbo;
 	unsigned int texture;
