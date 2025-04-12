@@ -5,6 +5,7 @@
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
 #include "Rendering/FrameBuffer.h"
+#include "Rendering/Renderer.h"
 
 LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBuffer* iEntityFrameBuffer, const char* iWindowName)
 	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }, EntityFrameBuffer{iEntityFrameBuffer}
@@ -40,6 +41,12 @@ void LEditorSceneWindow::Draw()
 		glViewport(0, 0, X, Y);
 		SceneFrameBuffer->RescaleBuffer(X, Y);
 		EntityFrameBuffer->RescaleBuffer(X, Y);
+
+		LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+		if (Renderer)
+		{
+			Renderer->SetProjectionMatrix(X, Y);
+		}
 	}
 
 	ImGui::Image(

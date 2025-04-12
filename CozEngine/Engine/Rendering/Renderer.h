@@ -23,6 +23,7 @@ public:
 	LWindow* GetWindow() { return m_Window; }
 	void GetShouldWindowClose(bool& bClose);
 
+	void SetProjectionMatrix(const float Width, const float Height);
 	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
 	void BindFrameBuffer(const LFrameBuffer* Buffer);

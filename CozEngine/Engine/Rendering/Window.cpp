@@ -32,6 +32,14 @@ void LWindow::Init()
 	glViewport(0, 0, Width, Height);
 	glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* Window, int width, int height)
 		{
+#if !defined(COZ_EDITOR)
+			LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
+			if (Renderer)
+			{
+				Renderer->SetProjectionMatrix(width, height);
+			}
+#endif
+
 			glViewport(0, 0, width, height);
 		});
 

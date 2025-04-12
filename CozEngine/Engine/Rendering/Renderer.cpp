@@ -53,7 +53,7 @@ void LRenderer::Initialize()
 	assert(m_Window);
 	m_Window->Init();
 
-	ProjectionMatrix = glm::perspective(glm::radians(60.0f), 1280.f / 720.f, 0.1f, 500.f);
+	SetProjectionMatrix(1280.0f, 720.0f);
 
 	LTexture::SetFlipVerticallyOnLoad(true);
 
@@ -146,4 +146,9 @@ void LRenderer::GetShouldWindowClose(bool& bClose)
 {
 	assert(m_Window);
 	bClose = m_Window->ShouldClose();
+}
+
+void LRenderer::SetProjectionMatrix(const float Width, const float Height)
+{
+	ProjectionMatrix = glm::perspective(glm::radians(60.0f), Width / Height, 0.1f, 500.f);
 }
