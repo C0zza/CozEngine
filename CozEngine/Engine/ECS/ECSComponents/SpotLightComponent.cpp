@@ -141,6 +141,7 @@ void CSpotLightComponentSystem::OnComponentRemoved(CSpotLightComponent& Componen
 
 void CSpotLightComponentSystem::GetSerializedComponent(const CSpotLightComponent& Component, nlohmann::json& J) const
 {
+	J["Direction"] = Component.Direction;
 	J["Ambient"] = Component.Ambient;
 	J["Constant"] = Component.Constant;
 	J["Diffuse"] = Component.Diffuse;
@@ -154,6 +155,7 @@ void CSpotLightComponentSystem::GetSerializedComponent(const CSpotLightComponent
 
 void CSpotLightComponentSystem::DeserializeComponent(CSpotLightComponent& Component, const nlohmann::json& J)
 {
+	Component.Direction = J["Direction"];
 	Component.Ambient = J["Ambient"];
 	Component.Constant = J["Constant"];
 	Component.Diffuse = J["Diffuse"];
