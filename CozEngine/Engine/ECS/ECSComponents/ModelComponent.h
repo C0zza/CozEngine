@@ -30,6 +30,11 @@ public:
 	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Renderer; }
 	virtual const char* GetComponentName() const final { return "ModelComponentSystem"; }
 
+	// TODO: Possibly setup macros to define these much easer. Will also need to setup FOR_EACH_N macros
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CModelComponent& Component) final;
+#endif
+
 protected:
 
 	virtual void GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const final;

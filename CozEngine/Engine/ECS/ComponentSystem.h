@@ -32,6 +32,11 @@ public:
 	virtual bool GetSerializedComponent(const LEntityID EntityID, nlohmann::json& J) const = 0;
 	virtual void DeserializeEntityComponentID(const LEntityID EntityID, const nlohmann::json& J) = 0;
 	virtual const char* GetComponentName() const = 0;
+
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(const LEntityID EntityID) = 0;
+#endif
+
 protected:
 	virtual void Init() = 0;
 
@@ -131,6 +136,11 @@ public:
 		return GetComponent(EntityID);
 	}
 
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(const LEntityID EntityID) final;
+	virtual void DrawImGuiComponent(TComponentType& Component) = 0;
+#endif
+
 protected:
 	virtual void Init() override {}
 	virtual void OnComponentAdded(TComponentType& Component) {};
@@ -187,3 +197,17 @@ private:
 	std::vector<TComponentType> Components;
 	std::unordered_map<LEntityID, unsigned int> EntityIdToComponentIndex;
 };
+
+#if defined(COZ_EDITOR)
+template<typename TComponentType>
+inline void LComponentSystem<TComponentType>::DrawImGuiComponent(const LEntityID EntityID)
+{
+	TComponentType* Component = GetComponent(EntityID);
+	if (!Component)
+	{
+		return;
+	}
+
+	DrawImGuiComponent(*Component);
+}
+#endif

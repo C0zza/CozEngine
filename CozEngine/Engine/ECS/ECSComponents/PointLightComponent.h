@@ -32,6 +32,10 @@ public:
 
 	virtual const char* GetComponentName() const final { return "PointLightComponentSystem"; }
 
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CPointLightComponent& Component) final;
+#endif
+
 protected:
 	virtual void OnComponentAdded(CPointLightComponent& Component) override;
 	virtual void OnComponentRemoved(CPointLightComponent& Component) override;

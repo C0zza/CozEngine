@@ -3,6 +3,15 @@
 
 #include "Misc/GlmSerialization.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+
+void CTransformComponentSystem::DrawImGuiComponent(CTransformComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Position", Component);
+}
+#endif
+
 void CTransformComponentSystem::GetSerializedComponent(const CTransformComponent& Component, nlohmann::json& J) const
 {
 	J["Position"] = Component.GetPosition();

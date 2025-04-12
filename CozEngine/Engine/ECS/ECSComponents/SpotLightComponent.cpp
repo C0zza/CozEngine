@@ -10,6 +10,10 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+#endif
+
 namespace CE::CSpotLightComponent
 {
 	struct CSpotLightComponentShaderStruct
@@ -90,6 +94,23 @@ void CSpotLightComponentSystem::UpdateSpotLights()
 		}
 	}
 }
+#if defined(COZ_EDITOR)
+void CSpotLightComponentSystem::DrawImGuiComponent(CSpotLightComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Position", Component.Position);
+	LImGuiPropertyDrawHelpers::DrawProperty("Direction", Component.Direction);
+	LImGuiPropertyDrawHelpers::DrawProperty("Ambient", Component.Ambient);
+	LImGuiPropertyDrawHelpers::DrawProperty("Diffuse", Component.Diffuse);
+	LImGuiPropertyDrawHelpers::DrawProperty("Specular", Component.Specular);
+
+	LImGuiPropertyDrawHelpers::DrawProperty("CutOff", Component.CutOff);
+	LImGuiPropertyDrawHelpers::DrawProperty("OuterCutOff", Component.OuterCutOff);
+
+	LImGuiPropertyDrawHelpers::DrawProperty("Constant", Component.Constant);
+	LImGuiPropertyDrawHelpers::DrawProperty("Linear", Component.Linear);
+	LImGuiPropertyDrawHelpers::DrawProperty("Quadratic", Component.Quadratic);
+}
+#endif
 
 void CSpotLightComponentSystem::OnComponentAdded(CSpotLightComponent& Component)
 {

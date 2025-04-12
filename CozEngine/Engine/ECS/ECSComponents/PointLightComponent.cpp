@@ -10,6 +10,10 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+#endif
+
 namespace CE::CPointLightComponent
 {
 	struct CPointLightComponentShaderStruct
@@ -87,6 +91,20 @@ void CPointLightComponentSystem::UpdatePointLights()
 		}
 	}
 }
+
+#if defined(COZ_EDITOR)
+void CPointLightComponentSystem::DrawImGuiComponent(CPointLightComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Position", Component.Position);
+	LImGuiPropertyDrawHelpers::DrawProperty("Ambient", Component.Ambient);
+	LImGuiPropertyDrawHelpers::DrawProperty("Diffuse", Component.Diffuse);
+	LImGuiPropertyDrawHelpers::DrawProperty("Specular", Component.Specular);
+
+	LImGuiPropertyDrawHelpers::DrawProperty("Constant", Component.Constant);
+	LImGuiPropertyDrawHelpers::DrawProperty("Linear", Component.Linear);
+	LImGuiPropertyDrawHelpers::DrawProperty("Quadratic", Component.Quadratic);
+}
+#endif
 
 void CPointLightComponentSystem::OnComponentAdded(CPointLightComponent& Component)
 {

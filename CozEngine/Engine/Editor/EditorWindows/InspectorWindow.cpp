@@ -39,19 +39,19 @@ void LInspectorWindow::Draw()
 		{
 			for (const auto & [Key, Value] : EntityJson.items())
 			{
+				LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemByName(Key);
+				if (!ComponentSystem)
+				{
+					// TODO: Add 1 time log macro for cases where they may spam.
+					continue;
+				}
+
 				if (ImGui::TreeNode(Key.c_str()))
 				{
-					for (const auto& [CompKey, CompValue] : Value.items())
-					{
-						if (ImGui::TreeNode(CompKey.c_str()))
-						{
-							for (const auto& [ValueKey, Value] : CompValue.items())
-							{
-								// TODO: Need a better way of drawing components to editor
-							}
-							ImGui::TreePop();
-						}
-					}
+// TODO: If editor code was in it's own module we wouldn't need this
+#if defined(COZ_EDITOR)
+					ComponentSystem->DrawImGuiComponent(SelectedEntityID);
+#endif
 					ImGui::TreePop();
 				}
 				ImGui::Spacing();

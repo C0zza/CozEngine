@@ -114,6 +114,8 @@ public:
 	void GetEntityComponentData(const LEntityID EntityID, nlohmann::json& ComponentData) const;
 	void InitEntityComponentData(const LEntityID EntityID, const std::string& ComponentSystemName, const nlohmann::json& ComponentData);
 
+	LComponentSystemBase* GetComponentSystemByName(const std::string& Name);
+
 private:
 	std::map<LComponentTypeID, std::unique_ptr<LComponentSystemBase>> ComponentSystems;
 	std::map<EComponentSystemType, std::vector<LComponentSystemBase*>> SpecialzedComponentSystems;

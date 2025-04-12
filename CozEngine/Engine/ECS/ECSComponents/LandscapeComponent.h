@@ -27,6 +27,10 @@ public:
 	virtual EComponentSystemType GetComponentSystemType() const { return EComponentSystemType::Renderer; }
 	virtual const char* GetComponentName() const final { return "LandscapeComponentSystem"; }
 
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CLandscapeComponent& Component) final;
+#endif
+
 protected:
 
 	virtual void GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const final;

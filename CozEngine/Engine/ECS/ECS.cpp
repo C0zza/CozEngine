@@ -51,3 +51,13 @@ void LECS::InitEntityComponentData(const LEntityID EntityID, const std::string& 
 
 	ComponentSystem->DeserializeEntityComponentID(EntityID, ComponentData);
 }
+
+LComponentSystemBase* LECS::GetComponentSystemByName(const std::string& Name)
+{
+	if (!ComponentSystemsByName.contains(Name))
+	{
+		return nullptr;
+	}
+
+	return ComponentSystemsByName.at(Name);
+}

@@ -37,6 +37,8 @@ void LEditor::Draw()
 		ImGui::EndMainMenuBar();
 	}
 
+	ImGui::ShowDemoWindow();
+
 	for (std::unique_ptr<LEditorWindow>& EditorWindow : EditorWindows)
 	{
 		assert(EditorWindow.get());

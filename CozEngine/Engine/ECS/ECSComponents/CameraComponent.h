@@ -24,6 +24,11 @@ public:
 
 	virtual const char* GetComponentName() const final { return "CameraComponentSystem"; }
 
+	// TODO: Camera component doesn't need to draw anything. We should have bool to check for this
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CCameraComponent& Component) final {};
+#endif
+
 protected:
 	virtual void GetSerializedComponent(const CCameraComponent& Component, nlohmann::json& J) const final;
 	virtual void DeserializeComponent(CCameraComponent& Component, const nlohmann::json& J) final;

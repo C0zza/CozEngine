@@ -8,6 +8,10 @@
 #include "Rendering/Mesh.h"
 #include "ResourceManagement/ResourceManager.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+#endif
+
 namespace
 {
 	const char* LandscapeShaderPath = "Engine/Content/Shaders/LandscapeShaders/LandscapeShader.casset";
@@ -90,6 +94,13 @@ void CLandscapeComponentSystem::RunComponent(CLandscapeComponent& Component)
 
 	LandscapeMesh->Draw(*ActiveShader, Transform->GetUpdatedTransformationMatrix());
 }
+
+#if defined(COZ_EDITOR)
+void CLandscapeComponentSystem::DrawImGuiComponent(CLandscapeComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Landscape Material", Component.LandscapeMaterial);
+}
+#endif
 
 void CLandscapeComponentSystem::GetSerializedComponent(const CLandscapeComponent& Component, nlohmann::json& J) const
 {

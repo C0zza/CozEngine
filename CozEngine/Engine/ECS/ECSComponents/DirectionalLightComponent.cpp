@@ -10,6 +10,10 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+#endif
+
 namespace CE::CDirectionalLightComponent
 {
 	static const int bIsActiveOffset = 64;
@@ -23,6 +27,16 @@ CDirectionalLightComponent::CDirectionalLightComponent()
 	Diffuse = ZeroVector;
 	Specular = ZeroVector;
 }
+
+#if defined(COZ_EDITOR)
+void CDirectionalLightComponentSystem::DrawImGuiComponent(CDirectionalLightComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Ambient", Component.Ambient);
+	LImGuiPropertyDrawHelpers::DrawProperty("Diffuse", Component.Diffuse);
+	LImGuiPropertyDrawHelpers::DrawProperty("Specular", Component.Specular);
+	LImGuiPropertyDrawHelpers::DrawProperty("Direction", Component.Direction);
+}
+#endif
 
 void CDirectionalLightComponentSystem::OnComponentAdded(CDirectionalLightComponent& Component)
 {

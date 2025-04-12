@@ -24,6 +24,10 @@ protected:
 	virtual void GetSerializedComponent(const CMovementComponent& Component, nlohmann::json& J) const final;
 	virtual void DeserializeComponent(CMovementComponent& Component, const nlohmann::json& J) final;
 
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CMovementComponent& Component) final {};
+#endif
+
 private:
 	virtual void RunComponent(CMovementComponent& Component) override;
 };

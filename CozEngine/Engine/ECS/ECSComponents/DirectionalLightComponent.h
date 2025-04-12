@@ -22,6 +22,10 @@ public:
 
 	virtual const char* GetComponentName() const final { return "DirectionalLightComponentSystem"; }
 
+#if defined(COZ_EDITOR)
+	virtual void DrawImGuiComponent(CDirectionalLightComponent& Component) final;
+#endif
+
 protected:
 	virtual void OnComponentAdded(CDirectionalLightComponent& Component) override;
 	virtual void OnComponentRemoved(CDirectionalLightComponent& Component) override;

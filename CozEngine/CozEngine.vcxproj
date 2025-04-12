@@ -219,6 +219,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\ImGuiPropertyDrawHelpers.cpp" />
     <ClCompile Include="Engine\Misc\Delegate.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\EditorSceneWindow.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\ImGuiPropertyDrawHelpers.h" />
     <ClInclude Include="Engine\Misc\Delegate.h" />
     <ClInclude Include="Engine\Editor\DrawModeSubsystem.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\EditorSceneWindow.h" />

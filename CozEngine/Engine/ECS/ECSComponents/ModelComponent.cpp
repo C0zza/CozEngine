@@ -5,6 +5,10 @@
 #include "Rendering/Renderer.h"
 #include "TransformComponent.h"
 
+#if defined(COZ_EDITOR)
+#include "Editor/ImGuiPropertyDrawHelpers.h"
+#endif
+
 void CModelComponentSystem::RunComponent(CModelComponent& Component)
 {
 	if (Component.Model.Get() && Component.ModelMaterial.Get())
@@ -27,6 +31,14 @@ void CModelComponentSystem::RunComponent(CModelComponent& Component)
 		}
 	}
 }
+
+#if defined(COZ_EDITOR)
+void CModelComponentSystem::DrawImGuiComponent(CModelComponent& Component)
+{
+	LImGuiPropertyDrawHelpers::DrawProperty("Model", Component.Model);
+	LImGuiPropertyDrawHelpers::DrawProperty("Model Material", Component.ModelMaterial);
+}
+#endif
 
 void CModelComponentSystem::GetSerializedComponent(const CModelComponent& Component, nlohmann::json& J) const
 {
