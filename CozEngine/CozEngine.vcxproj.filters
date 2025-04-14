@@ -183,6 +183,9 @@
     <ClCompile Include="Engine\Misc\Delegate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Editor\ImGuiPropertyDrawHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -413,6 +416,9 @@
     <ClInclude Include="Engine\Misc\Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Editor\ImGuiPropertyDrawHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
@@ -453,6 +459,8 @@
     <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader_EntityBuffer.casset" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape_EntityBuffer.fs" />
     <None Include="Game\Content\Materials\MAT_LandscapeMaterial.casset" />
+    <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_Outline.casset" />
+    <None Include="Engine\Rendering\DefaultShaders\Shader_Outline.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">

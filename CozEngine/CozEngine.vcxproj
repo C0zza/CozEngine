@@ -379,6 +379,7 @@
     <None Include="Engine\Content\Shaders\CubeMapShader.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_EntityBuffer.casset" />
+    <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_Outline.casset" />
     <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader.casset" />
     <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader_EntityBuffer.casset" />
     <None Include="Engine\Content\Shaders\ScreenTextureShader.casset" />
@@ -393,6 +394,7 @@
     <None Include="Engine\Rendering\DefaultShaders\shader.vs" />
     <None Include="Engine\Rendering\DefaultShaders\shader_2Textures.fs" />
     <None Include="Engine\Rendering\DefaultShaders\Shader_EntityBuffer.fs" />
+    <None Include="Engine\Rendering\DefaultShaders\Shader_Outline.fs" />
     <None Include="Game\Content\Levels\TestLevel.casset" />
     <None Include="Game\Content\Materials\MAT_Cube.casset" />
     <None Include="Game\Content\Materials\MAT_DefaultMaterial.casset" />

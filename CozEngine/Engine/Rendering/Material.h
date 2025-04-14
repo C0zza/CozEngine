@@ -9,6 +9,8 @@ class LMaterial : public LResource
 public:
 	const LShader* Use();
 
+	bool HasShaderForDrawMode(const EDrawMode DrawMode) const;
+
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LMaterial, Shaders)
 
 protected:

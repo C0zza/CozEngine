@@ -21,6 +21,7 @@ public:
 	void Move(const glm::vec3& Movement);
 	void MoveRelative(const glm::vec3& Movement);
 	void Rotate(const glm::vec3& Rotate);
+	void ScaleByFloat(const float Scalar) { Scale *= Scalar; IsDirty = true; }
 
 	glm::vec3 GetForward() const;
 	glm::vec3 GetRight() const;

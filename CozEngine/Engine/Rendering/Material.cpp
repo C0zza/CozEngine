@@ -27,3 +27,8 @@ const LShader* LMaterial::Use()
 
 	return ActiveShader;
 }
+
+bool LMaterial::HasShaderForDrawMode(const EDrawMode DrawMode) const
+{
+	return Shaders.contains(DrawMode) && Shaders.at(DrawMode).Get();
+}

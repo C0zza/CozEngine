@@ -11,6 +11,12 @@
       {
         "AssetPath": "Engine/Content/Shaders/DefaultShader/DefaultShader_EntityBuffer.casset"
       }
+    ],
+    [
+      "Outline",
+      {
+        "AssetPath": "Engine/Content/Shaders/DefaultShader/DefaultShader_Outline.casset"
+      }
     ]
   ],
   "Diffuse": {
