@@ -150,5 +150,5 @@ void LRenderer::GetShouldWindowClose(bool& bClose)
 
 void LRenderer::SetProjectionMatrix(const float Width, const float Height)
 {
-	ProjectionMatrix = glm::perspective(glm::radians(60.0f), Width / Height, 0.1f, 500.f);
+	ProjectionMatrix = glm::perspective(glm::radians(60.0f), Width / Height, 0.1f, 5000.f);
 }
