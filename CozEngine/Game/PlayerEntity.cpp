@@ -57,8 +57,13 @@ CPlayerEntity::CPlayerEntity()
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_LEFT_SHIFT, GLFW_RELEASE), &CPlayerEntity::StopMoveDown, StopMoveDownEvent);
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_SPACE, GLFW_PRESS), &CPlayerEntity::MoveUp, MoveUpEvent);
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_SPACE, GLFW_RELEASE), &CPlayerEntity::StopMoveUp, StopMoveUpEvent);
-
+	
+#if defined(COZ_EDITOR)
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_RIGHT, GLFW_PRESS), &CPlayerEntity::RightMousePressed, RightMousePressedEvent);
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_RIGHT, GLFW_RELEASE), &CPlayerEntity::RightMouseReleased, RightMouseReleasedEvent);
+#else
 	InputManager->RegisterMouseMoveEvent(this, &CPlayerEntity::Rotate, MouseRotateEvent);
+#endif
 }
 
 void CPlayerEntity::MoveLeft()
@@ -120,6 +125,25 @@ void CPlayerEntity::StopMoveUp()
 {
 	MovementComponent->Movement.y -= 1.f;
 }
+
+#if defined(COZ_EDITOR)
+void CPlayerEntity::RightMousePressed()
+{
+	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>(true);
+	if (!InputManager)
+	{
+		Log(LLogLevel::WARNING, "CPlayerEntity::CPlayerEntity - Failed to init component after invalid LinputManager.");
+		return;
+	}
+
+	InputManager->RegisterMouseMoveEvent(this, &CPlayerEntity::Rotate, MouseRotateEvent);
+}
+
+void CPlayerEntity::RightMouseReleased()
+{
+	MouseRotateEvent.Reset();
+}
+#endif
 
 void CPlayerEntity::Rotate(double X, double Y)
 {

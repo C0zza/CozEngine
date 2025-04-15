@@ -24,10 +24,12 @@ private:
 
 	LInputEventHandle ToggleFocusEventHandle;
 	LInputEventHandle MouseClickedEventHandle;
+	LInputEventHandle RightMouseClickedEventHandle;
 
 	void OnToggleFocus();
 	void OnFocusUpdate(const bool bIsFocused);
 
+	void OnRightMouseClicked();
 	void OnMouseClicked();
 
 	bool bWindowIsHovered = false;

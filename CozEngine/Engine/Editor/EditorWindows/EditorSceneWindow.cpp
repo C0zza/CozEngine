@@ -16,6 +16,8 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 	assert(InputManager);
 
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_KEY_T, GLFW_PRESS), &LEditorSceneWindow::OnToggleFocus, ToggleFocusEventHandle);
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_RIGHT, GLFW_PRESS), &LEditorSceneWindow::OnRightMouseClicked, RightMouseClickedEventHandle);
+
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE), &LEditorSceneWindow::OnMouseClicked, MouseClickedEventHandle);
 
 	CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
@@ -93,6 +95,14 @@ void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
 		InputManager->bInputEnabled = bIsFocused;
 	}
 #endif
+}
+
+void LEditorSceneWindow::OnRightMouseClicked()
+{
+	if (bWindowIsHovered)
+	{
+		OnFocusUpdate(true);
+	}
 }
 
 void LEditorSceneWindow::OnMouseClicked()

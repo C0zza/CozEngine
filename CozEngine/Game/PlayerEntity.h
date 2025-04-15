@@ -28,6 +28,15 @@ private:
 
 	LInputEventHandle MouseRotateEvent;
 
+#if defined(COZ_EDITOR)
+	LInputEventHandle RightMousePressedEvent;
+	LInputEventHandle RightMouseReleasedEvent;
+	bool bRightMousePressed = false;
+
+	void RightMousePressed();
+	void RightMouseReleased();
+#endif
+
 	void MoveLeft();
 	void StopMoveLeft();
 	void MoveRight();
