@@ -61,6 +61,9 @@ CPlayerEntity::CPlayerEntity()
 #if defined(COZ_EDITOR)
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_RIGHT, GLFW_PRESS), &CPlayerEntity::RightMousePressed, RightMousePressedEvent);
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_RIGHT, GLFW_RELEASE), &CPlayerEntity::RightMouseReleased, RightMouseReleasedEvent);
+
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_SCROLL_UP, GLFW_PRESS), &CPlayerEntity::IncreaseSpeed, IncreaseSpeedEvent);
+	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_SCROLL_DOWN, GLFW_PRESS), &CPlayerEntity::DecreaseSpeed, DecreaseSpeedEvent);
 #else
 	InputManager->RegisterMouseMoveEvent(this, &CPlayerEntity::Rotate, MouseRotateEvent);
 #endif
@@ -127,6 +130,21 @@ void CPlayerEntity::StopMoveUp()
 }
 
 #if defined(COZ_EDITOR)
+void CPlayerEntity::IncreaseSpeed()
+{
+	MovementComponent->Speed += 0.1f;
+}
+
+void CPlayerEntity::DecreaseSpeed()
+{
+	MovementComponent->Speed -= 0.1f;
+
+	if (MovementComponent->Speed < 0)
+	{
+		MovementComponent->Speed = 0.0f;
+	}
+}
+
 void CPlayerEntity::RightMousePressed()
 {
 	LInputManager* InputManager = CSystem.GetSubsystems().GetSubsystem<LInputManager>(true);

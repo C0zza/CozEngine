@@ -29,9 +29,15 @@ private:
 	LInputEventHandle MouseRotateEvent;
 
 #if defined(COZ_EDITOR)
+	LInputEventHandle IncreaseSpeedEvent;
+	LInputEventHandle DecreaseSpeedEvent;
+
 	LInputEventHandle RightMousePressedEvent;
 	LInputEventHandle RightMouseReleasedEvent;
 	bool bRightMousePressed = false;
+
+	void IncreaseSpeed();
+	void DecreaseSpeed();
 
 	void RightMousePressed();
 	void RightMouseReleased();

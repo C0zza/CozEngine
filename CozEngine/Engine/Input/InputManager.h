@@ -8,6 +8,9 @@
 #include "Misc/Logging.h"
 #include "Subsystem.h"
 
+#define GLFW_MOUSE_SCROLL_UP GLFW_MOUSE_BUTTON_LAST + 1
+#define GLFW_MOUSE_SCROLL_DOWN GLFW_MOUSE_BUTTON_LAST + 2
+
 struct GLFWwindow;
 using KeyAction = std::pair<int, int>;
 

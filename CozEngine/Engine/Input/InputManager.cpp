@@ -41,6 +41,23 @@ namespace CE::InputManager
 		}
 	}
 
+	void MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		if (window && LInputManager::GetInputManagers().contains(window))
+		{
+			LInputManager* InputManager = LInputManager::GetInputManagers().at(window);
+
+			if (yoffset > 0)
+			{
+				InputManager->ProcessKey(window, GLFW_MOUSE_SCROLL_UP, GLFW_PRESS, 0);
+			}
+			else if (yoffset < 0)
+			{
+				InputManager->ProcessKey(window, GLFW_MOUSE_SCROLL_DOWN, GLFW_PRESS, 0);
+			}
+		}
+	}
+
 	void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
 	{
 		if (window && LInputManager::GetInputManagers().contains(window))
@@ -89,6 +106,7 @@ void LInputManager::Initialize()
 
 	glfwSetKeyCallback(Window->m_Window, CE::InputManager::KeyCallback);
 	glfwSetMouseButtonCallback(Window->m_Window, CE::InputManager::MouseButtonCallback);
+	glfwSetScrollCallback(Window->m_Window, CE::InputManager::MouseScrollCallback);
 
 	glfwGetCursorPos(Window->m_Window, &PreviousMouseX, &PreviousMouseY);
 	glfwSetCursorPosCallback(Window->m_Window, CE::InputManager::MouseMoveCallback);
