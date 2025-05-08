@@ -1227,6 +1227,10 @@ enum ImGuiSelectableFlags_
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiSelectableFlags_AllowItemOverlap   = ImGuiSelectableFlags_AllowOverlap,  // Renamed in 1.89.7
 #endif
+
+// COZENGINE - Allow disabling selectable padding removal
+    CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing = 1 << 26,
+// ~COZENGINE
 };
 
 // Flags for ImGui::BeginCombo()

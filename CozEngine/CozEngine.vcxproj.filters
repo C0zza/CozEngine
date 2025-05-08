@@ -186,6 +186,15 @@
     <ClCompile Include="Engine\Editor\ImGuiPropertyDrawHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorWindows\ContentBrowserWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorWindows\AssetEditorWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\AssetEditorWindowSubsystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -419,6 +428,15 @@
     <ClInclude Include="Engine\Editor\ImGuiPropertyDrawHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorWindows\ContentBrowserWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorWindows\AssetEditorWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\AssetEditorWindowSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\Rendering\DefaultShaders\shader.fs.txt" />
@@ -461,6 +479,7 @@
     <None Include="Game\Content\Materials\MAT_LandscapeMaterial.casset" />
     <None Include="Engine\Content\Shaders\DefaultShader\DefaultShader_Outline.casset" />
     <None Include="Engine\Rendering\DefaultShaders\Shader_Outline.fs" />
+    <None Include="Engine\Content\Textures\FolderIcon.casset" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game\Assets\TestHeightMap.png">
@@ -473,6 +492,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Game\Assets\brickwall\normal.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Engine\Assets\Textures\FolderIcon.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

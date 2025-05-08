@@ -3,6 +3,7 @@
 #include "LEditor.h"
 
 #include "Development/LImGuiSubsystem.h"
+#include "Editor/EditorWindows/ContentBrowserWindow.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
 #include "Editor/EditorWindows/InspectorWindow.h"
 #include "Globes.h"
@@ -23,10 +24,13 @@ void LEditor::Initialize()
 	EntityFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720, GL_RGBA);
 
 	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), EntityFrameBuffer.get(), "Scene");
-	EditorWindows.emplace_back(std::move(EditorSceneWindow));
+	EditorWindows.emplace(EditorSceneWindow->GetWindowName(), std::move(EditorSceneWindow));
 
 	std::unique_ptr<LInspectorWindow> InspectorWindow = std::make_unique<LInspectorWindow>("Inspector");
-	EditorWindows.emplace_back(std::move(InspectorWindow));
+	EditorWindows.emplace(InspectorWindow->GetWindowName(), std::move(InspectorWindow));
+
+	std::unique_ptr<LContentBrowserWindow> ContentBrowserWindow = std::make_unique<LContentBrowserWindow>("Content Browser");
+	EditorWindows.emplace(ContentBrowserWindow->GetWindowName(), std::move(ContentBrowserWindow));
 }
 
 void LEditor::Draw()
@@ -39,9 +43,11 @@ void LEditor::Draw()
 
 	ImGui::ShowDemoWindow();
 
-	for (std::unique_ptr<LEditorWindow>& EditorWindow : EditorWindows)
+	for (std::pair<const std::string, std::unique_ptr<LEditorWindow>>& Pair : EditorWindows)
 	{
-		assert(EditorWindow.get());
+		LEditorWindow* EditorWindow = Pair.second.get();
+
+		assert(EditorWindow);
 		EditorWindow->PushWindowStyle();
 		ImGui::Begin(EditorWindow->GetWindowName());
 		{
@@ -51,13 +57,20 @@ void LEditor::Draw()
 		EditorWindow->PopWindowStyle();
 	}
 
-	ImGui::Begin("Test1");
+	for (const std::string& Window : WindowsToUnregister)
 	{
-		ImGui::End();
+		EditorWindows.erase(Window);
+	}
+	WindowsToUnregister.clear();
+}
+
+void LEditor::UnregisterWindow(const std::string& WindowName)
+{
+	if (!EditorWindows.contains(WindowName))
+	{
+		Log(LLogLevel::INFO, "LEditorWindow::UnregisterWindow - Editor window: " + WindowName + " not found.");
+		return;
 	}
 
-	ImGui::Begin("Test2");
-	{
-		ImGui::End();
-	}
+	WindowsToUnregister.insert(WindowName);
 }

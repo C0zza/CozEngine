@@ -219,6 +219,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\AssetEditorWindowSubsystem.cpp" />
+    <ClCompile Include="Engine\Editor\EditorWindows\AssetEditorWindow.cpp" />
+    <ClCompile Include="Engine\Editor\EditorWindows\ContentBrowserWindow.cpp" />
     <ClCompile Include="Engine\Editor\ImGuiPropertyDrawHelpers.cpp" />
     <ClCompile Include="Engine\Misc\Delegate.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\TransformComponent.cpp" />
@@ -293,6 +296,9 @@
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\AssetEditorWindowSubsystem.h" />
+    <ClInclude Include="Engine\Editor\EditorWindows\AssetEditorWindow.h" />
+    <ClInclude Include="Engine\Editor\EditorWindows\ContentBrowserWindow.h" />
     <ClInclude Include="Engine\Editor\ImGuiPropertyDrawHelpers.h" />
     <ClInclude Include="Engine\Misc\Delegate.h" />
     <ClInclude Include="Engine\Editor\DrawModeSubsystem.h" />
@@ -383,6 +389,7 @@
     <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader.casset" />
     <None Include="Engine\Content\Shaders\LandscapeShaders\LandscapeShader_EntityBuffer.casset" />
     <None Include="Engine\Content\Shaders\ScreenTextureShader.casset" />
+    <None Include="Engine\Content\Textures\FolderIcon.casset" />
     <None Include="Engine\Rendering\DefaultShaders\CubeMap.fs" />
     <None Include="Engine\Rendering\DefaultShaders\CubeMap.vs" />
     <None Include="Engine\Rendering\DefaultShaders\Landscape.fs" />
@@ -414,6 +421,7 @@
     <None Include="Game\Content\Textures\Wall.casset" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Engine\Assets\Textures\FolderIcon.png" />
     <Image Include="Game\Assets\brickwall\diffuse.jpg" />
     <Image Include="Game\Assets\brickwall\normal.jpg" />
     <Image Include="Game\Assets\grass03.png" />
