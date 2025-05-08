@@ -47,7 +47,7 @@ void LModel::ProcessNode(aiNode* Node, const aiScene* Scene)
 	for (unsigned int i = 0; i < Node->mNumMeshes; i++)
 	{
 		aiMesh* Mesh = Scene->mMeshes[Node->mMeshes[i]];
-		Meshes.push_back(ProcessMesh(Mesh, Scene));
+		Meshes.emplace_back(std::move(ProcessMesh(Mesh, Scene)));
 	}
 
 	// Do the same for each of it's children

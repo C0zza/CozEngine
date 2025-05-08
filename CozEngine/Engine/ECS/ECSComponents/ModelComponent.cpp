@@ -106,4 +106,9 @@ void CModelComponentSystem::DeserializeComponent(CModelComponent& Component, con
 	Component.ModelMaterial = J["ModelMaterial"];
 }
 
-
+CModelComponent::CModelComponent(const std::string& i_Model, const std::string& i_ModelMaterial)
+{
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	ResourceManager->GetResource<LModel>(i_Model, Model);
+	ResourceManager->GetResource<LModelMaterial>(i_ModelMaterial, ModelMaterial);
+}

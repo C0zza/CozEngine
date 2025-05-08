@@ -2,7 +2,6 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
-#include "Globes.h"
 #include "Rendering/Materials/ModelMaterial.h"
 #include "Rendering/Model.h"
 #include "ResourceManagement/ResourceManager.h"
@@ -19,12 +18,7 @@ struct CModelComponent : public LECSComponent
 	LResourceHandle<LModelMaterial> ModelMaterial;
 
 	CModelComponent() = default;
-	CModelComponent(const std::string& i_Model, const std::string& i_ModelMaterial)
-	{
-		LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
-		ResourceManager->GetResource<LModel>(i_Model, Model);
-		ResourceManager->GetResource<LModelMaterial>(i_ModelMaterial, ModelMaterial);
-	}
+	CModelComponent(const std::string& i_Model, const std::string& i_ModelMaterial);
 };
 
 class CModelComponentSystem : public LComponentSystem<CModelComponent>

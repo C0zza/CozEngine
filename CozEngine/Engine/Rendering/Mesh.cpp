@@ -22,6 +22,38 @@ LMesh::LMesh(std::vector<Vertex>&& i_Vertices, std::vector<unsigned int>&& i_Ind
 	SetupMesh();
 }
 
+LMesh::LMesh(LMesh&& Other)
+{
+	Vertices = std::move(Other.Vertices);
+	Indices = std::move(Other.Indices);
+
+	EBO = Other.EBO;
+	VBO = Other.VBO;
+	VAO = Other.VAO;
+
+	Other.EBO = 0;
+	Other.VBO = 0;
+	Other.VAO = 0;
+}
+
+LMesh::~LMesh()
+{
+	if (EBO > 0)
+	{
+		glDeleteBuffers(1, &EBO);
+	}
+
+	if (VBO > 0)
+	{
+		glDeleteBuffers(1, &VBO);
+	}
+
+	if (VAO > 0)
+	{
+		glDeleteVertexArrays(1, &VAO);
+	}
+}
+
 void LMesh::Draw(const LShader& Shader, const glm::mat4& Transform) const
 {
 	Shader.SetMat4("Model", Transform);

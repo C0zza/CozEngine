@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Globes.h"
 #include "ResourceManagement/ResourceHandle.h"
 #include "ResourceManagement/ResourceManager.h"
 
@@ -44,21 +45,32 @@ private:
 			if (ResourceHandle.Get())
 			{
 				AssetPath = ResourceHandle->GetAssetPath();
-				Buffer.resize(AssetPath.length());
 				Buffer = std::vector<char>(AssetPath.begin(), AssetPath.end());
+				Buffer.resize(AssetPath.length() * 2);
 			}
 			else
 			{
-				Buffer.resize(128);
 				AssetPath = "";
 			}
 
 			Buffer.push_back('\0');
 
-			if (ImGui::InputText(GetHiddenLabel(Label).c_str(), Buffer.data(), Buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
+			if (ImGui::InputText(GetHiddenLabel(Label).c_str(), Buffer.data(), 128, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				// TODO: Incorrect need to load through resource manager
-				// ResourceHandle->SetAssetPath(Buffer.data());
+				LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+				if (!ResourceManager)
+				{
+					Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle - Invalid Resource Manager.");
+					return;
+				}
+
+				LResourceHandle<T> NewResource;
+				ResourceManager->GetResource<T>(Buffer.data(), NewResource);
+
+				if (NewResource.Get())
+				{
+					ResourceHandle = NewResource;
+				}
 			}
 		}
 

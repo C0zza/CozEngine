@@ -53,6 +53,10 @@ public:
 	LMesh(const std::vector<Vertex>& i_Vertices, const std::vector<unsigned int> i_Indices);
 	LMesh(std::vector<Vertex>&& i_Vertices, std::vector<unsigned int>&& i_Indices);
 
+	LMesh(LMesh&& Other);
+
+	~LMesh();
+
 	void Draw(const LShader& Mat, const glm::mat4& Transform) const;
 
 	std::vector<Vertex> Vertices;
