@@ -35,8 +35,6 @@ protected:
 	ETextureType TextureType;
 	bool bHasAlpha;
 
-	static const char* TextureDirectory;
-
 private:
 	unsigned int TextureID;
 	int Width;

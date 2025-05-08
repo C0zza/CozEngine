@@ -1,5 +1,5 @@
 {
-  "TextureFiles": [ "backpack/normal.png" ],
+  "TextureFiles": [ "Game/Assets/backpack/normal.png" ],
   "TextureType": 1,
   "bHasAlpha": false
 }

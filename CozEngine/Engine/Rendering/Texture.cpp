@@ -7,8 +7,6 @@
 
 #include "Misc/Logging.h"
 
-const char* LTexture::TextureDirectory = "Game/Assets/";
-
 void LTexture::Load()
 {
 	glGenTextures(1, &TextureID);
@@ -52,10 +50,8 @@ void LTexture::SetupTexture()
 	}
 
 	int nrChannels;
-	std::string FullTexturePath = TextureDirectory;
-	FullTexturePath += TextureFiles[0];
 
-	unsigned char* data = stbi_load(FullTexturePath.c_str(), &Width, &Height, &nrChannels, 0);
+	unsigned char* data = stbi_load(TextureFiles[0].c_str(), &Width, &Height, &nrChannels, 0);
 
 	if (data)
 	{
@@ -65,7 +61,7 @@ void LTexture::SetupTexture()
 	}
 	else
 	{
-		Log(LLogLevel::ERROR, "LTexture::SetupTexture - Failed to load texture" + FullTexturePath);
+		Log(LLogLevel::ERROR, "LTexture::SetupTexture - Failed to load texture" + TextureFiles[0]);
 	}
 
 	stbi_image_free(data);

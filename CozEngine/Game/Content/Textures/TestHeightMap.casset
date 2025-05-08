@@ -1,5 +1,5 @@
 {
-  "TextureFiles": [ "TestHeightMap.jpg" ],
+  "TextureFiles": [ "Game/Assets/TestHeightMap.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false
 }

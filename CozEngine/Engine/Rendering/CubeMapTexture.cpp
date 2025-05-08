@@ -24,7 +24,7 @@ void LCubeMapTexture::SetupTexture()
 	// Currently dependent on the order of TextureFiles. Order should be r, l, t, b, f, b.
 	for (unsigned int i = 0; i < TextureFiles.size(); ++i)
 	{
-		std::string FullTexturePath = TextureDirectory + TextureFiles[i];
+		std::string FullTexturePath = TextureFiles[i];
 		data = stbi_load(FullTexturePath.c_str(), &Width, &Height, &NrChannels, 0);
 		if (data)
 		{

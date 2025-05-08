@@ -1,5 +1,5 @@
 {
-  "TextureFiles": [ "backpack/specular.jpg" ],
+  "TextureFiles": [ "Game/Assets/backpack/specular.jpg" ],
   "TextureType": 1,
   "bHasAlpha": false
 }

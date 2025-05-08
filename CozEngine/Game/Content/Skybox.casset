@@ -1,11 +1,11 @@
 {
   "TextureFiles": [
-    "skybox/right.jpg",
-    "skybox/left.jpg",
-    "skybox/top.jpg",
-    "skybox/bottom.jpg",
-    "skybox/front.jpg",
-    "skybox/back.jpg"
+    "Game/Assets/skybox/right.jpg",
+    "Game/Assets/skybox/left.jpg",
+    "Game/Assets/skybox/top.jpg",
+    "Game/Assets/skybox/bottom.jpg",
+    "Game/Assets/skybox/front.jpg",
+    "Game/Assets/skybox/back.jpg"
   ],
   "TextureType": 0,
   "bHasAlpha": false

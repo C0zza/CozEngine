@@ -1,5 +1,5 @@
 {
-  "TextureFiles": [ "brickwall/normal.jpg" ],
+  "TextureFiles": [ "Game/Assets/brickwall/normal.jpg" ],
   "TextureType": 1,
   "bHasAlpha": false
 }

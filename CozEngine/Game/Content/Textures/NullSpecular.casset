@@ -1,5 +1,5 @@
 {
-  "TextureFiles": [ "NullSpecular.jpg" ],
+  "TextureFiles": [ "Game/Assets/NullSpecular.jpg" ],
   "TextureType": 1,
   "bHasAlpha": false
 }
