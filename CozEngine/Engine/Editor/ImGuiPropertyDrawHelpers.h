@@ -17,6 +17,8 @@ public:
 
 		const float yBefore = ImGui::GetCursorPosY();
 
+		PrivateHelpers::RightAlignNextElement();
+
 		PrivateHelpers::DrawProperty(Label, Property);
 
 		if (yBefore == ImGui::GetCursorPosY())
@@ -73,6 +75,8 @@ private:
 				}
 			}
 		}
+
+		static void RightAlignNextElement();
 
 	private:
 		static std::string GetHiddenLabel(const char* Label);

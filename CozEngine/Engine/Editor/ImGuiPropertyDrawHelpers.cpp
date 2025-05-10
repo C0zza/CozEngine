@@ -50,6 +50,8 @@ void LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, 
 	ImGui::Text("Rotation");
 	ImGui::SameLine();
 
+	RightAlignNextElement();
+
 	if (ImGui::InputFloat3("##Rotation", Buffer, "%.3f"))
 	{
 		TransformComponent.SetRotation(glm::vec3(Buffer[0], Buffer[1], Buffer[2]));
@@ -63,9 +65,20 @@ void LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, 
 	ImGui::Text("Scale");
 	ImGui::SameLine();
 
+	RightAlignNextElement();
+
 	if (ImGui::InputFloat3("##Scale", Buffer, "%.3f"))
 	{
 		TransformComponent.SetScale(glm::vec3(Buffer[0], Buffer[1], Buffer[2]));
+	}
+}
+
+void LImGuiPropertyDrawHelpers::PrivateHelpers::RightAlignNextElement()
+{
+	const float XPos = ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - ImGui::CalcItemWidth();
+	if (XPos > ImGui::GetCursorPosX())
+	{
+		ImGui::SetCursorPosX(XPos);
 	}
 }
 
