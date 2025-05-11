@@ -33,6 +33,7 @@ private:
 	public:
 		static void DrawProperty(const char* Label, int& Value);
 		static void DrawProperty(const char* Label, float& Value);
+		static void DrawProperty(const char* Label, bool& Value);
 		static void DrawProperty(const char* Label, glm::vec3& Vec3);
 
 		// Override for this since it's transform matrix is updated internally via setters

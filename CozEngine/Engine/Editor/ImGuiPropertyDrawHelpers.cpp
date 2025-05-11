@@ -4,7 +4,7 @@
 void LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, int& Value)
 {
 	int Buffer = Value;
-	if (ImGui::InputInt(GetHiddenLabel(Label).c_str(), &Buffer, 1, 100, ImGuiInputTextFlags_EnterReturnsTrue))
+	if (ImGui::InputInt(GetHiddenLabel(Label).c_str(), &Buffer, 0, 0, ImGuiInputTextFlags_EnterReturnsTrue))
 	{
 		Value = Buffer;
 	}
@@ -14,6 +14,15 @@ void LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, 
 {
 	float Buffer = Value;
 	if(ImGui::InputFloat(GetHiddenLabel(Label).c_str(), &Buffer, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		Value = Buffer;
+	}
+}
+
+void LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, bool& Value)
+{
+	bool Buffer = Value;
+	if (ImGui::Checkbox(GetHiddenLabel(Label).c_str(), &Buffer))
 	{
 		Value = Buffer;
 	}
