@@ -195,6 +195,18 @@
     <ClCompile Include="Engine\Editor\AssetEditorWindowSubsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Reflection\Class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Reflection\ReflectTestGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Reflection\Property.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Reflection\ClassUtilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -435,6 +447,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Editor\AssetEditorWindowSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Reflection\ReflectTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Reflection\Class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Reflection\ReflectTestGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Reflection\Property.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Reflection\ClassUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

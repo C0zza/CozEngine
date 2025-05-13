@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Editor|Win32">
       <Configuration>Debug Editor</Configuration>
@@ -219,6 +218,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Reflection\ClassUtilities.cpp" />
+    <ClCompile Include="Engine\Reflection\Class.cpp" />
     <ClCompile Include="Engine\Editor\AssetEditorWindowSubsystem.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\AssetEditorWindow.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\ContentBrowserWindow.cpp" />
@@ -296,6 +297,10 @@
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Reflection\ClassRegister.h" />
+    <ClInclude Include="Engine\Reflection\ClassUtilities.h" />
+    <ClInclude Include="Engine\Reflection\Class.h" />
+    <ClInclude Include="Engine\Reflection\Reflection.h" />
     <ClInclude Include="Engine\Editor\AssetEditorWindowSubsystem.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\AssetEditorWindow.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\ContentBrowserWindow.h" />
@@ -374,6 +379,7 @@
     <ClInclude Include="Engine\Rendering\Materials\LandscapeMaterial.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\InspectorWindow.h" />
     <ClInclude Include="Engine\Editor\SelectedEntitySubsystem.h" />
+    <ClInclude Include="Engine\Reflection\Property.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>
