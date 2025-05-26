@@ -9,11 +9,12 @@ class LEditorSceneWindow : public LEditorWindow
 {
 public:
 	LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBuffer* iEntityFrameBuffer, const char* iWindowName);
-	
-	virtual void Draw() override;
 
 	virtual void PushWindowStyle() override;
 	virtual void PopWindowStyle() override;
+
+protected:
+	virtual void DrawWindow() override;
 
 private:
 	// TODO: LEditor currently has ownership of these buffers for easy access from LSystem. This makes more sense to have ownership though
@@ -31,8 +32,6 @@ private:
 
 	void OnRightMouseClicked();
 	void OnMouseClicked();
-
-	bool bWindowIsHovered = false;
 
 	ImVec2 MousePos;
 	ImVec2 TopLeft;

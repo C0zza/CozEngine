@@ -6,6 +6,8 @@
 
 #include "Editor/AssetEditorWindowSubsystem.h"
 #include "Globes.h"
+#include "Reflection/Class.h"
+#include "ResourceManagement/Resource.h"
 
 namespace
 {
@@ -23,7 +25,7 @@ LContentBrowserWindow::LContentBrowserWindow(const char* WindowName)
 	}
 
 	ResourceManager->GetResource<LTexture>(FolderIconTexturePath, FolderIcon);
-	
+
 	if (!FolderIcon.Get())
 	{
 		Log(LLogLevel::ERROR, "LContentBrowserWindow::LContentBrowserWindow - Failed to load FolderIcon with path " + FolderIconTexturePath);
@@ -31,10 +33,12 @@ LContentBrowserWindow::LContentBrowserWindow(const char* WindowName)
 	}
 }
 
-void LContentBrowserWindow::Draw()
+void LContentBrowserWindow::DrawWindow()
 {
 	constexpr const char* EngineContent = "Engine\\Content";
 	constexpr const char* ProjectContent = "Game\\Content";
+
+	HoveredItemPath.clear();
 
 	bool bBackButtonDisabled = false;
 	if (CurrentDirectory.empty())
@@ -61,6 +65,42 @@ void LContentBrowserWindow::Draw()
 	if (bBackButtonDisabled)
 	{
 		ImGui::EndDisabled();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Create Asset"))
+	{
+
+	}
+
+	ImGui::SameLine();
+
+	static const LClass* ResourceClass = LResource::StaticClass();
+	static const std::vector<LClass*> ResourceClasses = ResourceClass->GetChildClasses();
+	assert(!ResourceClasses.empty());
+
+	static LClass* CurrentClass = nullptr;
+
+	if (ImGui::BeginCombo("Type", CurrentClass ? CurrentClass->GetTypeName().data() : ResourceClasses[0]->GetTypeName().data(), ImGuiComboFlags_WidthFitPreview))
+	{
+		for (LClass* Class : ResourceClasses)
+		{
+			assert(Class);
+
+			bool bIsSelected = CurrentClass == Class;
+
+			if (ImGui::Selectable(Class->GetTypeName().data(), &bIsSelected))
+			{
+				CurrentClass = Class;
+			}
+
+			if (bIsSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
 	}
 
 	if (CurrentDirectory.empty())
@@ -105,6 +145,11 @@ void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::strin
 		}
 	}
 
+	if (ImGui::IsItemHovered())
+	{
+		HoveredItemPath = Path;
+	}
+
 	if (FolderIcon.Get())
 	{
 		ImVec2 SelectableMin = ImGui::GetItemRectMin();
@@ -116,8 +161,6 @@ void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::strin
 
 		ImGui::SetCursorScreenPos(CurrentCursorScreenPos);
 	}
-
-
 
 	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
 	ImGui::Text(Name.c_str());
@@ -135,7 +178,7 @@ void LContentBrowserWindow::DrawAsset(const std::filesystem::path& Path)
 
 	if (ImGui::Selectable("Asset", false, CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing | ImGuiSelectableFlags_AllowDoubleClick, ImVec2(100, 100)))
 	{
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+		if (ImGui::IsMouseDoubleClicked(0))
 		{
 			LAssetEditorWindowSubsystem* AssetEditorWindowSubsystem = CSystem.GetSubsystems().GetSubsystem<LAssetEditorWindowSubsystem>(true);
 			if (AssetEditorWindowSubsystem)

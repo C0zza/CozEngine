@@ -6,14 +6,21 @@ public:
 	LEditorWindow(const char* iWindowName) : WindowName{iWindowName} {}
 	virtual ~LEditorWindow() {}
 
-	virtual void Draw() = 0;
+	void Draw();
 
 	virtual void PushWindowStyle() {}
 	virtual void PopWindowStyle() {}
 
 	const char* GetWindowName() const { return WindowName; }
 
+protected:
+	virtual void DrawWindow() = 0;
+
+	bool IsWindowHovered() const { return bIsWindowHovered; }
+
 private:
 	const char* WindowName;
+
+	bool bIsWindowHovered = false;
 };
 

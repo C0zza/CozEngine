@@ -23,9 +23,8 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 	CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
 }
 
-void LEditorSceneWindow::Draw()
+void LEditorSceneWindow::DrawWindow()
 {
-	bWindowIsHovered = ImGui::IsWindowHovered();
 	MousePos = ImGui::GetMousePos();
 	TopLeft = ImGui::GetCursorScreenPos();
 	BottomRight = ImGui::GetContentRegionMax();
@@ -99,7 +98,7 @@ void LEditorSceneWindow::OnFocusUpdate(const bool bIsFocused)
 
 void LEditorSceneWindow::OnRightMouseClicked()
 {
-	if (bWindowIsHovered)
+	if (IsWindowHovered())
 	{
 		OnFocusUpdate(true);
 	}
@@ -107,7 +106,7 @@ void LEditorSceneWindow::OnRightMouseClicked()
 
 void LEditorSceneWindow::OnMouseClicked()
 {
-	if (!bWindowIsHovered || !EntityFrameBuffer)
+	if (!IsWindowHovered() || !EntityFrameBuffer)
 	{
 		return;
 	}

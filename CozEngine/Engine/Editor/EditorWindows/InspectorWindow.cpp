@@ -8,7 +8,7 @@
 #include "Globes.h"
 #include "json.hpp"
 
-void LInspectorWindow::Draw()
+void LInspectorWindow::DrawWindow()
 {
 	LSelectedEntitySubsystem* SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>();
 	if (!SelectedEntitySubsystem)

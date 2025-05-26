@@ -9,6 +9,7 @@ class LInspectorWindow : public LEditorWindow
 public:
 	LInspectorWindow(const char* iWindowName) : LEditorWindow(iWindowName) {}
 
-	virtual void Draw();
+protected:
+	virtual void DrawWindow();
 };
 

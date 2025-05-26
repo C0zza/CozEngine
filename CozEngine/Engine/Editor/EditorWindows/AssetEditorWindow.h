@@ -7,6 +7,7 @@ class LAssetEditorWindow : public LEditorWindow
 public:
 	LAssetEditorWindow(const char* iWindowName) : LEditorWindow{ iWindowName } {}
 
-	virtual void Draw() final;
+protected:
+	virtual void DrawWindow() final;
 };
 
