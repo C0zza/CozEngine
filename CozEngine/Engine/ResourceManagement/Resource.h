@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
+#include <filesystem>
 
 #include "Reflection/Reflection.h"
-
-using FAssetPath = std::string;
+#include "ResourceManagement/AssetPath.h"
 
 REFL_CLASS()
 class LResource
@@ -20,7 +19,7 @@ public:
 	void DecrementRefs();
 	
 	void SetAssetPath(const FAssetPath& AssetPath);
-	const FAssetPath& GetAssetPath() const { return AssetPath; }
+	const std::string GetAssetPath() const { return AssetPath.string(); }
 
 private:
 	unsigned int RefCount = 0;

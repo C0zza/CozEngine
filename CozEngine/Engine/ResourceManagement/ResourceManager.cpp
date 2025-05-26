@@ -7,9 +7,9 @@ LResourceManager::~LResourceManager()
 	if (!Resources.empty())
 	{
 		std::string ErrorString = "LResourceManager::~LResourceManager - Resources have not been released:";
-		for (const std::pair<std::string, LResource*>& Pair : Resources)
+		for (const std::pair<FAssetPath, LResource*>& Pair : Resources)
 		{
-			ErrorString += "\n - " + Pair.first;
+			ErrorString += "\n - " + Pair.first.string();
 		}
 		Log(LLogLevel::ERROR, ErrorString);
 	}
@@ -36,7 +36,7 @@ void LResourceManager::GetResource(const FAssetPath& Asset, LResourceHandle<LRes
 		LResource* Resource = Class->CreateObject<LResource>();
 		Resources.insert({ Asset, Resource });
 
-		LSavable::LoadAssetFromDisk(Asset, *Resource);
+		LSavable::LoadAssetFromDisk(Asset.string(), *Resource);
 		Resource->SetAssetPath(Asset);
 		Resource->Load();
 	}

@@ -18,7 +18,7 @@ void LResource::DecrementRefs()
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 	if (!RefCount)
 	{
-		ResourceManager->UnloadResource(AssetPath);
+		ResourceManager->UnloadResource(AssetPath.string());
 	}
 }
 

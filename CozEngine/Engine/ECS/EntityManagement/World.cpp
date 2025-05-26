@@ -10,7 +10,7 @@ LWorld::LWorld(const FAssetPath& InEntitiesDataPath)
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 	if (!ResourceManager)
 	{
-		Log(LLogLevel::ERROR, "LWorld::LWorld - Invalid ResourceManager. Unable to load world: " + InEntitiesDataPath);
+		Log(LLogLevel::ERROR, "LWorld::LWorld - Invalid ResourceManager. Unable to load world: " + InEntitiesDataPath.string());
 		return;
 	}
 
@@ -21,7 +21,7 @@ LWorld::LWorld(const FAssetPath& InEntitiesDataPath)
 
 	if (!bSuccessfullyLoaded)
 	{
-		Log(LLogLevel::ERROR, "LWorld::LWorld - Failed to load InEntitiesDataPath: " + InEntitiesDataPath);
+		Log(LLogLevel::ERROR, "LWorld::LWorld - Failed to load InEntitiesDataPath: " + InEntitiesDataPath.string());
 		return;
 	}
 }
@@ -32,7 +32,7 @@ void LWorld::SaveWorld(const FAssetPath& AssetPath)
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 	if (!ResourceManager)
 	{
-		Log(LLogLevel::ERROR, "LWorld::SaveWorld - ResourceManager invalid. Unable to save world: " + AssetPath);
+		Log(LLogLevel::ERROR, "LWorld::SaveWorld - ResourceManager invalid. Unable to save world: " + AssetPath.string());
 		return;
 	}
 
@@ -42,7 +42,7 @@ void LWorld::SaveWorld(const FAssetPath& AssetPath)
 	} 
 	else if(EntitiesData.Get()->GetAssetPath() != AssetPath)
 	{
-		Log(LLogLevel::WARNING, "LWorld::SaveWorld - Cannot save world to " + AssetPath + ". It is already saved to " + EntitiesData.Get()->GetAssetPath() + ".");
+		Log(LLogLevel::WARNING, "LWorld::SaveWorld - Cannot save world to " + AssetPath.string() + ". It is already saved to " + EntitiesData.Get()->GetAssetPath() + ".");
 		return;
 	}
 
