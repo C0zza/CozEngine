@@ -13,6 +13,8 @@ class LResourceManager : public LSubsystem
 public:
 	~LResourceManager();
 
+	void GetResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class);
+
 	template<typename T>
 	void GetResource(const FAssetPath& Asset, LResourceHandle<T>& OutResourceHandle)
 	{

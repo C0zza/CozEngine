@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 
+#include "Reflection/Class.h"
+
 LResourceManager::~LResourceManager()
 {
 	if (!Resources.empty())
@@ -11,6 +13,35 @@ LResourceManager::~LResourceManager()
 		}
 		Log(LLogLevel::ERROR, ErrorString);
 	}
+}
+
+void LResourceManager::GetResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class)
+{
+	if (!Class)
+	{
+		Log(LLogLevel::ERROR, "LResourceManager::GetResource - Invalid Class.");
+		return;
+	}
+
+	assert(Class->IsChildOf<LResource>());
+
+	if (Asset.empty() || Asset == "null")
+	{
+		Log(LLogLevel::INFO, "LResourceManager::GetResource - Empty Asset provided. Returning empty LResourceHandle.");
+		return;
+	}
+
+	if (!Resources.contains(Asset))
+	{
+		LResource* Resource = Class->CreateObject<LResource>();
+		Resources.insert({ Asset, Resource });
+
+		LSavable::LoadAssetFromDisk(Asset, *Resource);
+		Resource->SetAssetPath(Asset);
+		Resource->Load();
+	}
+
+	OutResourceHandle.Init(Resources[Asset]);
 }
 
 // Asset string not passed as reference because we need to null Resources[Asset] and Asset would otherwise be deleted
