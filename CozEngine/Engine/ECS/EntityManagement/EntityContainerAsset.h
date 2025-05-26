@@ -2,10 +2,13 @@
 
 #include "ECS/EntityManagement/EntityContainer.h"
 #include "json.hpp"
+#include "Reflection/Reflection.h"
 #include "ResourceManagement/Resource.h"
 
+REFL_CLASS()
 class LEntityContainerAsset : public LResource
 {
+	REFL_GENERATED_BODY(LEntityContainerAsset)
 public:
 	virtual void Load() final {}
 	virtual void Unload() final {}
@@ -16,8 +19,8 @@ public:
 	void UpdateLevelAssetData(const LEntityContainer& EntityContainer);
 #endif
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LEntityContainerAsset, EntitiesData)
 private:
+	REFL_PROP()
 	nlohmann::json EntitiesData;
 };
 

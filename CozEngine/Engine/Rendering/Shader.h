@@ -5,9 +5,12 @@
 #include <vector>
 
 #include "ResourceManagement/ResourceHandleHelper.h"
+#include "Reflection/Reflection.h"
 
+REFL_CLASS()
 class LShader : public LResource
 {
+	REFL_GENERATED_BODY(LShader)
 public:
 	LShader() : ID{ 0 }, VertexShaderPath{ "" }, FragmentShaderPath{ "" } {}
 
@@ -26,15 +29,17 @@ public:
 	void SetMat3(const std::string& name, const glm::mat3& mat) const;
 	void SetMat4(const std::string& name, const glm::mat4& mat) const;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LShader, VertexShaderPath, FragmentShaderPath, bUsesMatricesUBO, bUsesLightingUBO);
-
 private:
 	unsigned int ID;
 
+	REFL_PROP(Visible)
 	std::string VertexShaderPath;
+	REFL_PROP(Visible)
 	std::string FragmentShaderPath;
 
 	// TODO: Should rather have a list of UBOs this shader should register with. This'll require some UBO manager system.
+	REFL_PROP(Visible)
 	bool bUsesMatricesUBO = false;
+	REFL_PROP(Visible)
 	bool bUsesLightingUBO = false;
 };

@@ -7,22 +7,34 @@
 #include "ECS/ECSComponents/ECSComponent.h"
 #include "Rendering/Lighting/Lighting.h"
 
+#include "Reflection/Reflection.h"
+
 // Should match number in shader.fs
 #define MAX_NUM_POINT_LIGHT 4
 
+REFL_CLASS()
 struct CPointLightComponent : public LECSComponent
 {
 	CPointLightComponent();
 
+	REFL_PROP(Visible)
 	glm::vec3 Position;
+	REFL_PROP(Visible)
 	glm::vec3 Ambient;
+	REFL_PROP(Visible)
 	glm::vec3 Diffuse;
+	REFL_PROP(Visible)
 	glm::vec3 Specular;
 
 	// See https://learnopengl.com/Lighting/Light-casters for general point light values
+	REFL_PROP(Visible)
 	float Constant;
+	REFL_PROP(Visible)
 	float Linear;
+	REFL_PROP(Visible)
 	float Quadratic;
+
+	REFL_GENERATED_BODY(CPointLightComponent)
 };
 
 class CPointLightComponentSystem : public LComponentSystem<CPointLightComponent>

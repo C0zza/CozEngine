@@ -2,10 +2,14 @@
 
 #include <string>
 
+#include "Reflection/Reflection.h"
+
 using FAssetPath = std::string;
 
+REFL_CLASS()
 class LResource
 {
+	REFL_GENERATED_BODY(LResource)
 public:
 	virtual ~LResource() {}
 

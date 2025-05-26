@@ -6,25 +6,39 @@
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
 
+#include "Reflection/Reflection.h"
+
 // Should match number in shader.fs
 #define MAX_NUM_SPOT_LIGHT 4
 
+REFL_CLASS()
 struct CSpotLightComponent : public LECSComponent
 {
+	REFL_GENERATED_BODY(CSpotLightComponent)
 public:
 	CSpotLightComponent();
 
+	REFL_PROP(Visible)
 	glm::vec3 Position;
+	REFL_PROP(Visible)
 	glm::vec3 Direction;
+	REFL_PROP(Visible)
 	glm::vec3 Ambient;
+	REFL_PROP(Visible)
 	glm::vec3 Diffuse;
+	REFL_PROP(Visible)
 	glm::vec3 Specular;
 
+	REFL_PROP(Visible)
 	float CutOff;
+	REFL_PROP(Visible)
 	float OuterCutOff;
 
+	REFL_PROP(Visible)
 	float Constant;
+	REFL_PROP(Visible)
 	float Linear;
+	REFL_PROP(Visible)
 	float Quadratic;
 };
 

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Reflection/Reflection.h"
 #include "ResourceManagement/ResourceHandleHelper.h"
 
 enum class ETextureType
@@ -11,8 +12,10 @@ enum class ETextureType
 	Specular
 };
 
+REFL_CLASS()
 class LTexture : public LResource
 {
+	REFL_GENERATED_BODY(LTexture)
 public:
 	virtual void Load() override;
 	virtual void Unload() override;
@@ -26,13 +29,14 @@ public:
 
 	static void SetFlipVerticallyOnLoad(const bool Flip);
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LTexture, TextureType, TextureFiles, bHasAlpha)
-
 protected:
 	virtual void SetupTexture();
 
+	REFL_PROP(Visible)
 	std::vector<std::string> TextureFiles;
+	REFL_PROP(Visible)
 	ETextureType TextureType;
+	REFL_PROP(Visible)
 	bool bHasAlpha;
 
 private:
