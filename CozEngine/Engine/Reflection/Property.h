@@ -14,16 +14,16 @@ class LProperty
 {
 public:
 	LProperty(const std::string& iPropertyName, const std::string& iPropertyType, const std::size_t iPropertyOffset)
-		: PropertyName{ iPropertyName }, PropertyType{iPropertyType}, PropertyOffset{iPropertyOffset}
+		: Name{ iPropertyName }, Type{iPropertyType}, Offset{iPropertyOffset}
 	{}
 
-	const std::string& GetPropertyName() const { return PropertyName; }
-	const std::string& GetPropertyType() const { return PropertyType; }
-	std::size_t GetPropertyOffset() const { return PropertyOffset; }
+	const std::string& GetPropertyName() const { return Name; }
+	const std::string& GetPropertyType() const { return Type; }
+	std::size_t GetPropertyOffset() const { return Offset; }
 
 private:
-	std::string PropertyName = "";
-	std::string PropertyType = "";
-	std::size_t PropertyOffset = -1;
+	std::string Name = "";
+	std::string Type = "";
+	std::size_t Offset = -1;
 };
 
