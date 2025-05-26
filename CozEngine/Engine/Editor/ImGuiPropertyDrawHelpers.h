@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "ECS/ECSComponents/TransformComponent.h"
+#include "Editor/AssetRegistry.h"
 #include "Globes.h"
 #include "ResourceManagement/ResourceHandle.h"
 #include "ResourceManagement/ResourceManager.h"
@@ -62,26 +63,50 @@ private:
 
 			Buffer.push_back('\0');
 
-			if (ImGui::InputText(GetHiddenLabel(Label).c_str(), Buffer.data(), 128, ImGuiInputTextFlags_EnterReturnsTrue))
+			LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>();
+			if (!AssetRegistry)
 			{
-				LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
-				if (!ResourceManager)
-				{
-					Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle - Invalid Resource Manager.");
-					return false;
-				}
-
-				LResourceHandle<T> NewResource;
-				ResourceManager->GetResource<T>(Buffer.data(), NewResource);
-
-				if (NewResource.Get())
-				{
-					ResourceHandle = NewResource;
-				}
-
-				return true;
+				Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle<T> - Invalid AssetRegistry.");
+				return false;
 			}
-			return false;
+
+			const std::unordered_set<std::string_view> Assets = AssetRegistry->GetAssetsByClass(T::StaticClass());
+
+			LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+			if (!ResourceManager)
+			{
+				Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle - Invalid Resource Manager.");
+				return false;
+			}
+
+			bool bUpdated = false;
+			if (ImGui::BeginCombo(GetHiddenLabel(Label).c_str(), AssetPath.c_str()))
+			{
+				for (std::string_view Path : Assets)
+				{
+					bool bIsSelected = Path == AssetPath;
+
+					if (ImGui::Selectable(Path.data(), &bIsSelected))
+					{
+						LResourceHandle<T> NewResource;
+						ResourceManager->GetResource<T>(Path.data(), NewResource);
+
+						if (NewResource.Get())
+						{
+							ResourceHandle = NewResource;
+							bUpdated = true;
+						}
+					}
+
+					if (bIsSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			return bUpdated;
 		}
 
 		template<typename TKey, typename TValue>

@@ -3,6 +3,7 @@
 #include "LEditor.h"
 
 #include "Development/LImGuiSubsystem.h"
+#include "Editor/AssetRegistry.h"
 #include "Editor/EditorWindows/ContentBrowserWindow.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
 #include "Editor/EditorWindows/InspectorWindow.h"
@@ -31,6 +32,8 @@ void LEditor::Initialize()
 
 	std::unique_ptr<LContentBrowserWindow> ContentBrowserWindow = std::make_unique<LContentBrowserWindow>("Content Browser");
 	EditorWindows.emplace(ContentBrowserWindow->GetWindowName(), std::move(ContentBrowserWindow));
+
+	CSystem.GetSubsystems().AddSubsystem<LAssetRegistry>();
 }
 
 void LEditor::Draw()

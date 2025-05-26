@@ -210,6 +210,9 @@
     <ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Editor\AssetRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Editor\EditorWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -497,6 +500,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Reflection\Reflection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\AssetRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\AssetPath.h">
