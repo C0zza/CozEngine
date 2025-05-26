@@ -1,4 +1,5 @@
 {
+  "Type": "LTexture",
   "TextureFiles": [ "Game/Assets/backpack/specular.jpg" ],
   "TextureType": 1,
   "bHasAlpha": false

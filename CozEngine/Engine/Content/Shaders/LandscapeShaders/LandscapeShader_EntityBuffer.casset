@@ -1,4 +1,5 @@
 {
+  "Type": "LShader",
   "FragmentShaderPath": "Engine/Rendering/DefaultShaders/Landscape_EntityBuffer.fs",
   "VertexShaderPath": "Engine/Rendering/DefaultShaders/Landscape.vs",
   "bUsesMatricesUBO": true,

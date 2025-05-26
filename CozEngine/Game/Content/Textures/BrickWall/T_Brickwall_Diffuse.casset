@@ -1,4 +1,5 @@
 {
+  "Type": "LTexture",
   "TextureFiles": [ "Game/Assets/brickwall/diffuse.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false

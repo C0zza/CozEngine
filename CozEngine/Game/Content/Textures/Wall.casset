@@ -1,4 +1,5 @@
 {
+  "Type": "LTexture",
   "TextureFiles": [ "Game/Assets/ground.jpg" ],
   "TextureType": 0,
   "bHasAlpha": false

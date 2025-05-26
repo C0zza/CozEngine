@@ -29,19 +29,36 @@ class GeneratedFile:
         Self.ReflectedClasses = []
 
 class ReflectedClass:
-    def __init__(Self, Name):
+    def __init__(Self, Name, ParentName):
         Self.Name = Name
         Self.Properties = []
+        Self.AdditionalIncludes = set()
+
+        if not ParentName:
+            Self.ParentName = ""
+        else:
+            Self.ParentName = ParentName
 
 class ReflectedProperty:
-    def __init__(Self, Name, Type):
+    def __init__(Self, Name, Type, Tags):
         Self.Name = Name
         Self.Type = Type
+        Self.Tags = Tags
 
     def __str__(self):
         return f"{self.Name}, {self.Type}"
 
+PropertyTypeToIncludeMap = {
+    "glm::vec3" : "Misc/GlmSerialization.h"
+}
+
+ReflectedClassSet = set()
+
 GeneratedFiles = []
+
+VarNameRegex = r"\w{1}\w*"
+# \s*(\w{1}\w*(?:::\w{1}\w*)*(?:<\w{1}\w*>)*)\s+(\w{1}\w*)
+VarIdentifierRegex = r"\s*(" + VarNameRegex + r"(?:::" + VarNameRegex + r")*(?:<" + VarNameRegex + r">)*)\s+(" + VarNameRegex + r")"
 
 def ProcessDirectory(Directory):
     for Filename in os.listdir(Directory):
@@ -56,6 +73,7 @@ def ProcessDirectory(Directory):
 
 CurrentFilePath = ""
 def ProcessHeader(HeaderFilePath):
+    global CurrentFilePath
     with open(HeaderFilePath, "r", encoding="utf-8") as F:
         Lines = []
         ReflectTagLineIndex = []
@@ -81,7 +99,7 @@ def PrintInvalidReflectedPropertyTagUsage(LineNumber):
     print(f"Invalid {REFLECT_PROPERTY_TAG} usage in " + CurrentFilePath + " on line " + str(LineNumber))
 
 def ProcessReflectedClass(ReflectTagLineIndex, Lines):
-    ClassNameMatch = re.search(r"class\s*(.\S*)\s*", Lines[ReflectTagLineIndex])
+    ClassNameMatch = re.search(r"(?:class|struct)\s*(.\S+)\s*(?:: public (\S+))?", Lines[ReflectTagLineIndex])
     ClassName = ""
     try:
         ClassName = ClassNameMatch.group(1)
@@ -90,39 +108,58 @@ def ProcessReflectedClass(ReflectTagLineIndex, Lines):
         print("Failed to find class name match")
         exit(1)
 
+    ReflectedClassSet.add(ClassName)
+
+    ParentClassName = ClassNameMatch.group(2)
+
     CurrentReflectedClasses = GeneratedFiles[len(GeneratedFiles) - 1].ReflectedClasses
-    CurrentReflectedClasses.append(ReflectedClass(ClassName))
+    CurrentReflectedClasses.append(ReflectedClass(ClassName, ParentClassName))
 
     CurrentLineIndex = ReflectTagLineIndex + 2
     for Line in Lines[ReflectTagLineIndex + 2 : len(Lines)]:
         if Line.startswith('}'):
             break
 
-        PropertyTagMatch = re.search(f"\\s*{REFLECT_PROPERTY_TAG}", Line)
-        if PropertyTagMatch:
-            ProcessReflectedProperty(Lines, CurrentLineIndex, CurrentReflectedClasses[len(CurrentReflectedClasses) - 1])
+        PropertyTagMatch = re.search(f"\\s*({REFLECT_PROPERTY_TAG})\\((.*)\\)", Line)
+        if PropertyTagMatch and PropertyTagMatch.group(1):
+            ProcessReflectedProperty(Lines, CurrentLineIndex, CurrentReflectedClasses[len(CurrentReflectedClasses) - 1], PropertyTagMatch.group(2).split(','))
         CurrentLineIndex += 1
 
-def ProcessReflectedProperty(Lines, ReflectTagLineIndex, ReflectedClass):
-    PropertyMatch = re.search(r"\s*(\w[a-zA-Z0-9]+)\s+(\w[a-zA-Z0-9]+)", Lines[ReflectTagLineIndex + 1])
+def ProcessReflectedProperty(Lines, ReflectTagLineIndex, ReflectedClass, Tags):
+    PropertyMatch = re.search(VarIdentifierRegex, Lines[ReflectTagLineIndex + 1])
 
-    TypeName = ""
-    try:
-        TypeName = PropertyMatch.group(1)
-    except:
-        PrintInvalidReflectedPropertyTagUsage(ReflectTagLineIndex + 1)
-        print("Failed to find property type match")
-        exit(1)
+    TypeStartIndex = 0
+    TypeStopIndex = 0
+    IdentifierStartIndex = 0
+    IdentifierStopIndex = 0
 
-    PropertyName = ""
-    try:
-        PropertyName = PropertyMatch.group(2)
-    except:
-        PrintInvalidReflectedPropertyTagUsage(ReflectTagLineIndex + 1)
-        print("Failed to find property name match")
-        exit(1)
+    OpenScopes = 0
 
-    ReflectedClass.Properties.append(ReflectedProperty(PropertyName, TypeName))
+    for i in range(0, len(Lines[ReflectTagLineIndex + 1])):
+        Char = Lines[ReflectTagLineIndex + 1][i]
+        if not TypeStopIndex:
+            if not Char == ' ' and not TypeStartIndex:
+                TypeStartIndex = i
+            elif Char == '<':
+                OpenScopes += 1
+            elif Char == '>':
+                OpenScopes -= 1
+            elif Char == ' ' and not OpenScopes:
+                TypeStopIndex = i - 1
+
+        if TypeStopIndex and not Char == ' ' and not IdentifierStartIndex:
+            IdentifierStartIndex = i
+        elif IdentifierStartIndex and (Char == ' ' or Char == ';') and not IdentifierStopIndex:
+            IdentifierStopIndex = i - 1
+            break
+
+    TypeName = Lines[ReflectTagLineIndex + 1][TypeStartIndex : TypeStopIndex + 1]
+    PropertyName = Lines[ReflectTagLineIndex + 1][IdentifierStartIndex : IdentifierStopIndex + 1]
+
+    ReflectedClass.Properties.append(ReflectedProperty(PropertyName, TypeName, Tags))
+
+    if TypeName in PropertyTypeToIncludeMap:
+        ReflectedClass.AdditionalIncludes.add(PropertyTypeToIncludeMap[TypeName])
 
 EngineDir = '..\\..\\..\\Engine'
 ProjectDir = '..\\..\\..\\Game'
@@ -153,25 +190,56 @@ for ClCompile in CppItemGroup.findall("msb:ClCompile", ns):
 
 for GenFile in GeneratedFiles:
     with open(GeneratedFilesPath + GenFile.Name + "Gen.cpp", "w") as File:
+
         File.write(f"""\
 #include \"{GenFile.Path}/{GenFile.Name}.h\"
 
+#include \"Editor/ImGuiPropertyDrawHelpers.h\"
 #include \"Reflection/Class.h\"
 #include \"Reflection/ClassRegister.h\"
 #include \"Reflection/ClassUtilities.h\"
 #include \"Reflection/Property.h\"
-
 """)
-        
+
+        ClassSpecificHeaders = """"""
+
         for Class in GenFile.ReflectedClasses:
             ReflectedProperties = """"""
+            DeserializeProperties = """"""
+            SerializeProperties = """    Json[\"Type\"] = \""""+ Class.Name + "\";\n"""
+            DrawProperties = """"""
+
             for i in range(len(Class.Properties)):
                 Property = Class.Properties[i]
                 ReflectedProperties += "            {\"" + Property.Name + "\", \"" + Property.Type + "\", MEMBER_OFFSET(" + Class.Name + ", " + Property.Name + ")}"
+                DeserializeProperties += "    Object." + Property.Name + " = Json[\"" + Property.Name + "\"];\n"
+                SerializeProperties += "    Json[\"" + Property.Name + "\"] = Object." + Property.Name + ";\n"
+                
+                DrawnProperty = False
+                if "Visible" in Property.Tags:
+                    DrawProperties += "                " + Property.Type + "* " + Property.Name + "Ptr = reinterpret_cast<" + Property.Type + "*>(Address + offsetof(" + Class.Name + ", " + Property.Name + "));\n"
+                    DrawProperties += "                LImGuiPropertyDrawHelpers::DrawProperty(\"" + Property.Name + "\", *" + Property.Name + "Ptr);"
+                    DrawnProperty = True
+
                 if i < len(Class.Properties) - 1:
                     ReflectedProperties += ",\n"
+                    if DrawnProperty:
+                        DrawProperties += "\n\n"
+
+            for Include in Class.AdditionalIncludes:
+                ClassSpecificHeaders += "#include \"" + Include + "\"\n"
+
+            ToJson = """"""
+            FromJson = """"""
+            ParentName = ""
+            if Class.ParentName and Class.ParentName in ReflectedClassSet:
+                ParentName = Class.ParentName
+                ToJson = "    const " + ParentName + "& Parent = Object;\n    to_json(Json, Parent);"
+                FromJson = "    " + ParentName + "& Parent = Object;\n    from_json(Json, Parent);"
 
             File.write(f"""\
+{ClassSpecificHeaders}
+
 LClass* {Class.Name}::Class = {Class.Name}::StaticClass();
 
 LClass* {Class.Name}::StaticClass()
@@ -186,11 +254,42 @@ LClass* {Class.Name}::StaticClass()
 {ReflectedProperties}
         }};
 
-        LClassUtilities::RegisterStaticClassProperties({Class.Name}::Class, Properties);
+        std::function<void(uint8_t*)> DrawEditorFunc = [](uint8_t* Address)
+            {{
+{DrawProperties}
+            }};
+
+        
+        std::function<void*()> CreateObjectFunc = []()
+            {{
+                return new {Class.Name}();
+            }};
+
+        LClassUtilities::RegisterStaticClassProperties({Class.Name}::Class,
+                                                        Properties,
+                                                        sizeof({Class.Name}),
+                                                        alignof({Class.Name}),
+                                                        \"{Class.Name}\",
+                                                        \"{ParentName}\",
+                                                        DrawEditorFunc,
+                                                        CreateObjectFunc);
+        
         LClassRegister::RegisterObj(\"{Class.Name}\", {Class.Name}::Class);
     }}
     return {Class.Name}::Class;
-}}          
+}}
+
+void from_json(const nlohmann::json& Json, {Class.Name}& Object)
+{{
+{FromJson}
+{DeserializeProperties}
+}}
+
+void to_json(nlohmann::json& Json, const {Class.Name}& Object)
+{{
+{ToJson}
+{SerializeProperties}
+}}
 """)
             
     ET.SubElement(CppItemGroup, "ClCompile", Include=f"Engine\\GeneratedFiles\\{GenFile.Name}Gen.cpp")

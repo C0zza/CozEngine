@@ -1,4 +1,5 @@
 {
+  "Type": "LTexture",
   "TextureFiles": [ "Engine/Assets/Textures/FolderIcon.png" ],
   "TextureType": 0,
   "bHasAlpha": true

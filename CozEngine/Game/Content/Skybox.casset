@@ -1,4 +1,5 @@
 {
+  "Type": "LTexture",
   "TextureFiles": [
     "Game/Assets/skybox/right.jpg",
     "Game/Assets/skybox/left.jpg",
