@@ -218,6 +218,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\EditorWindow.cpp" />
     <ClCompile Include="Engine\Reflection\ClassUtilities.cpp" />
     <ClCompile Include="Engine\Reflection\Class.cpp" />
     <ClCompile Include="Engine\Editor\AssetEditorWindowSubsystem.cpp" />
@@ -295,8 +296,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
-  </ItemGroup>
+    <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\LandscapeMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ShaderGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" /></ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Misc\ObjRegister.h" />
     <ClInclude Include="Engine\Reflection\ClassRegister.h" />
     <ClInclude Include="Engine\Reflection\ClassUtilities.h" />
     <ClInclude Include="Engine\Reflection\Class.h" />
