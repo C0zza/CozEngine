@@ -69,6 +69,12 @@ void LContentBrowserWindow::DrawWindow()
 
 	ImGui::SameLine();
 
+	static const LClass* ResourceClass = LResource::StaticClass();
+	static const std::vector<LClass*> ResourceClasses = ResourceClass->GetChildClasses();
+	assert(!ResourceClasses.empty());
+
+	static LClass* CurrentClass = ResourceClasses[0];
+
 	if (ImGui::Button("Create Asset"))
 	{
 
@@ -76,13 +82,7 @@ void LContentBrowserWindow::DrawWindow()
 
 	ImGui::SameLine();
 
-	static const LClass* ResourceClass = LResource::StaticClass();
-	static const std::vector<LClass*> ResourceClasses = ResourceClass->GetChildClasses();
-	assert(!ResourceClasses.empty());
-
-	static LClass* CurrentClass = nullptr;
-
-	if (ImGui::BeginCombo("Type", CurrentClass ? CurrentClass->GetTypeName().data() : ResourceClasses[0]->GetTypeName().data(), ImGuiComboFlags_WidthFitPreview))
+	if (ImGui::BeginCombo("Type", CurrentClass->GetTypeName().data(), ImGuiComboFlags_WidthFitPreview))
 	{
 		for (LClass* Class : ResourceClasses)
 		{
