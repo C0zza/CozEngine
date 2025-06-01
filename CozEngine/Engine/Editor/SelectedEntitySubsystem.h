@@ -3,6 +3,8 @@
 #include "Misc/Delegate.h"
 #include "Subsystem.h"
 
+using FEntitySelectedDelegate = LDelegate<const LEntityID>;
+
 class LSelectedEntitySubsystem : public LSubsystem
 {
 public:
@@ -11,11 +13,11 @@ public:
 
 	bool IsEntitySelected() const { return SelectedEntityID != 0; }
 
-	LDelegate<const LEntityID>& GetOnEntitySelectedDelegate() { return OnEntitySelectedDelegate; }
+	FEntitySelectedDelegate& GetOnEntitySelectedDelegate() { return OnEntitySelectedDelegate; }
 
 private:
 	LEntityID SelectedEntityID = 0;
 
-	LDelegate<const LEntityID> OnEntitySelectedDelegate;
+	FEntitySelectedDelegate OnEntitySelectedDelegate;
 };
 

@@ -42,6 +42,8 @@ public:
 
 	void Broadcast(Args...);
 	
+	void Reset();
+
 	template<typename TCallerType, typename TFuncRef>
 	void AddEvent(TCallerType* Caller, TFuncRef&& FuncRef, LDelegateEventHandle& DelegateEventHandle);
 
@@ -50,6 +52,19 @@ public:
 private:
 	std::vector<std::function<void(Args...)>> Events;
 	std::map<void*, LDelegateEventHandle*> FuncToHandleMap;
+
+	template <typename Func, typename Caller, std::size_t... Is>
+	auto bind_with_placeholders(Func func, Caller caller, std::index_sequence<Is...>)
+	{
+		return std::bind(func, caller, (std::placeholders::_1 + Is)...);
+	}
+
+	template <typename Func, typename Caller, typename... Args>
+	auto bind_event(Func func, Caller caller)
+	{
+		static_assert(sizeof...(Args) <= 20, "std::bind supports at most 20 placeholders");
+		return bind_with_placeholders(func, caller, std::index_sequence_for<Args...>{});
+	}
 };
 
 template<typename ...Args>
@@ -61,13 +76,7 @@ inline LDelegate<Args...>::LDelegate()
 template<typename ...Args>
 inline LDelegate<Args...>::~LDelegate()
 {
-	for (auto& Pair : HandleToIndexMap)
-	{
-		if (Pair.first)
-		{
-			RawResetDelegateEventHandle(*Pair.first);
-		}
-	}
+	Reset();
 }
 
 template<typename ...Args>
@@ -76,6 +85,18 @@ inline void LDelegate<Args...>::Broadcast(Args... args)
 	for (std::function<void(Args...)>& Event : Events)
 	{
 		Event(args...);
+	}
+}
+
+template<typename ...Args>
+inline void LDelegate<Args...>::Reset()
+{
+	for (auto& Pair : HandleToIndexMap)
+	{
+		if (Pair.first)
+		{
+			RawResetDelegateEventHandle(*Pair.first);
+		}
 	}
 }
 
@@ -133,10 +154,9 @@ inline void LDelegate<Args...>::AddEvent(TCallerType* Caller, TFuncRef&& FuncRef
 		return;
 	}
 
-	// TODO: We need to somehow define multiple placeholders here
-	Events.emplace_back(std::bind(FuncRef, Caller, std::placeholders::_1));
+	Events.emplace_back(bind_event<TFuncRef, TCallerType*, Args...>(FuncRef, Caller));
 
-	HandleToIndexMap.emplace(&DelegateEventHandle, Events.size() - 1);
+	HandleToIndexMap.emplace(&DelegateEventHandle, static_cast<int>(Events.size() - 1));
 	FuncToHandleMap.emplace((void*)&Events.back(), &DelegateEventHandle);
 
 	InitDelegateEventHandle(DelegateEventHandle);
