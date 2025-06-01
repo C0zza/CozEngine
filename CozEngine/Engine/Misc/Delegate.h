@@ -98,6 +98,9 @@ inline void LDelegate<Args...>::Reset()
 			RawResetDelegateEventHandle(*Pair.first);
 		}
 	}
+
+	Events.clear();
+	FuncToHandleMap.clear();
 }
 
 template<typename ...Args>
