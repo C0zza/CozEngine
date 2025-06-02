@@ -33,7 +33,7 @@ private:
 	void OnRightMouseClicked();
 	void OnMouseClicked();
 
-	ImVec2 MousePos;
+	ImVec2 WindowMouseCoords;
 	ImVec2 TopLeft;
 	ImVec2 BottomRight;
 };

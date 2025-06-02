@@ -4,6 +4,7 @@
 
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
+#include "Misc/MathUtility.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/Renderer.h"
 
@@ -25,7 +26,7 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 
 void LEditorSceneWindow::DrawWindow()
 {
-	MousePos = ImGui::GetMousePos();
+	WindowMouseCoords = ImGui::GetMousePos();
 	TopLeft = ImGui::GetCursorScreenPos();
 
 	ImVec2 WindowSize = ImGui::GetWindowSize();
@@ -121,14 +122,13 @@ void LEditorSceneWindow::OnMouseClicked()
 		return;
 	}
 
-	const float XPos = MousePos.x - TopLeft.x;
-	const float YPos = BottomRight.y - TopLeft.y - (MousePos.y - TopLeft.y);
+	const ImVec2 TexCoords = LMathUtility::WindowToTextureCoords(WindowMouseCoords, TopLeft, BottomRight);
 
 	EntityFrameBuffer->Bind();
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 
 	float Pixel[4];
-	glReadPixels(XPos, YPos, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
+	glReadPixels(TexCoords.x, TexCoords.y, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
 
 	EntityFrameBuffer->Unbind();
 
