@@ -27,8 +27,11 @@ void LEditorSceneWindow::DrawWindow()
 {
 	MousePos = ImGui::GetMousePos();
 	TopLeft = ImGui::GetCursorScreenPos();
-	BottomRight = ImGui::GetContentRegionMax();
-	BottomRight.y += ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+
+	ImVec2 WindowSize = ImGui::GetWindowSize();
+	WindowSize.y -= ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+
+	BottomRight = TopLeft + WindowSize;
 
 	OnFocusUpdate(ImGui::IsWindowFocused());
 
@@ -118,15 +121,8 @@ void LEditorSceneWindow::OnMouseClicked()
 		return;
 	}
 
-	const float XSize = BottomRight.x - TopLeft.x;
-	const float YSize = BottomRight.y - TopLeft.y;
-
-	// Flip y to match texture format and adjust for window start location
-	MousePos.y = YSize - MousePos.y + TopLeft.y;
-	MousePos.x += TopLeft.x;
-
-	const float XPos = MousePos.x * XSize / EntityFrameBuffer->GetWidth();
-	const float YPos = MousePos.y * YSize / EntityFrameBuffer->GetHeight();
+	const float XPos = MousePos.x - TopLeft.x;
+	const float YPos = BottomRight.y - TopLeft.y - (MousePos.y - TopLeft.y);
 
 	EntityFrameBuffer->Bind();
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
