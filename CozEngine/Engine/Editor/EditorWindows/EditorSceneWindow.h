@@ -33,8 +33,10 @@ private:
 	void OnRightMouseClicked();
 	void OnMouseClicked();
 
-	ImVec2 WindowMouseCoords;
-	ImVec2 TopLeft;
-	ImVec2 BottomRight;
+	void SpawnEntityFromPath(const std::filesystem::path& Path, const glm::vec2& ClipSpaceCoords);
+
+	glm::vec2 LocalMouseScreenCoords;
+	float WindowWidth;
+	float WindowHeight;
 };
 

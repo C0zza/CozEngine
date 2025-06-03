@@ -4,12 +4,12 @@
 
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
-#include "Misc/MathUtility.h"
+#include "Misc/CoordSpaceConversion.h"
 #include "Rendering/FrameBuffer.h"
-#include "Rendering/Renderer.h"
+#include "Rendering/RendererInfo.h"
 
 LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBuffer* iEntityFrameBuffer, const char* iWindowName)
-	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }, EntityFrameBuffer{iEntityFrameBuffer}
+	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }, EntityFrameBuffer{ iEntityFrameBuffer }, LocalMouseScreenCoords{ glm::vec2() }, WindowWidth{ 0.0f }, WindowHeight{ 0.0f }
 {
 	assert(SceneFrameBuffer);
 
@@ -26,13 +26,9 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 
 void LEditorSceneWindow::DrawWindow()
 {
-	WindowMouseCoords = ImGui::GetMousePos();
-	TopLeft = ImGui::GetCursorScreenPos();
-
-	ImVec2 WindowSize = ImGui::GetWindowSize();
-	WindowSize.y -= ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-
-	BottomRight = TopLeft + WindowSize;
+	const ImVec2 MousePos = ImGui::GetMousePos();
+	const ImVec2 TopLeft = ImGui::GetCursorScreenPos();
+	LocalMouseScreenCoords = glm::vec2(MousePos.x - TopLeft.x, MousePos.y - TopLeft.y);
 
 	OnFocusUpdate(ImGui::IsWindowFocused());
 
@@ -47,11 +43,17 @@ void LEditorSceneWindow::DrawWindow()
 		SceneFrameBuffer->RescaleBuffer(X, Y);
 		EntityFrameBuffer->RescaleBuffer(X, Y);
 
-		LRenderer* Renderer = CSystem.GetSubsystems().GetSubsystem<LRenderer>();
-		if (Renderer)
+		LRendererInfo* RendererInfo = CSystem.GetSubsystems().GetSubsystem<LRendererInfo>();
+		if (RendererInfo)
 		{
-			Renderer->SetProjectionMatrix(X, Y);
+			RendererInfo->UpdateProjectionMatrix(X, Y);
 		}
+
+		const ImVec2 WindowSize = ImGui::GetWindowSize();
+
+		WindowWidth = WindowSize.x;
+		// Removes outer frame at top
+		WindowHeight = WindowSize.y - (ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2);
 	}
 
 	ImGui::Image(
@@ -122,13 +124,14 @@ void LEditorSceneWindow::OnMouseClicked()
 		return;
 	}
 
-	const ImVec2 TexCoords = LMathUtility::WindowToTextureCoords(WindowMouseCoords, TopLeft, BottomRight);
+	const glm::vec2 TexCoords = LCoordSpaceConversion::ScreenToUV(LocalMouseScreenCoords, WindowWidth, WindowHeight);
 
 	EntityFrameBuffer->Bind();
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
 
 	float Pixel[4];
-	glReadPixels(TexCoords.x, TexCoords.y, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
+	// TODO: Could do with a rounding method
+	glReadPixels((int)TexCoords.x, (int)TexCoords.y, 1, 1, GL_RGBA, GL_FLOAT, &Pixel);
 
 	EntityFrameBuffer->Unbind();
 

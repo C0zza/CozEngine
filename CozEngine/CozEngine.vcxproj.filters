@@ -240,7 +240,10 @@
     <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Misc\MathUtility.cpp">
+    <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\RendererInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -511,7 +514,10 @@
     <ClInclude Include="Engine\ResourceManagement\AssetPath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Misc\MathUtility.h">
+    <ClInclude Include="Engine\Misc\CoordSpaceConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\RendererInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "ECS/ECSComponents/SpotLightComponent.h"
 #include "FrameBuffer.h"
 #include "Globes.h"
+#include "Rendering/RendererInfo.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
@@ -53,7 +54,8 @@ void LRenderer::Initialize()
 	assert(m_Window);
 	m_Window->Init();
 
-	SetProjectionMatrix(1280.0f, 720.0f);
+	RendererInfo = CSystem.GetSubsystems().AddSubsystem<LRendererInfo>();
+	RendererInfo->UpdateProjectionMatrix(1280, 720);
 
 	LTexture::SetFlipVerticallyOnLoad(true);
 
@@ -116,17 +118,13 @@ void LRenderer::Update()
 	{
 		DirectionalLightCS->UpdateDirectionalLight();
 	}
-
-	// TODO update automatically by delegate. I.e, setup delegates
-	ComponentSystem = ECS->GetComponentSystemFor<CCameraComponent>();
-	CCameraComponentSystem* CameraCS = dynamic_cast<CCameraComponentSystem*>(ComponentSystem);
 	
-	if (CameraCS)
+	if (RendererInfo)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &GetProjectionMatrix());
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &CameraCS->GetViewMatrix());
-		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &CameraCS->GetViewPos());
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &RendererInfo->GetProjectionMatrix());
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &RendererInfo->GetViewMatrix());
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &RendererInfo->GetViewPos());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	else
@@ -146,9 +144,4 @@ void LRenderer::GetShouldWindowClose(bool& bClose)
 {
 	assert(m_Window);
 	bClose = m_Window->ShouldClose();
-}
-
-void LRenderer::SetProjectionMatrix(const float Width, const float Height)
-{
-	ProjectionMatrix = glm::perspective(glm::radians(60.0f), Width / Height, 0.1f, 5000.f);
 }

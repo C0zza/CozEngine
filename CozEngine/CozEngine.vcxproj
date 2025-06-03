@@ -291,7 +291,8 @@
     <ClCompile Include="Engine\SubsystemCollection.cpp" />
     <ClCompile Include="Engine\Rendering\Materials\ModelMaterial.cpp" />
     <ClCompile Include="Engine\Editor\SelectedEntitySubsystem.cpp" />
-    <ClCompile Include="Engine\Misc\MathUtility.cpp" />
+    <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp" />
+    <ClCompile Include="Engine\Rendering\RendererInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
@@ -396,7 +397,8 @@
     <ClInclude Include="Engine\Editor\EditorWindows\InspectorWindow.h" />
     <ClInclude Include="Engine\Editor\SelectedEntitySubsystem.h" />
     <ClInclude Include="Engine\Reflection\Property.h" />
-    <ClInclude Include="Engine\Misc\MathUtility.h" />
+    <ClInclude Include="Engine\Misc\CoordSpaceConversion.h" />
+    <ClInclude Include="Engine\Rendering\RendererInfo.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>

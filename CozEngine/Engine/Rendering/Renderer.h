@@ -8,6 +8,7 @@
 
 class LECS;
 class LFrameBuffer;
+class LRendererInfo;
 class LWindow;
 
 class LRenderer : public LSubsystem
@@ -22,9 +23,6 @@ public:
 
 	LWindow* GetWindow() { return m_Window; }
 	void GetShouldWindowClose(bool& bClose);
-
-	void SetProjectionMatrix(const float Width, const float Height);
-	const glm::mat4& GetProjectionMatrix() const { return ProjectionMatrix; }
 
 	void BindFrameBuffer(const LFrameBuffer* Buffer);
 	void BindDefaultFrameBuffer();
@@ -47,9 +45,10 @@ protected:
 
 private:
 	LWindow* m_Window;
-	glm::mat4 ProjectionMatrix = glm::mat4(0);
 
 	LFrameBuffer* CustomFrameBuffer = nullptr;
+
+	LRendererInfo* RendererInfo = nullptr;
 
 	LECS* ECS = nullptr;
 
