@@ -26,9 +26,8 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 
 void LEditorSceneWindow::DrawWindow()
 {
-	const ImVec2 MousePos = ImGui::GetMousePos();
-	const ImVec2 TopLeft = ImGui::GetCursorScreenPos();
-	LocalMouseScreenCoords = glm::vec2(MousePos.x - TopLeft.x, MousePos.y - TopLeft.y);
+	const ImVec2 ImLocalMouseScreenCoords = GetCurrentWindowMouseCoords();
+	LocalMouseScreenCoords = glm::vec2(ImLocalMouseScreenCoords.x, ImLocalMouseScreenCoords.y);
 
 	OnFocusUpdate(ImGui::IsWindowFocused());
 

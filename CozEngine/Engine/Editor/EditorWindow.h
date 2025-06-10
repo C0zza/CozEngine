@@ -18,6 +18,9 @@ protected:
 
 	bool IsWindowHovered() const { return bIsWindowHovered; }
 
+	// Must be called after ImGui::Begin due to ImGui::GetCursorScreenPos usage for window top left calculation.
+	ImVec2 GetCurrentWindowMouseCoords() const;
+
 private:
 	const char* WindowName;
 
