@@ -4,6 +4,8 @@
 #include <unordered_set>
 #include <functional>
 
+#include "json.hpp"
+
 #include "Property.h"
 
 class LClass;
@@ -18,7 +20,9 @@ public:
 												const std::string& ClassName,
 												const std::string& ParentClassName,
 												std::function<void(uint8_t*)> DrawEditorFunc,
-												std::function<void*()> CreateObjectFunc);
+												std::function<void*()> CreateObjectFunc,
+												std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc,
+												std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc);
 
 private:
 	static std::unordered_map<std::string, std::unordered_set<std::string>> ParentToChildClassesMap;

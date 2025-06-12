@@ -265,6 +265,18 @@ LClass* {Class.Name}::StaticClass()
                 return new {Class.Name}();
             }};
 
+        std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
+            {{
+                const {Class.Name}* Object = reinterpret_cast<const {Class.Name}*>(Address);
+                to_json(Json, *Object);
+            }};
+
+        std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc = [](uint8_t* Address, const nlohmann::json& Json)
+            {{
+                {Class.Name}* Object = reinterpret_cast<{Class.Name}*>(Address);
+                from_json(Json, *Object);
+            }};
+
         LClassUtilities::RegisterStaticClassProperties({Class.Name}::Class,
                                                         Properties,
                                                         sizeof({Class.Name}),
@@ -272,7 +284,9 @@ LClass* {Class.Name}::StaticClass()
                                                         \"{Class.Name}\",
                                                         \"{ParentName}\",
                                                         DrawEditorFunc,
-                                                        CreateObjectFunc);
+                                                        CreateObjectFunc,
+                                                        SerializeFunc,
+                                                        DeserializeFunc);
         
         LClassRegister::RegisterObj(\"{Class.Name}\", {Class.Name}::Class);
     }}

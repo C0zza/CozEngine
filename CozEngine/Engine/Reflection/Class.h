@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "ClassUtilities.h"
+#include "json.hpp"
 #include "Property.h"
 
 class LClass
@@ -13,6 +14,9 @@ class LClass
 	friend LClassUtilities;
 public:
 	void DrawEditorDetails(void* BaseAdd);
+	
+	void SerializeAddress(uint8_t* Add, nlohmann::json& Json) const;
+	void DeserializeAddress(uint8_t* Add, const nlohmann::json& Json) const;
 
 	std::size_t GetByteSize() const { return ByteSize; }
 	std::size_t GetByteAlignment() const { return ByteAlignment; }
@@ -47,6 +51,8 @@ private:
 
 	std::function<void*()> CreateObjectFunc;
 	std::function<void(uint8_t*)> DrawEditorFunc;
+	std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc;
+	std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc;
 
 	// TODO: Need something better. Can we deal with templated types? E.g. vector, map, etc.
 	static std::map<std::string, std::function<void(LClass*, uint8_t*, const char*)>> DrawFuncs;

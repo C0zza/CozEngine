@@ -8,7 +8,26 @@
 
 void LClass::DrawEditorDetails(void* BaseAddress)
 {
-	DrawEditorFunc(static_cast<uint8_t*>(BaseAddress));
+	if (DrawEditorFunc)
+	{
+		DrawEditorFunc(static_cast<uint8_t*>(BaseAddress));
+	}
+}
+
+void LClass::SerializeAddress(uint8_t* Add, nlohmann::json& Json) const
+{
+	if (SerializeFunc)
+	{
+		SerializeFunc(Add, Json);
+	}
+}
+
+void LClass::DeserializeAddress(uint8_t* Add, const nlohmann::json& Json) const
+{
+	if (DeserializeFunc)
+	{
+		DeserializeFunc(Add, Json);
+	}
 }
 
 bool LClass::IsChildOf(const std::string& ClassName) const
