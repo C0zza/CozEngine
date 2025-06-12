@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <algorithm>
+
 #include "ImGuiPropertyDrawHelpers.h"
 
 bool LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, int& Value)
@@ -56,7 +59,7 @@ bool LImGuiPropertyDrawHelpers::PrivateHelpers::DrawProperty(const char* Label, 
 	std::vector<char> Buffer;
 
 	Buffer = std::vector<char>(Value.begin(), Value.end());
-	Buffer.resize(Value.length() * 2);
+	Buffer.resize(std::max(static_cast<int>(Value.length()) * 2, 100));
 
 	Buffer.push_back('\0');
 
