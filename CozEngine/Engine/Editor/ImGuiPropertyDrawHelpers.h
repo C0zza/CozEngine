@@ -168,6 +168,65 @@ private:
 		}
 
 		template<typename T>
+		static bool DrawProperty(const char* Label, std::set<T>& Set)
+		{
+			if (ImGui::Button("+"))
+			{
+				Set.insert("");
+			}
+
+			bool bAnyUpdates = false;
+			
+			std::vector<const T*> ElementsToRemove;
+			std::vector<T> ElementsToAdd;
+
+			int i = 0;
+			for (const T& Element : Set)
+			{
+				bool bUpdated = false;
+
+				T Copy = Element;
+
+				std::string LabelStr = std::string(Label) + std::to_string(i);
+				bUpdated |= PrivateHelpers::DrawProperty(LabelStr.c_str(), Copy);
+
+				ImGui::SameLine();
+				const std::string RemoveButtonStr = "X##" + std::to_string(i);
+				if (ImGui::Button(RemoveButtonStr.c_str()))
+				{
+					ElementsToRemove.emplace_back(&Element);
+				}
+				else
+				{
+					if (bUpdated)
+					{
+						if (!Set.contains(Copy))
+						{
+							ElementsToRemove.emplace_back(&Element);
+							ElementsToAdd.emplace_back(Copy);
+						}
+					}
+				}
+
+				++i;
+
+				bAnyUpdates |= bUpdated;
+			}
+
+			for (const T* ElementToRemove : ElementsToRemove)
+			{
+				Set.erase(*ElementToRemove);
+			}
+
+			for (const T& ElementToAdd : ElementsToAdd)
+			{
+				Set.insert(ElementToAdd);
+			}
+
+			return bAnyUpdates;
+		}
+
+		template<typename T>
 		static bool DrawProperty(const char* Label, T& Enum)
 		{
 			static_assert(std::is_enum_v<T>);
