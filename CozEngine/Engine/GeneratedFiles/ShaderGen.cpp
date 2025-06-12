@@ -45,6 +45,18 @@ LClass* LShader::StaticClass()
                 return new LShader();
             };
 
+        std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
+            {
+                const LShader* Object = reinterpret_cast<const LShader*>(Address);
+                to_json(Json, *Object);
+            };
+
+        std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc = [](uint8_t* Address, const nlohmann::json& Json)
+            {
+                LShader* Object = reinterpret_cast<LShader*>(Address);
+                from_json(Json, *Object);
+            };
+
         LClassUtilities::RegisterStaticClassProperties(LShader::Class,
                                                         Properties,
                                                         sizeof(LShader),
@@ -52,7 +64,9 @@ LClass* LShader::StaticClass()
                                                         "LShader",
                                                         "LResource",
                                                         DrawEditorFunc,
-                                                        CreateObjectFunc);
+                                                        CreateObjectFunc,
+                                                        SerializeFunc,
+                                                        DeserializeFunc);
         
         LClassRegister::RegisterObj("LShader", LShader::Class);
     }

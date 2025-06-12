@@ -41,6 +41,18 @@ LClass* LTexture::StaticClass()
                 return new LTexture();
             };
 
+        std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
+            {
+                const LTexture* Object = reinterpret_cast<const LTexture*>(Address);
+                to_json(Json, *Object);
+            };
+
+        std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc = [](uint8_t* Address, const nlohmann::json& Json)
+            {
+                LTexture* Object = reinterpret_cast<LTexture*>(Address);
+                from_json(Json, *Object);
+            };
+
         LClassUtilities::RegisterStaticClassProperties(LTexture::Class,
                                                         Properties,
                                                         sizeof(LTexture),
@@ -48,7 +60,9 @@ LClass* LTexture::StaticClass()
                                                         "LTexture",
                                                         "LResource",
                                                         DrawEditorFunc,
-                                                        CreateObjectFunc);
+                                                        CreateObjectFunc,
+                                                        SerializeFunc,
+                                                        DeserializeFunc);
         
         LClassRegister::RegisterObj("LTexture", LTexture::Class);
     }

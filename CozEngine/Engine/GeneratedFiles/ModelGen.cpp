@@ -33,6 +33,18 @@ LClass* LModel::StaticClass()
                 return new LModel();
             };
 
+        std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
+            {
+                const LModel* Object = reinterpret_cast<const LModel*>(Address);
+                to_json(Json, *Object);
+            };
+
+        std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc = [](uint8_t* Address, const nlohmann::json& Json)
+            {
+                LModel* Object = reinterpret_cast<LModel*>(Address);
+                from_json(Json, *Object);
+            };
+
         LClassUtilities::RegisterStaticClassProperties(LModel::Class,
                                                         Properties,
                                                         sizeof(LModel),
@@ -40,7 +52,9 @@ LClass* LModel::StaticClass()
                                                         "LModel",
                                                         "LResource",
                                                         DrawEditorFunc,
-                                                        CreateObjectFunc);
+                                                        CreateObjectFunc,
+                                                        SerializeFunc,
+                                                        DeserializeFunc);
         
         LClassRegister::RegisterObj("LModel", LModel::Class);
     }

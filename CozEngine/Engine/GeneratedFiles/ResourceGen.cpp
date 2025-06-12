@@ -32,6 +32,18 @@ LClass* LResource::StaticClass()
                 return new LResource();
             };
 
+        std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
+            {
+                const LResource* Object = reinterpret_cast<const LResource*>(Address);
+                to_json(Json, *Object);
+            };
+
+        std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc = [](uint8_t* Address, const nlohmann::json& Json)
+            {
+                LResource* Object = reinterpret_cast<LResource*>(Address);
+                from_json(Json, *Object);
+            };
+
         LClassUtilities::RegisterStaticClassProperties(LResource::Class,
                                                         Properties,
                                                         sizeof(LResource),
@@ -39,7 +51,9 @@ LClass* LResource::StaticClass()
                                                         "LResource",
                                                         "",
                                                         DrawEditorFunc,
-                                                        CreateObjectFunc);
+                                                        CreateObjectFunc,
+                                                        SerializeFunc,
+                                                        DeserializeFunc);
         
         LClassRegister::RegisterObj("LResource", LResource::Class);
     }
