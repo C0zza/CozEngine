@@ -14,6 +14,7 @@ public:
 	~LResourceManager();
 
 	void GetResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class);
+	void SaveResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class);
 
 	template<typename T>
 	void GetResource(const FAssetPath& Asset, LResourceHandle<T>& OutResourceHandle)
@@ -55,10 +56,15 @@ public:
 			}
 			else
 			{
-				T* Resource = new T();
+				T* Resource = OutResourceHandle.Get();
+				if (!Resource)
+				{
+					T* Resource = new T();
+				}
+
 				Resources.insert({AssetPath, Resource});
-				Resource->SetAssetPath(AssetPath);
 				OutResourceHandle.Init(Resource);
+				Resource->SetAssetPath(AssetPath);
 			}
 		}
 		else

@@ -6,9 +6,15 @@
 #include "Misc/Logging.h"
 #include "json.hpp"
 
+class LClass;
+class LResource;
+
 class LSavable
 {
 public:
+	static void SaveAssetToDisk(const std::string& Asset, LClass* Class, LResource* Address);
+	static void LoadAssetFromDisk(const std::string& Asset, LClass* Class, LResource* Address);
+
 	template<typename T>
 	static void SaveAssetToDisk(const std::string& Asset, const T& Object)
 	{

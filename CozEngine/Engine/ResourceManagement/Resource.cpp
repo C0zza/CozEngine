@@ -24,7 +24,5 @@ void LResource::DecrementRefs()
 
 void LResource::SetAssetPath(const FAssetPath& i_AssetPath)
 {
-	// Make sure we're only setting the asset path during init
-	assert(!RefCount);
 	AssetPath = i_AssetPath;
 }

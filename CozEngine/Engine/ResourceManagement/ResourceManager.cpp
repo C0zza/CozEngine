@@ -36,12 +36,55 @@ void LResourceManager::GetResource(const FAssetPath& Asset, LResourceHandle<LRes
 		LResource* Resource = Class->CreateObject<LResource>();
 		Resources.insert({ Asset, Resource });
 
-		LSavable::LoadAssetFromDisk(Asset.string(), *Resource);
+		LSavable::LoadAssetFromDisk(Asset.string(), Class, Resource);
 		Resource->SetAssetPath(Asset);
 		Resource->Load();
 	}
 
 	OutResourceHandle.Init(Resources[Asset]);
+}
+
+void LResourceManager::SaveResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class)
+{
+	if (!Class)
+	{
+		Log(LLogLevel::ERROR, "LResourceManager::GetResource - Invalid Class.");
+		return;
+	}
+
+	assert(Class->IsChildOf<LResource>());
+
+	if (Asset.empty() || Asset == "null")
+	{
+		Log(LLogLevel::INFO, "LResourceManager::GetResource - Empty Asset provided. Returning empty LResourceHandle.");
+		return;
+	}
+
+	if (!Resources.contains(Asset))
+	{
+		std::ifstream File(Asset);
+		if (File.good())
+		{
+			Log(LLogLevel::INFO, "LResourceManager::CreateResourceAsset - AssetPath: " + Asset.string() + " already exists.");
+		}
+		else
+		{
+			if (!OutResourceHandle.Get())
+			{
+				OutResourceHandle.Init(Class->CreateObject<LResource>());
+			}
+			
+			Resources.insert({ Asset, OutResourceHandle.Get()});
+			OutResourceHandle.Get()->SetAssetPath(Asset);
+		}
+	}
+	else
+	{
+		Log(LLogLevel::INFO, "LResourceManager::CreateResourceAsset - AssetPath: " + Asset.string() + " already loaded.");
+		OutResourceHandle.Init(Resources[Asset]);
+	}
+
+	LSavable::SaveAssetToDisk(Asset.string(), Class, OutResourceHandle.Get());
 }
 
 // Asset string not passed as reference because we need to null Resources[Asset] and Asset would otherwise be deleted
