@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include "Editor/AssetEditorWindowSubsystem.h"
+#include "Editor/AssetRegistry.h"
 #include "Globes.h"
 #include "Reflection/Class.h"
 #include "ResourceManagement/Resource.h"
@@ -31,17 +32,17 @@ LContentBrowserWindow::LContentBrowserWindow(const char* WindowName)
 		Log(LLogLevel::ERROR, "LContentBrowserWindow::LContentBrowserWindow - Failed to load FolderIcon with path " + FolderIconTexturePath);
 		return;
 	}
+
+	LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>(true);
+	assert(AssetRegistry);
 }
 
 void LContentBrowserWindow::DrawWindow()
 {
-	constexpr const char* EngineContent = "Engine\\Content";
-	constexpr const char* ProjectContent = "Game\\Content";
-
-	HoveredItemPath.clear();
+	HoveredNode.Reset();
 
 	bool bBackButtonDisabled = false;
-	if (CurrentDirectory.empty())
+	if (CurrentNode.GetNode().IsRoot())
 	{
 		bBackButtonDisabled = true;
 		ImGui::BeginDisabled();
@@ -50,16 +51,8 @@ void LContentBrowserWindow::DrawWindow()
 	if (ImGui::Button("Back"))
 	{
 		// Should not be able to reach here while CurrentDirectory is empty since the button should be disabled
-		assert(!CurrentDirectory.empty());
-		if (CurrentDirectory == EngineContent || CurrentDirectory == ProjectContent)
-		{
-			CurrentDirectory.clear();
-		}
-		else
-		{
-			std::filesystem::path Path = CurrentDirectory;
-			CurrentDirectory = Path.parent_path().string();
-		}
+		assert(!CurrentNode.GetNode().IsRoot());
+		CurrentNode.StepOut();
 	}
 
 	if (bBackButtonDisabled)
@@ -103,37 +96,20 @@ void LContentBrowserWindow::DrawWindow()
 		ImGui::EndCombo();
 	}
 
-	if (CurrentDirectory.empty())
-	{
-		assert(std::filesystem::exists(EngineContent) && std::filesystem::is_directory(EngineContent));
-		assert(std::filesystem::exists(ProjectContent) && std::filesystem::is_directory(ProjectContent));
-
-		DrawFolder("Engine", EngineContent);
-		DrawFolder("Project", ProjectContent);
-	}
-	else
-	{
-		assert(std::filesystem::exists(CurrentDirectory) && std::filesystem::is_directory(CurrentDirectory));
-
-		for (const auto& Entry : std::filesystem::directory_iterator(CurrentDirectory)) 
+	CurrentNode.ForEachChildNode([this](FContentNodeHandle& NodeHandle)
 		{
-			if (Entry.is_directory())
+			if (NodeHandle.GetNode().IsDirectory())
 			{
-				DrawFolder(Entry.path().filename().string(), Entry.path().string());
-			}
-			else if (Entry.path().extension() == ".casset")
-			{
-				DrawAsset(Entry.path());
+				DrawFolder(NodeHandle);
 			}
 			else
 			{
-				Log(LLogLevel::WARNING, "FFolder::Populate - Unexpected filetype found in content folder: " + Entry.path().string());
+				DrawAsset(NodeHandle);
 			}
-		}
-	}
+		});
 }
 
-void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::string Path)
+void LContentBrowserWindow::DrawFolder(FContentNodeHandle& NodeHandle)
 {
 	ImGui::BeginGroup();
 
@@ -141,13 +117,13 @@ void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::strin
 	{
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 		{
-			CurrentDirectory = Path;
+			CurrentNode = NodeHandle;
 		}
 	}
 
 	if (ImGui::IsItemHovered())
 	{
-		HoveredItemPath = Path;
+		HoveredNode = NodeHandle;
 	}
 
 	if (FolderIcon.Get())
@@ -163,7 +139,7 @@ void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::strin
 	}
 
 	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
-	ImGui::Text(Name.c_str());
+	ImGui::Text(NodeHandle.GetNode().GetDisplayName().c_str());
 	ImGui::PopClipRect();
 
 	ImGui::EndGroup();
@@ -172,7 +148,7 @@ void LContentBrowserWindow::DrawFolder(const std::string& Name, const std::strin
 	ImGui::SameLine();
 }
 
-void LContentBrowserWindow::DrawAsset(const std::filesystem::path& Path)
+void LContentBrowserWindow::DrawAsset(FContentNodeHandle& NodeHandle)
 {
 	ImGui::BeginGroup();
 
@@ -183,7 +159,7 @@ void LContentBrowserWindow::DrawAsset(const std::filesystem::path& Path)
 			LAssetEditorWindowSubsystem* AssetEditorWindowSubsystem = CSystem.GetSubsystems().GetSubsystem<LAssetEditorWindowSubsystem>(true);
 			if (AssetEditorWindowSubsystem)
 			{
-				AssetEditorWindowSubsystem->RegisterAsset(Path);
+				AssetEditorWindowSubsystem->RegisterAsset(NodeHandle.GetNode().GetPath());
 			}
 			else
 			{
@@ -192,8 +168,13 @@ void LContentBrowserWindow::DrawAsset(const std::filesystem::path& Path)
 		}
 	}
 
+	if (ImGui::IsItemHovered())
+	{
+		HoveredNode = NodeHandle;
+	}
+
 	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
-	ImGui::Text(Path.stem().string().c_str());
+	ImGui::Text(NodeHandle.GetNode().GetDisplayName().c_str());
 	ImGui::PopClipRect();
 
 	ImGui::EndGroup();

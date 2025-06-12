@@ -2,10 +2,12 @@
 
 #include <vector>
 
+#include "Editor/ContentNodeHandle.h"
 #include "Editor/EditorWindow.h"
-#include "Input/InputManager.h"
 #include "Rendering/Texture.h"
 #include "ResourceManagement/ResourceHandle.h"
+
+struct FContentNodeHandle;
 
 class LContentBrowserWindow : public LEditorWindow
 {
@@ -16,11 +18,11 @@ protected:
 	virtual void DrawWindow() final;
 
 private:
-	void DrawFolder(const std::string& Name, const std::string Path);
-	void DrawAsset(const std::filesystem::path& Path);
+	void DrawFolder(FContentNodeHandle& NodeHandle);
+	void DrawAsset(FContentNodeHandle& NodeHandle);
 
-	std::string CurrentDirectory = "";
-	std::string HoveredItemPath = "";
+	FContentNodeHandle CurrentNode;
+	FContentNodeHandle HoveredNode;
 
 	LResourceHandle<LTexture> FolderIcon;
 };

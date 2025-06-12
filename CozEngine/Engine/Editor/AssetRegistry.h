@@ -2,35 +2,70 @@
 
 #include <filesystem>
 #include <unordered_set>
+#include <set>
 
 #include "Subsystem.h"
 
 class LClass;
 
+struct FContentNode
+{
+	friend class LAssetRegistry;
+	friend struct FContentNodeHandle;
+public:
+	FContentNode(const std::filesystem::path InPath, FContentNode* InParentNode);
+
+	bool IsRoot() const { return Path.empty(); }
+	bool IsValid() const;
+	bool IsDirectory() const;
+
+	std::string GetDisplayName() const;
+
+	const std::filesystem::path& GetPath() const { return Path; }
+
+private:
+	const std::string GetKey() const;
+
+	std::filesystem::path Path;
+	// TODO: This key could be a string_view, except std::filesystem::path isn't compatible. We'll need our own path type.
+	std::map<std::string, FContentNode> Contents;
+
+	bool bIsFirstNode = false;
+
+	FContentNode* ParentNode = nullptr;
+};
+
 class LAssetRegistry : public LSubsystem
 {
 public:
+	LAssetRegistry();
+
 	virtual void Initialize() override;
 
-	std::unordered_set<std::string_view> GetAssetsByClass(LClass* Class) const;
+	inline const std::unordered_set<std::filesystem::path>* GetAssetsByClass(LClass* Class) const
+	{
+		if (!Class || !ClassToAssetPathsMap.contains(Class))
+		{
+			return {};
+		}
+
+		return &ClassToAssetPathsMap.at(Class);
+	}
+
+	const FContentNode& GetRootNode() const { return RootNode; }
+
+	bool IsRootPath(const std::filesystem::path& Path) const;
 
 private:
-	struct FNode
-	{
-		bool IsValid() const;
-		bool IsDirectory() const;
-
-		std::string Path;
-		std::vector<FNode> Contents;
-	};
-
-	FNode RootNode;
+	FContentNode RootNode;
 
 private:
 	void RegisterRootPath(const std::filesystem::path& Path);
-	void RegisterPath(FNode* Parent, const std::filesystem::path& Path);
-	void RegisterAsset(FNode* Parent, const std::filesystem::path& Path);
+	void RegisterPath(FContentNode* Parent, const std::filesystem::path& Path);
+	void RegisterAsset(FContentNode* Parent, const std::filesystem::path& Path);
 
-	std::map<LClass*, std::unordered_set<std::string_view>> ClassToAssetPathsMap;
+	void RegisterContentsToNode(FContentNode& Node);
+
+	std::map<LClass*, std::unordered_set<std::filesystem::path>> ClassToAssetPathsMap;
 };
 

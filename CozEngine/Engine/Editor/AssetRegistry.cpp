@@ -4,25 +4,41 @@
 
 #include <fstream>
 
+#include "Globes.h"
 #include "json.hpp"
 #include "Misc/Logging.h"
 #include "Reflection/Class.h"
 #include "Reflection/ClassRegister.h"
 
-void LAssetRegistry::Initialize()
+namespace
 {
-	RegisterRootPath("Engine\\Content");
-	RegisterRootPath("Game\\Content");
+	// TODO: Could do with being a setting some where
+	const std::string EngineContent = "Engine\\Content";
+	const std::string ProjectContent = "Game\\Content";
+
+	bool IsRootPath(const std::filesystem::path& Path)
+	{
+		return Path == EngineContent || Path == ProjectContent;
+	}
 }
 
-std::unordered_set<std::string_view> LAssetRegistry::GetAssetsByClass(LClass* Class) const
+LAssetRegistry::LAssetRegistry()
+	: RootNode{FContentNode("", nullptr)}
 {
-	if (!Class || !ClassToAssetPathsMap.contains(Class))
-	{
-		return {};
-	}
+}
 
-	return ClassToAssetPathsMap.at(Class);
+void LAssetRegistry::Initialize()
+{
+	RootNode.Contents.emplace(EngineContent, FContentNode(EngineContent, nullptr));
+	RegisterContentsToNode(RootNode.Contents.at(EngineContent));
+
+	RootNode.Contents.emplace(ProjectContent, FContentNode(ProjectContent, nullptr));
+	RegisterContentsToNode(RootNode.Contents.at(ProjectContent));
+}
+
+bool LAssetRegistry::IsRootPath(const std::filesystem::path& Path) const
+{
+	return Path == ProjectContent || Path == EngineContent;
 }
 
 void LAssetRegistry::RegisterRootPath(const std::filesystem::path& Path)
@@ -34,12 +50,76 @@ void LAssetRegistry::RegisterRootPath(const std::filesystem::path& Path)
 	RegisterPath(nullptr, Path);
 }
 
-void LAssetRegistry::RegisterPath(FNode* Parent, const std::filesystem::path& Path)
+void LAssetRegistry::RegisterPath(FContentNode* Parent, const std::filesystem::path& Path)
 {
-	FNode& Node = Parent ? Parent->Contents.emplace_back() : RootNode.Contents.emplace_back();
-	Node.Path = Path.string();
+	const std::string Filename = Path.filename().string();
 
-	for (const auto& Entry : std::filesystem::directory_iterator(Path))
+	if (Parent)
+	{
+		Parent->Contents.emplace(Filename, FContentNode(Path, Parent));
+	}
+	else
+	{
+		RootNode.Contents.emplace(Filename, FContentNode(Path, Parent));
+		Parent = &RootNode;
+	}
+
+	FContentNode& Node = Parent->Contents.at(Filename);
+	Node.Path = Path.string();
+	Node.ParentNode = Parent;
+
+	RegisterContentsToNode(Node);
+}
+
+void LAssetRegistry::RegisterAsset(FContentNode* Parent, const std::filesystem::path& Path)
+{
+	assert(Parent);
+	assert(Path.string().ends_with(".casset"));
+
+	const std::string Filename = Path.filename().string();
+
+	Parent->Contents.emplace(Filename, FContentNode(Path, Parent));
+	
+	FContentNode& Node = Parent->Contents.at(Filename);
+
+	std::ifstream File(Path);
+	assert(File.is_open());
+
+	nlohmann::json Json;
+	File >> Json;
+
+	assert(Json.contains("Type"));
+	assert(Json["Type"].is_string());
+
+	const std::string TypeString = Json["Type"];
+	LClass* TypeClass = LClassRegister::Get(TypeString);
+	if (!TypeClass)
+	{
+		Log(LLogLevel::ERROR, "LAssetRegistry::RegisterAsset - Invalid Type: " + TypeString + " in asset: " + Node.GetPath().string());
+		return;
+	}
+
+	if (!ClassToAssetPathsMap.contains(TypeClass))
+	{
+		ClassToAssetPathsMap[TypeClass] = {};
+	}
+
+	ClassToAssetPathsMap.at(TypeClass).insert(Node.GetPath());
+	LClass* ParentClass = TypeClass->GetParentClass();
+	while (ParentClass)
+	{
+		if (!ClassToAssetPathsMap.contains(ParentClass))
+		{
+			ClassToAssetPathsMap[ParentClass] = {};
+		}
+		ClassToAssetPathsMap.at(ParentClass).insert(Node.GetPath());
+		ParentClass = ParentClass->GetParentClass();
+	}
+}
+
+void LAssetRegistry::RegisterContentsToNode(FContentNode& Node)
+{
+	for (const auto& Entry : std::filesystem::directory_iterator(Node.GetPath()))
 	{
 		if (Entry.is_directory())
 		{
@@ -56,55 +136,37 @@ void LAssetRegistry::RegisterPath(FNode* Parent, const std::filesystem::path& Pa
 	}
 }
 
-void LAssetRegistry::RegisterAsset(FNode* Parent, const std::filesystem::path& Path)
+FContentNode::FContentNode(const std::filesystem::path InPath, FContentNode* InParentNode)
+	: Path{ InPath }, ParentNode{ InParentNode }, bIsFirstNode{ IsRootPath(InPath) }
 {
-	assert(Parent);
-	assert(Path.string().ends_with(".casset"));
-
-	FNode& Node = Parent->Contents.emplace_back();
-	Node.Path = Path.string();
-
-	std::ifstream File(Path);
-	assert(File.is_open());
-
-	nlohmann::json Json;
-	File >> Json;
-
-	assert(Json.contains("Type"));
-	assert(Json["Type"].is_string());
-
-	const std::string TypeString = Json["Type"];
-	LClass* TypeClass = LClassRegister::Get(TypeString);
-	if (!TypeClass)
-	{
-		Log(LLogLevel::ERROR, "LAssetRegistry::RegisterAsset - Invalid Type: " + TypeString + " in asset: " + Node.Path);
-		return;
-	}
-
-	if (!ClassToAssetPathsMap.contains(TypeClass))
-	{
-		ClassToAssetPathsMap[TypeClass] = {};
-	}
-
-	ClassToAssetPathsMap.at(TypeClass).insert(Node.Path);
-	LClass* ParentClass = TypeClass->GetParentClass();
-	while (ParentClass)
-	{
-		if (!ClassToAssetPathsMap.contains(ParentClass))
-		{
-			ClassToAssetPathsMap[ParentClass] = {};
-		}
-		ClassToAssetPathsMap.at(ParentClass).insert(Node.Path);
-		ParentClass = ParentClass->GetParentClass();
-	}
 }
 
-bool LAssetRegistry::FNode::IsValid() const
+bool FContentNode::IsValid() const
 {
 	return Path.empty();
 }
 
-bool LAssetRegistry::FNode::IsDirectory() const
+bool FContentNode::IsDirectory() const
 {
-	return !Path.ends_with(".casset");
+	return !Path.string().ends_with(".casset");
+}
+
+std::string FContentNode::GetDisplayName() const
+{
+	if (Path == EngineContent || Path == ProjectContent)
+	{
+		return Path.parent_path().string();
+	}
+	else
+	{
+		return Path.stem().string();
+	}
+}
+
+const std::string FContentNode::GetKey() const
+{
+	if (bIsFirstNode)
+	{
+		return Path.string();
+	}
 }

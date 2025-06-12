@@ -24,6 +24,8 @@ void LEditor::Initialize()
 
 	EntityFrameBuffer = std::make_unique<LFrameBuffer>(1280, 720, GL_RGBA);
 
+	CSystem.GetSubsystems().AddSubsystem<LAssetRegistry>();
+
 	std::unique_ptr<LEditorWindow> EditorSceneWindow = std::make_unique<LEditorSceneWindow>(SceneFrameBuffer.get(), EntityFrameBuffer.get(), "Scene");
 	EditorWindows.emplace(EditorSceneWindow->GetWindowName(), std::move(EditorSceneWindow));
 
@@ -32,8 +34,6 @@ void LEditor::Initialize()
 
 	std::unique_ptr<LContentBrowserWindow> ContentBrowserWindow = std::make_unique<LContentBrowserWindow>("Content Browser");
 	EditorWindows.emplace(ContentBrowserWindow->GetWindowName(), std::move(ContentBrowserWindow));
-
-	CSystem.GetSubsystems().AddSubsystem<LAssetRegistry>();
 }
 
 void LEditor::Draw()

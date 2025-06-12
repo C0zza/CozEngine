@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <unordered_Set>
 #include <vector>
 
 #include "ECS/ECSComponents/TransformComponent.h"
@@ -63,14 +64,14 @@ private:
 
 			Buffer.push_back('\0');
 
-			LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>();
+			const LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>();
 			if (!AssetRegistry)
 			{
 				Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle<T> - Invalid AssetRegistry.");
 				return false;
 			}
 
-			const std::unordered_set<std::string_view> Assets = AssetRegistry->GetAssetsByClass(T::StaticClass());
+			const std::unordered_set<std::filesystem::path>* Assets = AssetRegistry->GetAssetsByClass(T::StaticClass());
 
 			LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 			if (!ResourceManager)
@@ -82,25 +83,30 @@ private:
 			bool bUpdated = false;
 			if (ImGui::BeginCombo(GetHiddenLabel(Label).c_str(), AssetPath.c_str()))
 			{
-				for (std::string_view Path : Assets)
+				if (Assets)
 				{
-					bool bIsSelected = Path == AssetPath;
-
-					if (ImGui::Selectable(Path.data(), &bIsSelected))
+					for (const std::filesystem::path& Path : *Assets)
 					{
-						LResourceHandle<T> NewResource;
-						ResourceManager->GetResource<T>(Path.data(), NewResource);
+						const std::string PathString = Path.string();
 
-						if (NewResource.Get())
+						bool bIsSelected = PathString == AssetPath;
+
+						if (ImGui::Selectable(PathString.data(), &bIsSelected))
 						{
-							ResourceHandle = NewResource;
-							bUpdated = true;
-						}
-					}
+							LResourceHandle<T> NewResource;
+							ResourceManager->GetResource<T>(PathString.data(), NewResource);
 
-					if (bIsSelected)
-					{
-						ImGui::SetItemDefaultFocus();
+							if (NewResource.Get())
+							{
+								ResourceHandle = NewResource;
+								bUpdated = true;
+							}
+						}
+
+						if (bIsSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
 					}
 				}
 				ImGui::EndCombo();

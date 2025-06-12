@@ -218,6 +218,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Editor\ContentNodeHandle.cpp" />
     <ClCompile Include="Engine\Editor\AssetRegistry.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindow.cpp" />
     <ClCompile Include="Engine\Reflection\ClassUtilities.cpp" />
@@ -311,6 +312,7 @@
     <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\ContentNodeHandle.h" />
     <ClInclude Include="Engine\Editor\AssetRegistry.h" />
     <ClInclude Include="Engine\Misc\ObjRegister.h" />
     <ClInclude Include="Engine\Reflection\ClassRegister.h" />
