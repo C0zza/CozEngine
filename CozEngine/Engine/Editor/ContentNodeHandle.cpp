@@ -125,5 +125,6 @@ FContentNode& FContentNodeHandle::GetMutableNode() const
 		CurrentNode = &CurrentNode->Contents.at(PathSegment.string());
 	}
 
+	assert(CurrentNode);
 	return *CurrentNode;
 }

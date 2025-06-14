@@ -39,6 +39,31 @@ void LAssetRegistry::Initialize()
 	RegisterContentsToNode(RootNode.Contents.at(ProjectContent));
 }
 
+void LAssetRegistry::CreateFolder(FContentNodeHandle& ParentNodeHandle, const std::string FolderName)
+{
+	if (!ParentNodeHandle.IsValid())
+	{
+		return;
+	}
+
+	FContentNode& ParentNode = ParentNodeHandle.GetMutableNode();
+
+	// TODO: Add counter to FolderName and increment until available name is found
+	if (ParentNode.Contents.contains(FolderName))
+	{
+		return;
+	}
+
+	std::filesystem::path FolderPath = ParentNode.GetPath().string() + "\\" + FolderName;
+
+	if (!std::filesystem::create_directory(FolderPath))
+	{
+		return;
+	}
+
+	ParentNode.Contents.try_emplace(FolderName, FolderPath, &ParentNode);
+}
+
 bool LAssetRegistry::RenameNode(FContentNodeHandle& ContentNodeHandle, const std::string NewName)
 {
 	const FContentNode& Node = ContentNodeHandle.GetNode();

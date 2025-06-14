@@ -6,6 +6,7 @@ struct FContentNode;
 
 struct FContentNodeHandle
 {
+	friend class LAssetRegistry;
 public:
 	FContentNodeHandle(const std::filesystem::path& InPath = "");
 

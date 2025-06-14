@@ -50,8 +50,6 @@ public:
 		}
 	}
 
-private:
-
 	static void CreateDirectoryForAsset(const std::string& AssetPath)
 	{
 		std::size_t EndOfDirectory = AssetPath.find_last_of("/\\");

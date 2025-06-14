@@ -57,7 +57,7 @@ public:
 	}
 
 	void CreateAsset(const std::filesystem::path& Path, LClass* AssetClass, FContentNodeHandle* ContentNodeHandle = nullptr) {}
-	void CreateFolder(const std::filesystem::path& Path, FContentNodeHandle* ContentNodeHandle = nullptr) {}
+	void CreateFolder(FContentNodeHandle& ParentNodeHandle, const std::string FolderName);
 	bool RenameNode(FContentNodeHandle& ContentNode, const std::string NewName);
 	void DeleteNode(const std::filesystem::path& Path) {}
 
