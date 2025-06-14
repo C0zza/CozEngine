@@ -76,6 +76,8 @@ public:
 		LSavable::SaveAssetToDisk(AssetPath.string(), *OutResourceHandle.Get());
 	}
 
+	void OnAssetPathUpdated(const std::filesystem::path& OldPath, const std::filesystem::path& NewPath);
+
 	void UnloadResource(const std::string Asset);
 
 private:

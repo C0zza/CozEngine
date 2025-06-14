@@ -6,6 +6,7 @@
 
 #include "Subsystem.h"
 
+struct FContentNodeHandle;
 class LClass;
 
 struct FContentNode
@@ -13,7 +14,7 @@ struct FContentNode
 	friend class LAssetRegistry;
 	friend struct FContentNodeHandle;
 public:
-	FContentNode(const std::filesystem::path InPath, FContentNode* InParentNode);
+	FContentNode(const std::filesystem::path& InPath, FContentNode* InParentNode);
 
 	bool IsRoot() const { return Path.empty(); }
 	bool IsValid() const;
@@ -26,6 +27,8 @@ public:
 private:
 	const std::string GetKey() const;
 
+	void operator=(FContentNode&& Other);
+
 	std::filesystem::path Path;
 	// TODO: This key could be a string_view, except std::filesystem::path isn't compatible. We'll need our own path type.
 	std::map<std::string, FContentNode> Contents;
@@ -37,6 +40,7 @@ private:
 
 class LAssetRegistry : public LSubsystem
 {
+	friend struct FContentNodeHandle;
 public:
 	LAssetRegistry();
 
@@ -51,6 +55,11 @@ public:
 
 		return &ClassToAssetPathsMap.at(Class);
 	}
+
+	void CreateAsset(const std::filesystem::path& Path, LClass* AssetClass, FContentNodeHandle* ContentNodeHandle = nullptr) {}
+	void CreateFolder(const std::filesystem::path& Path, FContentNodeHandle* ContentNodeHandle = nullptr) {}
+	bool RenameNode(FContentNodeHandle& ContentNode, const std::string NewName);
+	void DeleteNode(const std::filesystem::path& Path) {}
 
 	const FContentNode& GetRootNode() const { return RootNode; }
 

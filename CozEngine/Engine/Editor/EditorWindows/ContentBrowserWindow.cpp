@@ -33,16 +33,16 @@ LContentBrowserWindow::LContentBrowserWindow(const char* WindowName)
 		return;
 	}
 
-	LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>(true);
+	AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>();
 	assert(AssetRegistry);
 }
 
 void LContentBrowserWindow::DrawWindow()
 {
-	HoveredNode.Reset();
+	CurrentNodeHandle.Validate();
 
 	bool bBackButtonDisabled = false;
-	if (CurrentNode.GetNode().IsRoot())
+	if (CurrentNodeHandle.GetNode().IsRoot())
 	{
 		bBackButtonDisabled = true;
 		ImGui::BeginDisabled();
@@ -51,8 +51,8 @@ void LContentBrowserWindow::DrawWindow()
 	if (ImGui::Button("Back"))
 	{
 		// Should not be able to reach here while CurrentDirectory is empty since the button should be disabled
-		assert(!CurrentNode.GetNode().IsRoot());
-		CurrentNode.StepOut();
+		assert(!CurrentNodeHandle.GetNode().IsRoot());
+		CurrentNodeHandle.StepOut();
 	}
 
 	if (bBackButtonDisabled)
@@ -96,7 +96,7 @@ void LContentBrowserWindow::DrawWindow()
 		ImGui::EndCombo();
 	}
 
-	CurrentNode.ForEachChildNode([this](FContentNodeHandle& NodeHandle)
+	CurrentNodeHandle.ForEachChildNode([this](FContentNodeHandle& NodeHandle)
 		{
 			if (NodeHandle.GetNode().IsDirectory())
 			{
@@ -107,23 +107,29 @@ void LContentBrowserWindow::DrawWindow()
 				DrawAsset(NodeHandle);
 			}
 		});
+
+	// Any file hierarchy changes must be process after iteration
+	if (RenamingNodeHandle.IsValid() && !RenamedAssetName.empty())
+	{
+		AssetRegistry->RenameNode(RenamingNodeHandle, RenamedAssetName);
+		RenamingNodeHandle.Reset();
+		RenamedAssetName.clear();
+	}
 }
 
 void LContentBrowserWindow::DrawFolder(FContentNodeHandle& NodeHandle)
 {
 	ImGui::BeginGroup();
 
-	if (ImGui::Selectable("##Folder", false, CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing | ImGuiSelectableFlags_AllowDoubleClick, ImVec2(100, 100)))
+	const FContentNode& FolderNode = NodeHandle.GetNode();
+
+	const std::string SelectableID = "##Folder" + FolderNode.GetDisplayName();
+	if (ImGui::Selectable(SelectableID.c_str(), false, CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing | ImGuiSelectableFlags_AllowDoubleClick, ImVec2(100, 100)))
 	{
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 		{
-			CurrentNode = NodeHandle;
+			CurrentNodeHandle = NodeHandle;
 		}
-	}
-
-	if (ImGui::IsItemHovered())
-	{
-		HoveredNode = NodeHandle;
 	}
 
 	if (FolderIcon.Get())
@@ -138,9 +144,7 @@ void LContentBrowserWindow::DrawFolder(FContentNodeHandle& NodeHandle)
 		ImGui::SetCursorScreenPos(CurrentCursorScreenPos);
 	}
 
-	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
-	ImGui::Text(NodeHandle.GetNode().GetDisplayName().c_str());
-	ImGui::PopClipRect();
+	DrawSharedImGui(NodeHandle, FolderNode, SelectableID);
 
 	ImGui::EndGroup();
 
@@ -152,14 +156,18 @@ void LContentBrowserWindow::DrawAsset(FContentNodeHandle& NodeHandle)
 {
 	ImGui::BeginGroup();
 
-	if (ImGui::Selectable("Asset", false, CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing | ImGuiSelectableFlags_AllowDoubleClick, ImVec2(100, 100)))
+	const FContentNode& AssetNode = NodeHandle.GetNode();
+
+	std::string SelectableID = "##Asset" + AssetNode.GetDisplayName();
+
+	if (ImGui::Selectable(SelectableID.c_str(), false, CozEngine_ImGuiSelectableFlags_NoPadWithHalfSpacing | ImGuiSelectableFlags_AllowDoubleClick, ImVec2(100, 100)))
 	{
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
 			LAssetEditorWindowSubsystem* AssetEditorWindowSubsystem = CSystem.GetSubsystems().GetSubsystem<LAssetEditorWindowSubsystem>(true);
 			if (AssetEditorWindowSubsystem)
 			{
-				AssetEditorWindowSubsystem->RegisterAsset(NodeHandle.GetNode().GetPath());
+				AssetEditorWindowSubsystem->RegisterAsset(AssetNode.GetPath());
 			}
 			else
 			{
@@ -168,17 +176,86 @@ void LContentBrowserWindow::DrawAsset(FContentNodeHandle& NodeHandle)
 		}
 	}
 
-	if (ImGui::IsItemHovered())
+	if (ImGui::BeginDragDropSource())
 	{
-		HoveredNode = NodeHandle;
+		ImGui::SetDragDropPayload("ASSET_DRAG", &AssetNode, sizeof(FContentNode));
+		ImGui::Text(AssetNode.GetDisplayName().c_str());
+		ImGui::EndDragDropSource();
 	}
 
-	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
-	ImGui::Text(NodeHandle.GetNode().GetDisplayName().c_str());
-	ImGui::PopClipRect();
+	DrawSharedImGui(NodeHandle, AssetNode, SelectableID);
 
 	ImGui::EndGroup();
 
 	// TODO: Add test for whether another item will overflow window area. If not, call ImGui::SameLine
 	ImGui::SameLine();
+}
+
+void LContentBrowserWindow::DrawSharedImGui(FContentNodeHandle& NodeHandle, const FContentNode& Node, const std::string& SelectableID)
+{
+	bool bRenameStarted = false;
+
+	ImGui::OpenPopupOnItemClick(SelectableID.c_str(), ImGuiPopupFlags_MouseButtonRight);
+	if (ImGui::BeginPopup(SelectableID.c_str()))
+	{
+		if (ImGui::Selectable("Rename"))
+		{
+			RenamingNodeHandle = NodeHandle;
+			bRenameStarted = true;
+			bRenamingActive = true;
+		}
+
+		if (ImGui::Selectable("Delete"))
+		{
+			// AssetRegistry->DeleteNode(AssetNode.GetPath());
+		}
+
+		ImGui::EndPopup();
+	}
+
+	ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImGui::GetCursorScreenPos() + ImVec2(100, ImGui::GetTextLineHeight()), true);
+
+	const std::string DisplayName = Node.GetDisplayName();
+	if (bRenamingActive && RenamingNodeHandle.IsValid() && RenamingNodeHandle == NodeHandle)
+	{
+		// TODO: Abstract
+		std::vector<char> Buffer;
+
+		Buffer = std::vector<char>(DisplayName.begin(), DisplayName.end());
+		Buffer.resize(std::max(static_cast<int>(DisplayName.length()) * 2, 100));
+
+		Buffer.push_back('\0');
+
+		if (bRenameStarted)
+		{
+			ImGui::SetKeyboardFocusHere();
+		}
+
+		// To align input text with regular text
+		const ImVec2 OldPadding = ImGui::GetStyle().FramePadding;
+		ImGui::GetStyle().FramePadding = ImVec2(0, 0);
+
+		// PushClipRect is only relevant for rendering. The "physical" layout will still extend outside so we must manually enforce the width
+		ImGui::SetNextItemWidth(100);
+
+		const std::string HiddenLabel = "##" + DisplayName;
+		if (ImGui::InputText(HiddenLabel.c_str(), Buffer.data(), Buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			RenamedAssetName = Buffer.data();
+		}
+
+		if (!bRenameStarted && !ImGui::IsItemActive())
+		{
+			bRenamingActive = false;
+		}
+
+		// TODO: ON_SCOPE_EXIT like macro
+		ImGui::GetStyle().FramePadding = OldPadding;
+	}
+	else
+	{
+		ImGui::Text(DisplayName.c_str());
+	}
+
+	ImGui::PopClipRect();
 }

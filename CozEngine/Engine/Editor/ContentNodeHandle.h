@@ -12,11 +12,17 @@ public:
 	void ForEachChildNode(std::function<void(FContentNodeHandle&)> Func);
 	void StepOut();
 
-	const FContentNode& GetNode();
+	const FContentNode& GetNode() const;
+	void Validate();
 
+	bool IsValid() const;
 	void Reset();
 
+	bool operator==(const FContentNodeHandle& Other) const { return Path == Other.Path; }
+
 private:
+	FContentNode& GetMutableNode() const;
+
 	std::filesystem::path Path;
 
 	class LAssetRegistry* AssetRegistry = nullptr;

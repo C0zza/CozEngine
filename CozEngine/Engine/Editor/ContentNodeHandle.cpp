@@ -51,9 +51,39 @@ void FContentNodeHandle::StepOut()
 	}
 }
 
-const FContentNode& FContentNodeHandle::GetNode()
+const FContentNode& FContentNodeHandle::GetNode() const
 {
-	const FContentNode& RootNode = AssetRegistry->GetRootNode();
+	const FContentNode& Node = GetMutableNode();
+	return Node;
+}
+
+void FContentNodeHandle::Validate()
+{
+	if (!IsValid())
+	{
+		Path.clear();
+	}
+}
+
+bool FContentNodeHandle::IsValid() const
+{
+	if (Path.empty())
+	{
+		return false;
+	}
+
+	const std::filesystem::path PathCopy = Path;
+	return GetNode().GetPath() == Path;
+}
+
+void FContentNodeHandle::Reset()
+{
+	Path.clear();
+}
+
+FContentNode& FContentNodeHandle::GetMutableNode() const
+{
+	FContentNode& RootNode = AssetRegistry->RootNode;
 
 	if (Path.empty())
 	{
@@ -81,7 +111,7 @@ const FContentNode& FContentNodeHandle::GetNode()
 
 	PathString.erase(0, RootString.size() + 1);
 
-	const FContentNode* CurrentNode = &RootNode.Contents.at(RootString);
+	FContentNode* CurrentNode = &RootNode.Contents.at(RootString);
 
 	std::filesystem::path RemovedRootPath = PathString;
 	for (const std::filesystem::path& PathSegment : RemovedRootPath)
@@ -89,7 +119,6 @@ const FContentNode& FContentNodeHandle::GetNode()
 		if (!CurrentNode->Contents.contains(PathSegment.string()))
 		{
 			Log(LLogLevel::INFO, "FContentNodeHandle::GetNode - Failed to find " + Path.string() + ". Returning to " + CurrentNode->GetPath().string());
-			Path = CurrentNode->GetPath();
 			break;
 		}
 
@@ -97,9 +126,4 @@ const FContentNode& FContentNodeHandle::GetNode()
 	}
 
 	return *CurrentNode;
-}
-
-void FContentNodeHandle::Reset()
-{
-	Path.clear();
 }

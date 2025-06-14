@@ -2,13 +2,16 @@
 
 #include "AssetRegistry.h"
 
+#include <filesystem>
 #include <fstream>
 
+#include "Editor/ContentNodeHandle.h"
 #include "Globes.h"
 #include "json.hpp"
 #include "Misc/Logging.h"
 #include "Reflection/Class.h"
 #include "Reflection/ClassRegister.h"
+#include "ResourceManagement/ResourceManager.h"
 
 namespace
 {
@@ -23,17 +26,64 @@ namespace
 }
 
 LAssetRegistry::LAssetRegistry()
-	: RootNode{FContentNode("", nullptr)}
+	: RootNode{FContentNode(std::string(""), nullptr)}
 {
 }
 
 void LAssetRegistry::Initialize()
 {
-	RootNode.Contents.emplace(EngineContent, FContentNode(EngineContent, nullptr));
+	RootNode.Contents.try_emplace(EngineContent, EngineContent, &RootNode);
 	RegisterContentsToNode(RootNode.Contents.at(EngineContent));
 
-	RootNode.Contents.emplace(ProjectContent, FContentNode(ProjectContent, nullptr));
+	RootNode.Contents.try_emplace(ProjectContent, ProjectContent, &RootNode);
 	RegisterContentsToNode(RootNode.Contents.at(ProjectContent));
+}
+
+bool LAssetRegistry::RenameNode(FContentNodeHandle& ContentNodeHandle, const std::string NewName)
+{
+	const FContentNode& Node = ContentNodeHandle.GetNode();
+	if (Node.GetPath().stem().string() == NewName)
+	{
+		return true;
+	}
+
+	assert(Node.ParentNode);
+
+	FContentNode* ParentNode = Node.ParentNode;
+	if (!ParentNode->ParentNode)
+	{
+		// Renaming of first level nodes is not allowed.
+		return true;
+	}
+
+	if (ParentNode->Contents.contains(NewName + (Node.IsDirectory() ? "" : ".casset")))
+	{
+		return false;
+	}
+
+	std::string NewPathString = Node.GetPath().string();
+	NewPathString.erase(NewPathString.size() - Node.GetPath().filename().string().size());
+	NewPathString.append(NewName);
+
+	if (!Node.IsDirectory())
+	{
+		NewPathString.append(".casset");
+	}
+
+	std::filesystem::path NewPath = NewPathString;
+
+	ParentNode->Contents.try_emplace(NewPath.filename().string(), NewPath, ParentNode);
+
+	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+	assert(ResourceManager);
+
+	ResourceManager->OnAssetPathUpdated(Node.GetPath(), NewPath);
+
+	std::filesystem::rename(Node.GetPath(), NewPath);
+
+	ParentNode->Contents.erase(Node.GetPath().filename().string());
+
+	return true;
 }
 
 bool LAssetRegistry::IsRootPath(const std::filesystem::path& Path) const
@@ -56,11 +106,11 @@ void LAssetRegistry::RegisterPath(FContentNode* Parent, const std::filesystem::p
 
 	if (Parent)
 	{
-		Parent->Contents.emplace(Filename, FContentNode(Path, Parent));
+		Parent->Contents.try_emplace(Filename, Path, Parent);
 	}
 	else
 	{
-		RootNode.Contents.emplace(Filename, FContentNode(Path, Parent));
+		RootNode.Contents.try_emplace(Filename, Path, Parent);
 		Parent = &RootNode;
 	}
 
@@ -78,7 +128,7 @@ void LAssetRegistry::RegisterAsset(FContentNode* Parent, const std::filesystem::
 
 	const std::string Filename = Path.filename().string();
 
-	Parent->Contents.emplace(Filename, FContentNode(Path, Parent));
+	Parent->Contents.try_emplace(Filename, Path, Parent);
 	
 	FContentNode& Node = Parent->Contents.at(Filename);
 
@@ -136,7 +186,7 @@ void LAssetRegistry::RegisterContentsToNode(FContentNode& Node)
 	}
 }
 
-FContentNode::FContentNode(const std::filesystem::path InPath, FContentNode* InParentNode)
+FContentNode::FContentNode(const std::filesystem::path& InPath, FContentNode* InParentNode)
 	: Path{ InPath }, ParentNode{ InParentNode }, bIsFirstNode{ IsRootPath(InPath) }
 {
 }
@@ -169,4 +219,16 @@ const std::string FContentNode::GetKey() const
 	{
 		return Path.string();
 	}
+	else
+	{
+		return Path.stem().string();
+	}
+}
+
+void FContentNode::operator=(FContentNode&& Other)
+{
+	Path = Other.Path;
+	bIsFirstNode = Other.bIsFirstNode;
+	ParentNode = Other.ParentNode;
+	Contents = std::move(Other.Contents);
 }

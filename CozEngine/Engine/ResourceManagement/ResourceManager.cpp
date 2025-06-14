@@ -87,6 +87,25 @@ void LResourceManager::SaveResource(const FAssetPath& Asset, LResourceHandle<LRe
 	LSavable::SaveAssetToDisk(Asset.string(), Class, OutResourceHandle.Get());
 }
 
+void LResourceManager::OnAssetPathUpdated(const std::filesystem::path& OldPath, const std::filesystem::path& NewPath)
+{
+	if (!Resources.contains(OldPath))
+	{
+		return;
+	}
+
+	LResource* Resource = Resources.at(OldPath);
+
+	if (Resource)
+	{
+		Resource->SetAssetPath(NewPath);
+	}
+
+	Resources.try_emplace(NewPath, Resources.at(OldPath));
+
+	Resources.erase(OldPath);
+}
+
 // Asset string not passed as reference because we need to null Resources[Asset] and Asset would otherwise be deleted
 void LResourceManager::UnloadResource(const std::string Asset)
 {

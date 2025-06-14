@@ -7,7 +7,7 @@
 #include "Rendering/Texture.h"
 #include "ResourceManagement/ResourceHandle.h"
 
-struct FContentNodeHandle;
+class LAssetRegistry;
 
 class LContentBrowserWindow : public LEditorWindow
 {
@@ -21,9 +21,16 @@ private:
 	void DrawFolder(FContentNodeHandle& NodeHandle);
 	void DrawAsset(FContentNodeHandle& NodeHandle);
 
-	FContentNodeHandle CurrentNode;
-	FContentNodeHandle HoveredNode;
+	void DrawSharedImGui(FContentNodeHandle& NodeHandle, const FContentNode& Node, const std::string& SelectableID);
+
+	FContentNodeHandle CurrentNodeHandle;
+
+	FContentNodeHandle RenamingNodeHandle;
+	std::string RenamedAssetName = "";
+	bool bRenamingActive = false;
 
 	LResourceHandle<LTexture> FolderIcon;
+
+	LAssetRegistry* AssetRegistry = nullptr;
 };
 
