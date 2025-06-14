@@ -1,5 +1,6 @@
 #include "SpotLightEntity.h"
 
+#include "Components/MovementComponent.h"
 #include "ECS/ECSComponents/ModelComponent.h"
 #include "ECS/ECSComponents/PointLightComponent.h"
 #include "ECS/ECSComponents/SpotLightComponent.h"
@@ -21,4 +22,7 @@ CSpotLightEntity::CSpotLightEntity()
 
 	CTransformComponent* Transform = GetComponent<CTransformComponent>();
 	Transform->Move(glm::vec3(0.f, 0.f, 5.f));
+
+	CMovementComponent* MovementComponent = AddComponent<CMovementComponent>();
+	MovementComponent->Rotation.y = 0.4f;
 }
