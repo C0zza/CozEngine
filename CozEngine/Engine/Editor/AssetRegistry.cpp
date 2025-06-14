@@ -39,6 +39,46 @@ void LAssetRegistry::Initialize()
 	RegisterContentsToNode(RootNode.Contents.at(ProjectContent));
 }
 
+void LAssetRegistry::CreateAsset(FContentNodeHandle& ParentNodeHandle, LClass* AssetClass)
+{
+	if (!ParentNodeHandle.IsValid() || !AssetClass)
+	{
+		return;
+	}
+
+	FContentNode& ParentNode = ParentNodeHandle.GetMutableNode();
+
+	assert(ParentNode.IsDirectory());
+
+	const std::string AssetString = std::string(AssetClass->GetTypeName().data()) + ".casset";
+
+	// TODO: Add counter to FolderName and increment until available name is found
+	if (ParentNode.Contents.contains(AssetString))
+	{
+		return;
+	}
+
+	std::filesystem::path AssetPath = ParentNode.GetPath().string() + "\\" + AssetString;
+
+	// TODO: Ideally we'd use some CDO or default serialization func from the LClass
+	std::unique_ptr<LResource> DefaultResource(AssetClass->CreateObject<LResource>());
+
+	std::fstream AssetFile(AssetPath, std::ios::out | std::ios::trunc);
+
+	if (!AssetFile.is_open())
+	{
+		return;
+	}
+
+	nlohmann::json Data;
+	AssetClass->SerializeAddress(reinterpret_cast<uint8_t*>(DefaultResource.get()), Data);
+
+	AssetFile << Data.dump(2);
+	AssetFile.close();
+
+	ParentNode.Contents.try_emplace(AssetString, AssetPath, &ParentNode);
+}
+
 void LAssetRegistry::CreateFolder(FContentNodeHandle& ParentNodeHandle, const std::string FolderName)
 {
 	if (!ParentNodeHandle.IsValid())

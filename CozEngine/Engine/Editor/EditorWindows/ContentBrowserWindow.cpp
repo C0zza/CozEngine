@@ -77,8 +77,7 @@ void LContentBrowserWindow::DrawWindow()
 
 	if (ImGui::Button("Create Asset"))
 	{
-
-		AssetRegistry->CreateAsset(AssetPath, CurrentClass, &RenamingNodeHandle);
+		AssetRegistry->CreateAsset(CurrentNodeHandle, CurrentClass);
 	}
 
 	ImGui::SameLine();
