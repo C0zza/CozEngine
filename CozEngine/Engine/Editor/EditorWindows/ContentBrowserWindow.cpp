@@ -68,9 +68,17 @@ void LContentBrowserWindow::DrawWindow()
 
 	static LClass* CurrentClass = ResourceClasses[0];
 
+	if (ImGui::Button("Create Folder"))
+	{
+		AssetRegistry->CreateFolder(CurrentNodeHandle, "NewFolder");
+	}
+
+	ImGui::SameLine();
+
 	if (ImGui::Button("Create Asset"))
 	{
 
+		AssetRegistry->CreateAsset(AssetPath, CurrentClass, &RenamingNodeHandle);
 	}
 
 	ImGui::SameLine();
