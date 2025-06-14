@@ -86,10 +86,10 @@ void LTransform::UpdateTransformationMatrix()
 {
 	TransformationMatrix = glm::mat4(1.f);
 	TransformationMatrix = glm::translate(TransformationMatrix, Position);
-	TransformationMatrix = glm::scale(TransformationMatrix, Scale);
 	TransformationMatrix = glm::rotate(TransformationMatrix, Rotation.x, glm::vec3(1.0, 0.f, 0.f));
 	TransformationMatrix = glm::rotate(TransformationMatrix, Rotation.y, glm::vec3(0.f, 1.0f, 0.f));
 	TransformationMatrix = glm::rotate(TransformationMatrix, Rotation.z, glm::vec3(0.f, 0.f, 1.0f));
+	TransformationMatrix = glm::scale(TransformationMatrix, Scale);
 
 	IsDirty = false;
 }
