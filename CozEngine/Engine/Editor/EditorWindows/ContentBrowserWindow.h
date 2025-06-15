@@ -29,6 +29,8 @@ private:
 	std::string RenamedAssetName = "";
 	bool bRenamingActive = false;
 
+	FContentNodeHandle NodeHandleToDelete;
+
 	LResourceHandle<LTexture> FolderIcon;
 
 	LAssetRegistry* AssetRegistry = nullptr;

@@ -122,6 +122,12 @@ void LContentBrowserWindow::DrawWindow()
 		RenamingNodeHandle.Reset();
 		RenamedAssetName.clear();
 	}
+
+	if (NodeHandleToDelete.IsValid())
+	{
+		AssetRegistry->DeleteNode(NodeHandleToDelete);
+		NodeHandleToDelete.Reset();
+	}
 }
 
 void LContentBrowserWindow::DrawFolder(FContentNodeHandle& NodeHandle)
@@ -214,7 +220,7 @@ void LContentBrowserWindow::DrawSharedImGui(FContentNodeHandle& NodeHandle, cons
 
 		if (ImGui::Selectable("Delete"))
 		{
-			// AssetRegistry->DeleteNode(AssetNode.GetPath());
+			NodeHandleToDelete = NodeHandle;
 		}
 
 		ImGui::EndPopup();

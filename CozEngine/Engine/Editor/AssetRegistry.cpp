@@ -151,6 +151,29 @@ bool LAssetRegistry::RenameNode(FContentNodeHandle& ContentNodeHandle, const std
 	return true;
 }
 
+void LAssetRegistry::DeleteNode(FContentNodeHandle& ContentNodeHandle)
+{
+	const FContentNode& Node = ContentNodeHandle.GetNode();
+
+	FContentNode* ParentNode = Node.ParentNode;
+
+	if (!Node.ParentNode)
+	{
+		return;
+	}
+
+	const std::string NodeKey = Node.GetPath().filename().string();
+
+	if (!ParentNode->Contents.contains(Node.GetPath().filename().string()))
+	{
+		return;
+	}
+
+	std::filesystem::remove(Node.GetPath());
+
+	ParentNode->Contents.erase(NodeKey);
+}
+
 bool LAssetRegistry::IsRootPath(const std::filesystem::path& Path) const
 {
 	return Path == ProjectContent || Path == EngineContent;
