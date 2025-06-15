@@ -51,13 +51,22 @@ void LEditor::Draw()
 		LEditorWindow* EditorWindow = Pair.second.get();
 
 		assert(EditorWindow);
+
+		bool bKeepWindowOpen = true;
+		bool* bKeepWindowOpenPtr = EditorWindow->ShouldDisplayCloseButton() ? &bKeepWindowOpen : nullptr;
+
 		EditorWindow->PushWindowStyle();
-		ImGui::Begin(EditorWindow->GetWindowName());
+		ImGui::Begin(EditorWindow->GetWindowName(), bKeepWindowOpenPtr);
 		{
 			EditorWindow->Draw();
 			ImGui::End();
 		}
 		EditorWindow->PopWindowStyle();
+	
+		if (!bKeepWindowOpen)
+		{
+			UnregisterWindow(EditorWindow->GetWindowName());
+		}
 	}
 
 	for (const std::string& Window : WindowsToUnregister)

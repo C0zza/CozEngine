@@ -13,6 +13,8 @@ public:
 
 	const char* GetWindowName() const { return WindowName; }
 
+	virtual bool ShouldDisplayCloseButton() const { return false; }
+
 protected:
 	virtual void DrawWindow() = 0;
 
