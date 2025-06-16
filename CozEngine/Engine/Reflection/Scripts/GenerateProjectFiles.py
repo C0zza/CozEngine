@@ -53,7 +53,8 @@ PropertyTypeToIncludeMap = {
 }
 
 TemplatePropertyTypeToIncludeMap = {
-    "LResourceHandle" : "ResourceManagement/ResourceHandleHelper.h"
+    "LResourceHandle" : "ResourceManagement/ResourceHandleHelper.h",
+    "LSoftResourceHandle" : "ResourceManagement/ResourceHandleHelper.h"
 }
 
 ReflectedClassSet = set()
