@@ -294,6 +294,8 @@
     <ClCompile Include="Engine\Editor\SelectedEntitySubsystem.cpp" />
     <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp" />
     <ClCompile Include="Engine\Rendering\RendererInfo.cpp" />
+    <ClCompile Include="Engine\Settings\SettingsManager.cpp" />
+    <ClCompile Include="Engine\Editor\EditorWindows\SettingsWindow.cpp" />
     <ClCompile Include="Engine\ResourceManagement\SoftResourceHandle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -301,18 +303,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\LandscapeMaterialGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\ModelMaterialGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\ModelGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\ShaderGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" />
-  </ItemGroup>
+    <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EditorSettingsGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\LandscapeMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ShaderGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SettingsGen.cpp" /></ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Editor\EditorSettings.h" />
     <ClInclude Include="Engine\Editor\ContentNodeHandle.h" />
     <ClInclude Include="Engine\Editor\AssetRegistry.h" />
     <ClInclude Include="Engine\Misc\ObjRegister.h" />
@@ -402,6 +395,9 @@
     <ClInclude Include="Engine\Reflection\Property.h" />
     <ClInclude Include="Engine\Misc\CoordSpaceConversion.h" />
     <ClInclude Include="Engine\Rendering\RendererInfo.h" />
+    <ClInclude Include="Engine\Settings\Settings.h" />
+    <ClInclude Include="Engine\Settings\SettingsManager.h" />
+    <ClInclude Include="Engine\Editor\EditorWindows\SettingsWindow.h" />
     <ClInclude Include="Engine\ResourceManagement\SoftResourceHandle.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />

@@ -7,10 +7,14 @@
 #include "Editor/EditorWindows/ContentBrowserWindow.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
 #include "Editor/EditorWindows/InspectorWindow.h"
+#include "Editor/EditorWindows/SettingsWindow.h"
 #include "Globes.h"
 #include "imgui/imgui.h"
+#include "Reflection/Class.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Window.h"
+#include "Settings/Settings.h"
+#include "Settings/SettingsManager.h"
 
 void LEditor::Initialize()
 {
@@ -34,6 +38,9 @@ void LEditor::Initialize()
 
 	std::unique_ptr<LContentBrowserWindow> ContentBrowserWindow = std::make_unique<LContentBrowserWindow>("Content Browser");
 	EditorWindows.emplace(ContentBrowserWindow->GetWindowName(), std::move(ContentBrowserWindow));
+
+	SettingsManager = CSystem.GetSubsystems().GetSubsystem<LSettingsManager>(true);
+	assert(SettingsManager);
 }
 
 void LEditor::Draw()
@@ -41,6 +48,13 @@ void LEditor::Draw()
 	ImGui::DockSpaceOverViewport();
 	if (ImGui::BeginMainMenuBar())
 	{
+		if (ImGui::Button("Settings"))
+		{
+			// TODO: This is currently fine as ImGUi prevents windows with duplicate names, but this should
+			// really check if it's active first which isn't currently possible without an array look up.
+			std::unique_ptr<LSettingsWindow> SettingsWindow = std::make_unique<LSettingsWindow>("Settings");
+			EditorWindows.emplace(SettingsWindow->GetWindowName(), std::move(SettingsWindow));
+		}
 		ImGui::EndMainMenuBar();
 	}
 

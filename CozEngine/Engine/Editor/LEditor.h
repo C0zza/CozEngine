@@ -10,6 +10,7 @@
 
 class LEditorWindow;
 class LRenderer;
+class LSettingsManager;
 
 class LEditor : public LSubsystem
 {
@@ -28,6 +29,7 @@ public:
 
 private:
 	LRenderer* Renderer = nullptr;
+	LSettingsManager* SettingsManager = nullptr;
 
 	std::unique_ptr<LFrameBuffer> SceneFrameBuffer;
 	std::unique_ptr<LFrameBuffer> EntityFrameBuffer;
