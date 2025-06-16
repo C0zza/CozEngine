@@ -5,6 +5,7 @@
 #include "Reflection/ClassRegister.h"
 #include "Reflection/ClassUtilities.h"
 #include "Reflection/Property.h"
+#include "ResourceManagement/ResourceHandleHelper.h"
 
 
 LClass* LMaterial::Class = LMaterial::StaticClass();

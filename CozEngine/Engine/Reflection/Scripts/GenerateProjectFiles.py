@@ -52,6 +52,10 @@ PropertyTypeToIncludeMap = {
     "glm::vec3" : "Misc/GlmSerialization.h"
 }
 
+TemplatePropertyTypeToIncludeMap = {
+    "LResourceHandle" : "ResourceManagement/ResourceHandleHelper.h"
+}
+
 ReflectedClassSet = set()
 
 GeneratedFiles = []
@@ -160,6 +164,10 @@ def ProcessReflectedProperty(Lines, ReflectTagLineIndex, ReflectedClass, Tags):
 
     if TypeName in PropertyTypeToIncludeMap:
         ReflectedClass.AdditionalIncludes.add(PropertyTypeToIncludeMap[TypeName])
+    else:
+        for TemplateType in TemplatePropertyTypeToIncludeMap:
+            if TemplateType in TypeName:
+                ReflectedClass.AdditionalIncludes.add(TemplatePropertyTypeToIncludeMap[TemplateType])
 
 EngineDir = '..\\..\\..\\Engine'
 ProjectDir = '..\\..\\..\\Game'
