@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ResourceManager.h"
+#include "ResourceManagement/SoftResourceHandle.h"
 
 #include "Globes.h"
 #include "json.hpp"
@@ -29,5 +30,17 @@ inline void from_json(const nlohmann::json& J, LResourceHandle<T>& ResourceHandl
 	LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
 
 	ResourceManager->GetResource<T>(AssetPath, ResourceHandle);
+}
+
+template<typename T>
+inline void to_json(nlohmann::json& J, const LSoftResourceHandle<T>& SoftResourceHandle)
+{
+	J["AssetPath"] = SoftResourceHandle.ResourcePath;
+}
+
+template<typename T>
+inline void from_json(const nlohmann::json& J, LSoftResourceHandle<T>& SoftResourceHandle)
+{
+	J.at("AssetPath").get_to(SoftResourceHandle.ResourcePath);
 }
 

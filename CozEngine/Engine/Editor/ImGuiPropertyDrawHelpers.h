@@ -8,6 +8,7 @@
 #include "Editor/AssetRegistry.h"
 #include "Globes.h"
 #include "ResourceManagement/ResourceHandle.h"
+#include "ResourceManagement/SoftResourceHandle.h"
 #include "ResourceManagement/ResourceManager.h"
 
 class LImGuiPropertyDrawHelpers
@@ -44,6 +45,49 @@ private:
 
 		// Override for this since it's transform matrix is updated internally via setters
 		static bool DrawProperty(const char* Label, CTransformComponent& TransformComponent);
+
+		template<typename T>
+		static bool DrawProperty(const char* Label, LSoftResourceHandle<T>& SoftResourceHandle)
+		{
+			std::string AssetPath = SoftResourceHandle.ResourcePath.string();
+
+			static const LAssetRegistry* AssetRegistry = CSystem.GetSubsystems().GetSubsystem<LAssetRegistry>();
+			if (!AssetRegistry)
+			{
+				Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - LResourceHandle<T> - Invalid AssetRegistry.");
+				return false;
+			}
+
+			const std::unordered_set<std::filesystem::path>* Assets = AssetRegistry->GetAssetsByClass(T::StaticClass());
+
+			bool bUpdated = false;
+			if (ImGui::BeginCombo(GetHiddenLabel(Label).c_str(), AssetPath.c_str()))
+			{
+				if (Assets)
+				{
+					for (const std::filesystem::path& Path : *Assets)
+					{
+						const std::string PathString = Path.string();
+
+						bool bIsSelected = PathString == AssetPath;
+
+						if (ImGui::Selectable(PathString.data(), &bIsSelected))
+						{
+							SoftResourceHandle.ResourcePath = PathString;
+							bUpdated = true;
+						}
+
+						if (bIsSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			return bUpdated;
+		}
 
 		template<typename T>
 		static bool DrawProperty(const char* Label, LResourceHandle<T>& ResourceHandle)

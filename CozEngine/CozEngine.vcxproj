@@ -294,6 +294,7 @@
     <ClCompile Include="Engine\Editor\SelectedEntitySubsystem.cpp" />
     <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp" />
     <ClCompile Include="Engine\Rendering\RendererInfo.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\SoftResourceHandle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
@@ -401,6 +402,7 @@
     <ClInclude Include="Engine\Reflection\Property.h" />
     <ClInclude Include="Engine\Misc\CoordSpaceConversion.h" />
     <ClInclude Include="Engine\Rendering\RendererInfo.h" />
+    <ClInclude Include="Engine\ResourceManagement\SoftResourceHandle.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>
