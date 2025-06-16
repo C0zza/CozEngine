@@ -12,8 +12,10 @@ class LResource;
 class LSavable
 {
 public:
-	static void SaveAssetToDisk(const std::string& Asset, LClass* Class, LResource* Address);
-	static void LoadAssetFromDisk(const std::string& Asset, LClass* Class, LResource* Address);
+	static void SaveAssetToDisk(const std::string& Asset, LClass* Class, void* Address);
+	static void LoadAssetFromDisk(const std::string& Asset, LClass* Class, void* Address);
+
+	static bool DoesAssetExist(const std::string& Asset);
 
 	template<typename T>
 	static void SaveAssetToDisk(const std::string& Asset, const T& Object)

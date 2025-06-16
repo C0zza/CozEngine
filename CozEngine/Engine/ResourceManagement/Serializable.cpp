@@ -5,7 +5,7 @@
 #include "Reflection/Class.h"
 #include "ResourceManagement/Resource.h"
 
-void LSavable::SaveAssetToDisk(const std::string& Asset, LClass* Class, LResource* Address)
+void LSavable::SaveAssetToDisk(const std::string& Asset, LClass* Class, void* Address)
 {
 	CreateDirectoryForAsset(Asset);
 
@@ -26,7 +26,7 @@ void LSavable::SaveAssetToDisk(const std::string& Asset, LClass* Class, LResourc
 	}
 }
 
-void LSavable::LoadAssetFromDisk(const std::string& Asset, LClass* Class, LResource* Address)
+void LSavable::LoadAssetFromDisk(const std::string& Asset, LClass* Class, void* Address)
 {
 	std::ifstream AssetFile(Asset);
 	if (AssetFile.is_open())
@@ -40,4 +40,9 @@ void LSavable::LoadAssetFromDisk(const std::string& Asset, LClass* Class, LResou
 	{
 		Log(LLogLevel::ERROR, "LSavable::LoadAssetFromDisk - Failed to load " + Asset + ".");
 	}
+}
+
+bool LSavable::DoesAssetExist(const std::string& Asset)
+{
+	return std::filesystem::exists(Asset);
 }
