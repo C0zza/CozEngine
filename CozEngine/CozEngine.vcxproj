@@ -249,6 +249,7 @@
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\Rendering\FrameBufferSubsystem.cpp" />
     <ClCompile Include="Engine\ECS\EntityManagement\EntityContainer.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Serializable.cpp" />
     <ClCompile Include="Game\DirectionalLightEntity.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\PointLightComponent.cpp" />

@@ -243,6 +243,9 @@
     <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Serializable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Rendering\RendererInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
