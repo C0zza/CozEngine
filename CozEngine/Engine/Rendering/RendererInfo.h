@@ -19,7 +19,11 @@ public:
 	const glm::mat4& GetViewMatrix() const;
 	const glm::vec3& GetViewPos();
 
+	bool CanRender();
+
 private:
+	CCameraComponentSystem* GetCameraComponentSystem();
+
 	glm::mat4 ProjectionMatrix = glm::mat4(0);
 
 	CCameraComponentSystem* CameraComponentSystem = nullptr;

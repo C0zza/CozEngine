@@ -26,13 +26,27 @@ void LRendererInfo::UpdateProjectionMatrix(const int Width, const int Height)
 
 const glm::mat4& LRendererInfo::GetViewMatrix() const
 {
-	if (CameraComponentSystem)
-	{
-		return CameraComponentSystem->GetViewMatrix();
-	}
+	return CameraComponentSystem->GetViewMatrix();
 }
 
 const glm::vec3& LRendererInfo::GetViewPos()
+{
+	return CameraComponentSystem->GetViewPos();
+}
+
+bool LRendererInfo::CanRender()
+{
+	if (CCameraComponentSystem* CameraComponentSystem = GetCameraComponentSystem())
+	{
+		return CameraComponentSystem->GetActiveCameraEntityID() >= 0;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+CCameraComponentSystem* LRendererInfo::GetCameraComponentSystem()
 {
 	if (!CameraComponentSystem)
 	{
@@ -40,8 +54,5 @@ const glm::vec3& LRendererInfo::GetViewPos()
 		CameraComponentSystem = dynamic_cast<CCameraComponentSystem*>(ECS->GetComponentSystemFor<CCameraComponent>());
 	}
 
-	if (CameraComponentSystem)
-	{
-		return CameraComponentSystem->GetViewPos();
-	}
+	return CameraComponentSystem;
 }

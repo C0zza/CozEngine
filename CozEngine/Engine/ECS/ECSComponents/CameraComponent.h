@@ -20,7 +20,7 @@ public:
 	const glm::vec3& GetViewPos();
 
 	void ActivateCamera(const CCameraComponent& Component) { ActiveCameraEntityID = Component.EntityID; }
-	LEntityID GetActiveCameraEntityID() { return ActiveCameraEntityID; }
+	int GetActiveCameraEntityID() { return ActiveCameraEntityID; }
 
 	virtual const char* GetComponentName() const final { return "CameraComponentSystem"; }
 
@@ -34,7 +34,7 @@ protected:
 	virtual void DeserializeComponent(CCameraComponent& Component, const nlohmann::json& J) final;
 
 private:
-	LEntityID ActiveCameraEntityID = -1;
+	int ActiveCameraEntityID = -1;
 };
 
 

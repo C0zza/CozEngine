@@ -7,6 +7,9 @@
 #include "ECS/ECSComponents/CameraComponent.h"
 #include "Globes.h"
 #include "Rendering/Model.h"
+// TEMP while LCubeMap hasn't been setup as an entity/ component properly
+#include "Rendering/RendererInfo.h"
+// ~TEMP
 #include "ResourceManagement/ResourceManager.h"
 #include "Shader.h"
 
@@ -39,6 +42,16 @@ LCubeMap::LCubeMap(const char* i_CubeMapTexture, const char* i_CubeModel)
 
 void LCubeMap::Draw()
 {
+	// TEMP while LCubeMap hasn't been setup as an entity/ component properly
+	LRendererInfo* RendererInfo = CSystem.GetSubsystems().GetSubsystem<LRendererInfo>();
+	assert(RendererInfo);
+
+	if (!RendererInfo->CanRender())
+	{
+		return;
+	}
+	// ~TEMP
+
 	if (!CubeMapShader.Get())
 	{
 		return;

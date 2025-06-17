@@ -101,6 +101,11 @@ void LRenderer::Update()
 {
 	assert(ECS);
 
+	if (!RendererInfo || !RendererInfo->CanRender())
+	{
+		return;
+	}
+
 	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CPointLightComponent>();
 	if (CPointLightComponentSystem* PointLightCS = dynamic_cast<CPointLightComponentSystem*>(ComponentSystem))
 	{
@@ -119,18 +124,11 @@ void LRenderer::Update()
 		DirectionalLightCS->UpdateDirectionalLight();
 	}
 	
-	if (RendererInfo)
-	{
-		glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &RendererInfo->GetProjectionMatrix());
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &RendererInfo->GetViewMatrix());
-		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &RendererInfo->GetViewPos());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
-	else
-	{
-		Log(LLogLevel::WARNING, "Failed to update view shader data");
-	}
+	glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &RendererInfo->GetProjectionMatrix());
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &RendererInfo->GetViewMatrix());
+	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &RendererInfo->GetViewPos());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void LRenderer::Swap()
