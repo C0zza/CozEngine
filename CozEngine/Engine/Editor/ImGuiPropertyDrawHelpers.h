@@ -65,11 +65,21 @@ private:
 			{
 				if (Assets)
 				{
+					bool bIsSelected = false;
+
+					const char* NoneString = "None";
+					bIsSelected = NoneString == AssetPath;
+					if (ImGui::Selectable(NoneString, &bIsSelected))
+					{
+						SoftResourceHandle.ResourcePath.clear();
+						bUpdated = true;
+					}
+
 					for (const std::filesystem::path& Path : *Assets)
 					{
 						const std::string PathString = Path.string();
 
-						bool bIsSelected = PathString == AssetPath;
+						bIsSelected = PathString == AssetPath;
 
 						if (ImGui::Selectable(PathString.data(), &bIsSelected))
 						{
