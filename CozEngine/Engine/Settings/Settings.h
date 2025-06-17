@@ -6,5 +6,7 @@ REFL_CLASS()
 class LSettings
 {
 	REFL_GENERATED_BODY(LSettings)
+public:
+	virtual ~LSettings() {}
 };
 

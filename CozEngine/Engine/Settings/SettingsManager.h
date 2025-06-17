@@ -20,9 +20,25 @@ public:
 	void SaveSettings(LClass* SettingsClass);
 	void LoadSettings(LClass* SettingsClass);
 
+	template<typename T>
+	T* GetSettings();
+
 private:
 	std::string GetSavedSettingsPath(LClass* SettingsClass);
 
 	std::map<LClass*, std::unique_ptr<LSettings>> SettingsClasses;
 };
 
+template<typename T>
+inline T* LSettingsManager::GetSettings()
+{
+	if (!SettingsClasses.contains(T::StaticClass()))
+	{
+		return nullptr;
+	}
+	else
+	{
+		LSettings* Settings = SettingsClasses.at(T::StaticClass()).get();
+		return dynamic_cast<T*>(Settings);
+	}
+}
