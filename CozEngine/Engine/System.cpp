@@ -14,11 +14,11 @@
 
 #include "Rendering/CubeMap.h"
 
-#include "ECS/EntityManagement/World.h"
 
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/MovementComponent.h"
 
+#include "WorldManager.h"
 void LSystem::Run()
 {
 	LResourceManager* ResourceManager = Subsystems.GetSubsystem<LResourceManager>(true);
@@ -45,8 +45,8 @@ void LSystem::Run()
 	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
 
 	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");
+	LWorldManager* WorldManager = Subsystems.GetSubsystem<LWorldManager>(true);
 
-	std::unique_ptr<LWorld> World = std::make_unique<LWorld>("Game/Content/Levels/TestLevel.casset");
 
 	assert(Renderer);
 	bool bShouldWindowClose = true;

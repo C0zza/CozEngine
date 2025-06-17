@@ -298,6 +298,7 @@
     <ClCompile Include="Engine\Settings\SettingsManager.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\SettingsWindow.cpp" />
     <ClCompile Include="Engine\ResourceManagement\SoftResourceHandle.cpp" />
+    <ClCompile Include="Engine\WorldManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
@@ -400,6 +401,7 @@
     <ClInclude Include="Engine\Settings\SettingsManager.h" />
     <ClInclude Include="Engine\Editor\EditorWindows\SettingsWindow.h" />
     <ClInclude Include="Engine\ResourceManagement\SoftResourceHandle.h" />
+    <ClInclude Include="Engine\WorldManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>
