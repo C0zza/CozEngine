@@ -4,6 +4,8 @@
 #include "ECS/EntityManagement/EntityContainerAsset.h"
 #include "ResourceManagement/ResourceHandle.h"
 
+class LEntity;
+
 class LWorld
 {
 public:
@@ -14,6 +16,8 @@ public:
 	void SaveWorld(const FAssetPath& AssetPath);
 	bool HasAsset() const;
 #endif
+
+	LEntity* AddEntityByClass(LClass* Class);
 
 	LEntityContainer EntityContainer;
 private:

@@ -3,6 +3,7 @@
 
 #include "Globes.h"
 #include "Misc/Logging.h"
+#include "Reflection/Class.h"
 #include "ResourceManagement/ResourceManager.h"
 
 LWorld::LWorld(const FAssetPath& InEntitiesDataPath)
@@ -55,3 +56,22 @@ bool LWorld::HasAsset() const
 	return EntitiesData.Get();
 }
 #endif
+
+LEntity* LWorld::AddEntityByClass(LClass* Class)
+{
+#if defined(COZ_EDITOR)
+	if (!Class)
+	{
+		return nullptr;
+	}
+
+	assert(Class->IsChildOf<LEntity>());
+	LEntity* Entity = Class->CreateObject<LEntity>();
+
+	EntityContainer.AddEntity(std::unique_ptr<LEntity>(Entity));
+
+	return Entity;
+#elif
+	return nullptr;
+#endif
+}

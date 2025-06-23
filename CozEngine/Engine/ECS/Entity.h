@@ -5,9 +5,12 @@
 #include "EntityManagement/EntityRegistration.h"
 #include "ECS.h"
 #include "Globes.h"
+#include "Reflection/Reflection.h"
 
+REFL_CLASS()
 class LEntity
 {
+	REFL_GENERATED_BODY(LEntity)
 public:
 	LEntity();
 	virtual ~LEntity();
