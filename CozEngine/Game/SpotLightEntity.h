@@ -1,9 +1,12 @@
 #pragma once
 
 #include "ECS/Entity.h"
+#include "Reflection/Reflection.h"
 
+REFL_CLASS()
 class CSpotLightEntity : public LEntity 
 {
+	REFL_GENERATED_BODY(CSpotLightEntity)
 public:
 	CSpotLightEntity();
 

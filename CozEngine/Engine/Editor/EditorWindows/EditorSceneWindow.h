@@ -3,7 +3,10 @@
 #include "Editor/EditorWindow.h"
 #include "Input/InputManager.h"
 
+class LClass;
+class LEntity;
 class LFrameBuffer;
+class LSelectedEntitySubsystem;
 
 class LEditorSceneWindow : public LEditorWindow
 {
@@ -22,6 +25,7 @@ private:
 	LFrameBuffer* EntityFrameBuffer = nullptr;
 
 	LInputManager* InputManager = nullptr;
+	LSelectedEntitySubsystem* SelectedEntitySubsystem = nullptr;
 
 	LInputEventHandle ToggleFocusEventHandle;
 	LInputEventHandle MouseClickedEventHandle;
@@ -33,10 +37,12 @@ private:
 	void OnRightMouseClicked();
 	void OnMouseClicked();
 
-	void SpawnEntityFromPath(const std::filesystem::path& Path, const glm::vec2& ClipSpaceCoords);
+	LClass* GetClassFromPath(const std::filesystem::path& Path);
 
 	glm::vec2 LocalMouseScreenCoords;
 	float WindowWidth;
 	float WindowHeight;
+
+	LEntity* HeldEntity = nullptr;
 };
 

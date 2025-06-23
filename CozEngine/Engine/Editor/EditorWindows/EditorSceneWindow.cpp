@@ -2,11 +2,25 @@
 
 #include "EditorSceneWindow.h"
 
+#include <filesystem>
+#include <fstream>
+
+#include "ECS/Entity.h"
+#include "ECS/ECSComponents/TransformComponent.h"
+#include "Editor/AssetRegistry.h"
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
+#include "json.hpp"
 #include "Misc/CoordSpaceConversion.h"
+#include "Reflection/Class.h"
+#include "Reflection/ClassRegister.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/RendererInfo.h"
+#include "WorldManager.h"
+
+// TEMP: While testing drag/ drop assets
+#include "SpotLightEntity.h"
+// ~TEMP
 
 LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBuffer* iEntityFrameBuffer, const char* iWindowName)
 	: LEditorWindow(iWindowName), SceneFrameBuffer{ iSceneFrameBuffer }, EntityFrameBuffer{ iEntityFrameBuffer }, LocalMouseScreenCoords{ glm::vec2() }, WindowWidth{ 0.0f }, WindowHeight{ 0.0f }
@@ -21,7 +35,7 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE), &LEditorSceneWindow::OnMouseClicked, MouseClickedEventHandle);
 
-	CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
+	SelectedEntitySubsystem = CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
 }
 
 void LEditorSceneWindow::DrawWindow()
@@ -61,6 +75,76 @@ void LEditorSceneWindow::DrawWindow()
 		ImVec2(0, 1),
 		ImVec2(1, 0)
 	);
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload* Payload = ImGui::GetDragDropPayload();
+
+		if (ImGui::AcceptDragDropPayload("ASSET_DRAG"))
+		{
+			HeldEntity = nullptr;
+		}
+		else if (Payload && Payload->IsDataType("ASSET_DRAG")) 
+		{
+			// TODO: Separate into method
+			if (!HeldEntity)
+			{
+				LWorldManager* WorldManager = CSystem.GetSubsystems().GetSubsystem<LWorldManager>();
+				assert(WorldManager);
+
+				LWorld* ActiveWorld = WorldManager->GetActiveWorld();
+				if (ActiveWorld)
+				{
+					//const FContentNode* ContentNode = reinterpret_cast<FContentNode*>(Payload->Data);
+
+					//assert(ContentNode);
+					//assert(!ContentNode->IsDirectory());
+
+					// TODO: Figuring out what asset type this is shouldn't be handled here
+					//const std::filesystem::path& Path = ContentNode->GetPath();
+
+					const glm::vec3 ScreenToWorldRayVec = LCoordSpaceConversion::ScreenToWorldPos(LocalMouseScreenCoords, WindowWidth, WindowHeight, 10.f);
+
+					// TEMP: While testing drag/ drop assets
+					HeldEntity = ActiveWorld->AddEntityByClass(CSpotLightEntity::StaticClass());
+					// ~TEMP
+
+					if (HeldEntity)
+					{
+						CTransformComponent* TransformComponent = HeldEntity->GetComponent<CTransformComponent>();
+						if (TransformComponent)
+						{
+							TransformComponent->SetPosition(ScreenToWorldRayVec);
+						}
+
+						SelectedEntitySubsystem->SetSelectedEntityID(HeldEntity->GetID());
+					}
+				}
+			}
+			else
+			{
+				const glm::vec3 ScreenToWorldRayVec = LCoordSpaceConversion::ScreenToWorldPos(LocalMouseScreenCoords, WindowWidth, WindowHeight, 10.f);
+				CTransformComponent* TransformComponent = HeldEntity->GetComponent<CTransformComponent>();
+				if (TransformComponent)
+				{
+					TransformComponent->SetPosition(ScreenToWorldRayVec);
+				}
+			}
+		}
+
+		ImGui::EndDragDropTarget();
+	}
+	else if (HeldEntity)
+	{
+		SelectedEntitySubsystem->SetSelectedEntityID(0);
+
+		LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
+		assert(ECS);
+
+		ECS->RemoveEntity(HeldEntity->GetID());
+
+		HeldEntity = nullptr;
+	}
 }
 
 void LEditorSceneWindow::PushWindowStyle()
@@ -116,13 +200,6 @@ void LEditorSceneWindow::OnMouseClicked()
 		return;
 	}
 
-	LSelectedEntitySubsystem* SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>();
-	if (!SelectedEntitySubsystem)
-	{
-		Log(LLogLevel::ERROR, "LEditorSceneWindow::OnMouseClicked - Invalid SelectedEntitySubsystem.");
-		return;
-	}
-
 	const glm::vec2 TexCoords = LCoordSpaceConversion::ScreenToUV(LocalMouseScreenCoords, WindowWidth, WindowHeight);
 
 	EntityFrameBuffer->Bind();
@@ -140,4 +217,35 @@ void LEditorSceneWindow::OnMouseClicked()
 						static_cast<LEntityID>(Pixel[3] * 255);
 
 	SelectedEntitySubsystem->SetSelectedEntityID(EntityID);
+}
+
+LClass* LEditorSceneWindow::GetClassFromPath(const std::filesystem::path& Path)
+{
+	nlohmann::json AssetJson;
+
+	std::ifstream AssetFile(Path);
+	if (!AssetFile.is_open())
+	{
+		Log(LLogLevel::ERROR, "LEditorSceneWindow::SpawnEntityFromPath - Failed to open file: " + Path.string());
+		return nullptr;
+	}
+
+	AssetFile >> AssetJson;
+
+	if (!AssetJson.contains("Type"))
+	{
+		Log(LLogLevel::ERROR, "LEditorSceneWindow::SpawnEntityFromPath - Asset: " + Path.string() + " is missing \"Type\" entry");
+		return nullptr;
+	}
+
+	LClass* AssetClass = LClassRegister::Get(AssetJson["Type"]);
+	if (!AssetClass)
+	{
+		Log(LLogLevel::ERROR, "LEditorSceneWindow::SpawnEntityFromPath - Failed to find LClass from Type: " + AssetJson["Type"]);
+		return nullptr;
+	}
+
+	assert(AssetClass->IsChildOf<LEntity>());
+
+	return AssetClass;
 }

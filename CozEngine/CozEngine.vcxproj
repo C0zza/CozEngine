@@ -307,6 +307,7 @@
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\EntityGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EditorSettingsGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" />
