@@ -80,7 +80,7 @@ void CModelComponentSystem::DrawImGuiComponent(CModelComponent& Component)
 
 void CModelComponentSystem::Init()
 {
-	SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>();
+	SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>(true);
 	if (!SelectedEntitySubsystem)
 	{
 		Log(LLogLevel::ERROR, "CModelComponentSystem::Init - Invalid SelectedEntitySubsystem");

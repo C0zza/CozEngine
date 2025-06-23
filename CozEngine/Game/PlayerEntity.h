@@ -2,9 +2,12 @@
 
 #include "ECS/Entity.h"
 #include "Input/InputManager.h"
+#include "Reflection/Reflection.h"
 
+REFL_CLASS()
 class CPlayerEntity : public LEntity
 {
+	REFL_GENERATED_BODY(CPlayerEntity)
 public:
 	CPlayerEntity();
 

@@ -20,7 +20,7 @@ glm::vec2 LCoordSpaceConversion::ScreenToClip(const glm::vec2& ScreenCoords, con
 glm::vec3 LCoordSpaceConversion::ScreenToWorldPos(const glm::vec2& ScreenCoords, const float Width, const float Height, const float Distance)
 {
 	LRendererInfo* RendererInfo = CSystem.GetSubsystems().GetSubsystem<LRendererInfo>();
-	assert(RendererInfo);
+	assert(RendererInfo && RendererInfo->CanRender());
 
 	// OpenGL uses -1 for near clip space
 	const glm::vec4 ClipSpace(ScreenToClip(ScreenCoords, Width, Height), -1, 1);
