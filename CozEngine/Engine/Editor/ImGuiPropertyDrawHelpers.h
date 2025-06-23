@@ -7,6 +7,8 @@
 #include "ECS/ECSComponents/TransformComponent.h"
 #include "Editor/AssetRegistry.h"
 #include "Globes.h"
+#include "Reflection/Class.h"
+#include "Reflection/SubclassOf.h"
 #include "ResourceManagement/ResourceHandle.h"
 #include "ResourceManagement/SoftResourceHandle.h"
 #include "ResourceManagement/ResourceManager.h"
@@ -45,6 +47,60 @@ private:
 
 		// Override for this since it's transform matrix is updated internally via setters
 		static bool DrawProperty(const char* Label, CTransformComponent& TransformComponent);
+
+		template<typename T>
+		static bool DrawProperty(const char* Label, TSubclassOf<T>& SubclassOf)
+		{
+			LClass* BaseClass = T::StaticClass();
+
+			if (!BaseClass)
+			{
+				Log(LLogLevel::ERROR, "LImGuiPropertyDrawHelpers::DrawProperty - TSubclassOf<T> - Invalid T::StaticClass");
+				return false;
+			}
+
+			static const char* NoneString = "None";
+			std::string CurrentClassString = SubclassOf.IsValid() ? SubclassOf.Get()->GetTypeName().data() : NoneString;
+
+			const std::vector<LClass*>& Subclasses = BaseClass->GetChildClasses();
+
+			bool bUpdated = false;
+			if (ImGui::BeginCombo(GetHiddenLabel(Label).c_str(), CurrentClassString.c_str()))
+			{
+				bool bIsSelected = false;
+
+				bIsSelected = CurrentClassString == NoneString;
+				if (ImGui::Selectable(NoneString, &bIsSelected))
+				{
+					SubclassOf = nullptr;
+					bUpdated = true;
+				}
+
+				for (LClass* Subclass : Subclasses)
+				{
+					assert(Subclass);
+
+					const std::string SubclassString = Subclass->GetTypeName().data();
+
+					bIsSelected = SubclassString == CurrentClassString;
+
+					if (ImGui::Selectable(SubclassString.data(), &bIsSelected))
+					{
+						SubclassOf = Subclass;
+						bUpdated = true;
+					}
+
+					if (bIsSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+
+				ImGui::EndCombo();
+			}
+
+			return bUpdated;
+		}
 
 		template<typename T>
 		static bool DrawProperty(const char* Label, LSoftResourceHandle<T>& SoftResourceHandle)
@@ -226,7 +282,7 @@ private:
 		{
 			if (ImGui::Button("+"))
 			{
-				Set.insert("");
+				Set.insert(T());
 			}
 
 			bool bAnyUpdates = false;
