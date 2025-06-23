@@ -1,6 +1,6 @@
 {
   "EditorStartupLevel": {
-    "AssetPath": "Game/Content/Levels/TestLevel.casset"
+    "AssetPath": "Game\\Content\\Levels\\TestLevel.casset"
   },
   "Type": "LEditorSettings"
 }
