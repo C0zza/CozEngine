@@ -90,7 +90,7 @@ def ProcessHeader(HeaderFilePath):
         if len(ReflectTagLineIndex) > 0:
             HeaderName = os.path.splitext(os.path.basename(HeaderFilePath))[0]
             NormalizedPath = HeaderFilePath.replace("\\", "/")
-            PathMatch = re.search(f"(?:/Engine/|/Game/)(.*)/{HeaderName}.h", NormalizedPath)
+            PathMatch = re.search(f"(?:/Engine/|/Game/)(.*)/?{HeaderName}.h", NormalizedPath)
             GeneratedFiles.append(GeneratedFile(HeaderName, PathMatch.group(1)))
 
         for LineIndex in ReflectTagLineIndex:
@@ -201,7 +201,7 @@ for GenFile in GeneratedFiles:
     with open(GeneratedFilesPath + GenFile.Name + "Gen.cpp", "w") as File:
 
         File.write(f"""\
-#include \"{GenFile.Path}/{GenFile.Name}.h\"
+#include \"{GenFile.Path}{GenFile.Name}.h\"
 
 #include \"Editor/ImGuiPropertyDrawHelpers.h\"
 #include \"Reflection/Class.h\"
@@ -221,7 +221,7 @@ for GenFile in GeneratedFiles:
             for i in range(len(Class.Properties)):
                 Property = Class.Properties[i]
                 ReflectedProperties += "            {\"" + Property.Name + "\", \"" + Property.Type + "\", MEMBER_OFFSET(" + Class.Name + ", " + Property.Name + ")}"
-                DeserializeProperties += "    Object." + Property.Name + " = Json[\"" + Property.Name + "\"];\n"
+                DeserializeProperties += "    if(Json.contains(\"" + Property.Name + "\")) Object." + Property.Name + " = Json[\"" + Property.Name + "\"];\n"
                 SerializeProperties += "    Json[\"" + Property.Name + "\"] = Object." + Property.Name + ";\n"
                 
                 DrawnProperty = False
