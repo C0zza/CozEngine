@@ -10,6 +10,8 @@ class LWorldManager : public LSubsystem
 public:
 	virtual void Initialize() override final;
 
+	LWorld* GetActiveWorld() { return ActiveWorld.get(); }
+
 private:
 	std::unique_ptr<LWorld> ActiveWorld;
 };
