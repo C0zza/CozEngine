@@ -87,6 +87,7 @@ public:
 			const LEntityID IndexToRemove = EntityIdToComponentIndex[EntityID];
 			TComponentType& LastComponent = Components[Components.size() - 1];
 
+			OnComponentRemoved(Components[IndexToRemove]);
 			Components[IndexToRemove].Destroy();
 
 			if (&Components[IndexToRemove] != &LastComponent)
