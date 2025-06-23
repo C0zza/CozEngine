@@ -35,28 +35,24 @@ void LInspectorWindow::DrawWindow()
 
 		nlohmann::json EntityJson;
 		ECS->GetEntityComponentData(SelectedEntityID, EntityJson);
-		if (ImGui::TreeNode(std::string("Entity - " + std::to_string(SelectedEntityID)).c_str()))
+		for (const auto & [Key, Value] : EntityJson.items())
 		{
-			for (const auto & [Key, Value] : EntityJson.items())
+			LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemByName(Key);
+			if (!ComponentSystem)
 			{
-				LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemByName(Key);
-				if (!ComponentSystem)
-				{
-					// TODO: Add 1 time log macro for cases where they may spam.
-					continue;
-				}
+				// TODO: Add 1 time log macro for cases where they may spam.
+				continue;
+			}
 
-				if (ImGui::TreeNode(Key.c_str()))
-				{
+			if (ImGui::TreeNode(Key.c_str()))
+			{
 // TODO: If editor code was in it's own module we wouldn't need this
 #if defined(COZ_EDITOR)
-					ComponentSystem->DrawImGuiComponent(SelectedEntityID);
+				ComponentSystem->DrawImGuiComponent(SelectedEntityID);
 #endif
-					ImGui::TreePop();
-				}
-				ImGui::Spacing();
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
+			ImGui::Spacing();
 		}
 
 		ImGui::EndChild();

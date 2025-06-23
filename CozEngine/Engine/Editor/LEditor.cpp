@@ -7,6 +7,7 @@
 #include "Editor/EditorWindows/ContentBrowserWindow.h"
 #include "Editor/EditorWindows/EditorSceneWindow.h"
 #include "Editor/EditorWindows/InspectorWindow.h"
+#include "Editor/EditorWindows/SceneOutlinerWindow.h"
 #include "Editor/EditorWindows/SettingsWindow.h"
 #include "Globes.h"
 #include "imgui/imgui.h"
@@ -38,6 +39,9 @@ void LEditor::Initialize()
 
 	std::unique_ptr<LContentBrowserWindow> ContentBrowserWindow = std::make_unique<LContentBrowserWindow>("Content Browser");
 	EditorWindows.emplace(ContentBrowserWindow->GetWindowName(), std::move(ContentBrowserWindow));
+
+	std::unique_ptr<LSceneOutlinerWindow> SceneOutlinerWindow = std::make_unique<LSceneOutlinerWindow>("Scene Outliner");
+	EditorWindows.emplace(SceneOutlinerWindow->GetWindowName(), std::move(SceneOutlinerWindow));
 
 	SettingsManager = CSystem.GetSubsystems().GetSubsystem<LSettingsManager>(true);
 	assert(SettingsManager);
