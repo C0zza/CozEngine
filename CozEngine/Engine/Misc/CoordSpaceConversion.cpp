@@ -17,24 +17,17 @@ glm::vec2 LCoordSpaceConversion::ScreenToClip(const glm::vec2& ScreenCoords, con
 	return glm::vec2((ScreenCoords.x / Width) * 2 - 1, 1 - (ScreenCoords.y / Height) * 2);
 }
 
-glm::vec3 LCoordSpaceConversion::ScreenToWorldRay(const glm::vec2& ScreenCoords, const float Width, const float Height)
+glm::vec3 LCoordSpaceConversion::ScreenToWorldPos(const glm::vec2& ScreenCoords, const float Width, const float Height, const float Distance)
 {
 	LRendererInfo* RendererInfo = CSystem.GetSubsystems().GetSubsystem<LRendererInfo>();
-
-	const glm::vec2 ClipSpace2D = ScreenToClip(ScreenCoords, Width, Height);
+	assert(RendererInfo);
 
 	// OpenGL uses -1 for near clip space
-	const glm::vec4 ClipSpace(ClipSpace2D.x, ClipSpace2D.y, -1, 1);
+	const glm::vec4 ClipSpace(ScreenToClip(ScreenCoords, Width, Height), -1, 1);
 
-	const glm::mat4 InverseProjection = glm::inverse(RendererInfo->GetProjectionMatrix());
+	const glm::vec4 WorldSpace = glm::inverse(RendererInfo->GetProjectionMatrix() * RendererInfo->GetViewMatrix()) * ClipSpace;
 
-	glm::vec4 ViewSpace = InverseProjection * ClipSpace;
+	glm::vec3 RayDirection = glm::vec3(WorldSpace.x, WorldSpace.y, WorldSpace.z) / WorldSpace.w - RendererInfo->GetViewPos();
 
-	const glm::mat4 InverseView = glm::inverse(RendererInfo->GetViewMatrix());
-
-	glm::vec4 WorldSpace = InverseView * ViewSpace;
-
-	glm::vec3 RayDirection = glm::vec3(WorldSpace.x, WorldSpace.y, WorldSpace.z) - RendererInfo->GetViewPos();
-
-	return RendererInfo->GetViewPos() + glm::normalize(RayDirection);
+	return RendererInfo->GetViewPos() + glm::normalize(RayDirection) * Distance;
 }
