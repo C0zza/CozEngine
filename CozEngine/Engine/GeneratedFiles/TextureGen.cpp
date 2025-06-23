@@ -73,9 +73,9 @@ void from_json(const nlohmann::json& Json, LTexture& Object)
 {
     LResource& Parent = Object;
     from_json(Json, Parent);
-    Object.TextureFiles = Json["TextureFiles"];
-    Object.TextureType = Json["TextureType"];
-    Object.bHasAlpha = Json["bHasAlpha"];
+    if(Json.contains("TextureFiles")) Object.TextureFiles = Json["TextureFiles"];
+    if(Json.contains("TextureType")) Object.TextureType = Json["TextureType"];
+    if(Json.contains("bHasAlpha")) Object.bHasAlpha = Json["bHasAlpha"];
 
 }
 

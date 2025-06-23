@@ -77,10 +77,10 @@ void from_json(const nlohmann::json& Json, LModelMaterial& Object)
 {
     LMaterial& Parent = Object;
     from_json(Json, Parent);
-    Object.Diffuse = Json["Diffuse"];
-    Object.Specular = Json["Specular"];
-    Object.NormalMap = Json["NormalMap"];
-    Object.SpecularShininess = Json["SpecularShininess"];
+    if(Json.contains("Diffuse")) Object.Diffuse = Json["Diffuse"];
+    if(Json.contains("Specular")) Object.Specular = Json["Specular"];
+    if(Json.contains("NormalMap")) Object.NormalMap = Json["NormalMap"];
+    if(Json.contains("SpecularShininess")) Object.SpecularShininess = Json["SpecularShininess"];
 
 }
 

@@ -64,7 +64,7 @@ void from_json(const nlohmann::json& Json, LEntityContainerAsset& Object)
 {
     LResource& Parent = Object;
     from_json(Json, Parent);
-    Object.EntitiesData = Json["EntitiesData"];
+    if(Json.contains("EntitiesData")) Object.EntitiesData = Json["EntitiesData"];
 
 }
 

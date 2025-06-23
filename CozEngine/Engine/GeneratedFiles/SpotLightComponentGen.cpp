@@ -101,16 +101,16 @@ LClass* CSpotLightComponent::StaticClass()
 void from_json(const nlohmann::json& Json, CSpotLightComponent& Object)
 {
 
-    Object.Position = Json["Position"];
-    Object.Direction = Json["Direction"];
-    Object.Ambient = Json["Ambient"];
-    Object.Diffuse = Json["Diffuse"];
-    Object.Specular = Json["Specular"];
-    Object.CutOff = Json["CutOff"];
-    Object.OuterCutOff = Json["OuterCutOff"];
-    Object.Constant = Json["Constant"];
-    Object.Linear = Json["Linear"];
-    Object.Quadratic = Json["Quadratic"];
+    if(Json.contains("Position")) Object.Position = Json["Position"];
+    if(Json.contains("Direction")) Object.Direction = Json["Direction"];
+    if(Json.contains("Ambient")) Object.Ambient = Json["Ambient"];
+    if(Json.contains("Diffuse")) Object.Diffuse = Json["Diffuse"];
+    if(Json.contains("Specular")) Object.Specular = Json["Specular"];
+    if(Json.contains("CutOff")) Object.CutOff = Json["CutOff"];
+    if(Json.contains("OuterCutOff")) Object.OuterCutOff = Json["OuterCutOff"];
+    if(Json.contains("Constant")) Object.Constant = Json["Constant"];
+    if(Json.contains("Linear")) Object.Linear = Json["Linear"];
+    if(Json.contains("Quadratic")) Object.Quadratic = Json["Quadratic"];
 
 }
 

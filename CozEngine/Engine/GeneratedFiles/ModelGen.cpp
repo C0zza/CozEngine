@@ -65,7 +65,7 @@ void from_json(const nlohmann::json& Json, LModel& Object)
 {
     LResource& Parent = Object;
     from_json(Json, Parent);
-    Object.ObjFile = Json["ObjFile"];
+    if(Json.contains("ObjFile")) Object.ObjFile = Json["ObjFile"];
 
 }
 

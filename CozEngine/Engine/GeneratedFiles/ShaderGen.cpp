@@ -77,10 +77,10 @@ void from_json(const nlohmann::json& Json, LShader& Object)
 {
     LResource& Parent = Object;
     from_json(Json, Parent);
-    Object.VertexShaderPath = Json["VertexShaderPath"];
-    Object.FragmentShaderPath = Json["FragmentShaderPath"];
-    Object.bUsesMatricesUBO = Json["bUsesMatricesUBO"];
-    Object.bUsesLightingUBO = Json["bUsesLightingUBO"];
+    if(Json.contains("VertexShaderPath")) Object.VertexShaderPath = Json["VertexShaderPath"];
+    if(Json.contains("FragmentShaderPath")) Object.FragmentShaderPath = Json["FragmentShaderPath"];
+    if(Json.contains("bUsesMatricesUBO")) Object.bUsesMatricesUBO = Json["bUsesMatricesUBO"];
+    if(Json.contains("bUsesLightingUBO")) Object.bUsesLightingUBO = Json["bUsesLightingUBO"];
 
 }
 

@@ -89,13 +89,13 @@ LClass* CPointLightComponent::StaticClass()
 void from_json(const nlohmann::json& Json, CPointLightComponent& Object)
 {
 
-    Object.Position = Json["Position"];
-    Object.Ambient = Json["Ambient"];
-    Object.Diffuse = Json["Diffuse"];
-    Object.Specular = Json["Specular"];
-    Object.Constant = Json["Constant"];
-    Object.Linear = Json["Linear"];
-    Object.Quadratic = Json["Quadratic"];
+    if(Json.contains("Position")) Object.Position = Json["Position"];
+    if(Json.contains("Ambient")) Object.Ambient = Json["Ambient"];
+    if(Json.contains("Diffuse")) Object.Diffuse = Json["Diffuse"];
+    if(Json.contains("Specular")) Object.Specular = Json["Specular"];
+    if(Json.contains("Constant")) Object.Constant = Json["Constant"];
+    if(Json.contains("Linear")) Object.Linear = Json["Linear"];
+    if(Json.contains("Quadratic")) Object.Quadratic = Json["Quadratic"];
 
 }
 

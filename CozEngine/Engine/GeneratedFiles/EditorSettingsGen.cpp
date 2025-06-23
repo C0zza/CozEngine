@@ -66,7 +66,7 @@ void from_json(const nlohmann::json& Json, LEditorSettings& Object)
 {
     LSettings& Parent = Object;
     from_json(Json, Parent);
-    Object.EditorStartupLevel = Json["EditorStartupLevel"];
+    if(Json.contains("EditorStartupLevel")) Object.EditorStartupLevel = Json["EditorStartupLevel"];
 
 }
 

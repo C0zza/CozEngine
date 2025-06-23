@@ -66,7 +66,7 @@ void from_json(const nlohmann::json& Json, LMaterial& Object)
 {
     LResource& Parent = Object;
     from_json(Json, Parent);
-    Object.Shaders = Json["Shaders"];
+    if(Json.contains("Shaders")) Object.Shaders = Json["Shaders"];
 
 }
 

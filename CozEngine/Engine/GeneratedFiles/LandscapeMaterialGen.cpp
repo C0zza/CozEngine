@@ -74,9 +74,9 @@ void from_json(const nlohmann::json& Json, LLandscapeMaterial& Object)
 {
     LMaterial& Parent = Object;
     from_json(Json, Parent);
-    Object.HeightMap = Json["HeightMap"];
-    Object.GroundTexture = Json["GroundTexture"];
-    Object.WallTexture = Json["WallTexture"];
+    if(Json.contains("HeightMap")) Object.HeightMap = Json["HeightMap"];
+    if(Json.contains("GroundTexture")) Object.GroundTexture = Json["GroundTexture"];
+    if(Json.contains("WallTexture")) Object.WallTexture = Json["WallTexture"];
 
 }
 
