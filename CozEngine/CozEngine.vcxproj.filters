@@ -270,6 +270,9 @@
     <ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\GeneratedFiles\ECSComponentGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
