@@ -270,6 +270,15 @@
     <ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GeneratedFiles\EntityGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GeneratedFiles\PlayerEntityGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Rendering\Shader.h">
@@ -566,6 +575,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Reflection\SubclassOf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
