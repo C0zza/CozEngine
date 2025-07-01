@@ -7,7 +7,7 @@
 #include "Globes.h"
 #include "Reflection/Reflection.h"
 
-REFL_CLASS()
+REFL_CLASS(Abstract)
 class LEntity
 {
 	REFL_GENERATED_BODY(LEntity)

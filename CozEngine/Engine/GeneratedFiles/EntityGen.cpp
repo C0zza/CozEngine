@@ -29,7 +29,6 @@ LClass* LEntity::StaticClass()
         
         std::function<void*()> CreateObjectFunc = []()
             {
-                // TEMP: Override whenever regenerating. Need to add something like an "Abstract" tag to REFL_CLASS() tags.
                 return nullptr;
             };
 
