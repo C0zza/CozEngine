@@ -29,8 +29,9 @@ class GeneratedFile:
         Self.ReflectedClasses = []
 
 class ReflectedClass:
-    def __init__(Self, Name, ParentName):
+    def __init__(Self, Name, ParentName, Tags):
         Self.Name = Name
+        Self.Tags = Tags
         Self.Properties = []
         Self.AdditionalIncludes = set()
 
@@ -117,8 +118,10 @@ def ProcessReflectedClass(ReflectTagLineIndex, Lines):
 
     ParentClassName = ClassNameMatch.group(2)
 
+    ClassTagsMatch = re.search(f"\\s*{REFLECT_CLASS_TAG}\\((.*)\\)", Lines[ReflectTagLineIndex - 1])
+
     CurrentReflectedClasses = GeneratedFiles[len(GeneratedFiles) - 1].ReflectedClasses
-    CurrentReflectedClasses.append(ReflectedClass(ClassName, ParentClassName))
+    CurrentReflectedClasses.append(ReflectedClass(ClassName, ParentClassName, ClassTagsMatch.group(1).split(',')))
 
     CurrentLineIndex = ReflectTagLineIndex + 2
     for Line in Lines[ReflectTagLineIndex + 2 : len(Lines)]:
@@ -246,6 +249,12 @@ for GenFile in GeneratedFiles:
                 ToJson = "    const " + ParentName + "& Parent = Object;\n    to_json(Json, Parent);"
                 FromJson = "    " + ParentName + "& Parent = Object;\n    from_json(Json, Parent);"
 
+            CreateObjectFuncBody = ""
+            if "Abstract" in Class.Tags:
+                CreateObjectFuncBody = "return nullptr;"
+            else:
+                CreateObjectFuncBody = f"return new {Class.Name}();"
+
             File.write(f"""\
 {ClassSpecificHeaders}
 
@@ -271,7 +280,7 @@ LClass* {Class.Name}::StaticClass()
         
         std::function<void*()> CreateObjectFunc = []()
             {{
-                return new {Class.Name}();
+                {CreateObjectFuncBody}
             }};
 
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
