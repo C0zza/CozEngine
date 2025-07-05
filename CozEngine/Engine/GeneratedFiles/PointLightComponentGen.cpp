@@ -85,7 +85,7 @@ LClass* CPointLightComponent::StaticClass()
                                                         sizeof(CPointLightComponent),
                                                         alignof(CPointLightComponent),
                                                         "CPointLightComponent",
-                                                        "",
+                                                        "LECSComponent",
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
@@ -100,7 +100,8 @@ LClass* CPointLightComponent::StaticClass()
 
 void from_json(const nlohmann::json& Json, CPointLightComponent& Object)
 {
-
+    LECSComponent& Parent = Object;
+    from_json(Json, Parent);
     if(Json.contains("Position")) Object.Position = Json["Position"];
     if(Json.contains("Ambient")) Object.Ambient = Json["Ambient"];
     if(Json.contains("Diffuse")) Object.Diffuse = Json["Diffuse"];
@@ -113,7 +114,8 @@ void from_json(const nlohmann::json& Json, CPointLightComponent& Object)
 
 void to_json(nlohmann::json& Json, const CPointLightComponent& Object)
 {
-
+    const LECSComponent& Parent = Object;
+    to_json(Json, Parent);
     Json["Type"] = "CPointLightComponent";
     Json["Position"] = Object.Position;
     Json["Ambient"] = Object.Ambient;

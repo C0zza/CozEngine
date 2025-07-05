@@ -70,6 +70,16 @@ LClass* CSpotLightComponent::StaticClass()
                 return new CSpotLightComponent();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) CSpotLightComponent();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<CSpotLightComponent*>(Add)->~CSpotLightComponent();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const CSpotLightComponent* Object = reinterpret_cast<const CSpotLightComponent*>(Address);
@@ -87,11 +97,13 @@ LClass* CSpotLightComponent::StaticClass()
                                                         sizeof(CSpotLightComponent),
                                                         alignof(CSpotLightComponent),
                                                         "CSpotLightComponent",
-                                                        "",
+                                                        "LECSComponent",
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("CSpotLightComponent", CSpotLightComponent::Class);
     }
@@ -100,7 +112,8 @@ LClass* CSpotLightComponent::StaticClass()
 
 void from_json(const nlohmann::json& Json, CSpotLightComponent& Object)
 {
-
+    LECSComponent& Parent = Object;
+    from_json(Json, Parent);
     if(Json.contains("Position")) Object.Position = Json["Position"];
     if(Json.contains("Direction")) Object.Direction = Json["Direction"];
     if(Json.contains("Ambient")) Object.Ambient = Json["Ambient"];
@@ -116,7 +129,8 @@ void from_json(const nlohmann::json& Json, CSpotLightComponent& Object)
 
 void to_json(nlohmann::json& Json, const CSpotLightComponent& Object)
 {
-
+    const LECSComponent& Parent = Object;
+    to_json(Json, Parent);
     Json["Type"] = "CSpotLightComponent";
     Json["Position"] = Object.Position;
     Json["Direction"] = Object.Direction;

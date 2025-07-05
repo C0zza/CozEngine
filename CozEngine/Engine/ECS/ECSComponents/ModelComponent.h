@@ -12,13 +12,18 @@ class LSelectedEntitySubsystem;
 #endif
 
 // TODO: rename to something decent once we can get rid of the existing CModelComponent
+REFL_CLASS()
 struct CModelComponent : public LECSComponent
 {
+	REFL_PROP(Visible)
 	LResourceHandle<LModel> Model;
+	REFL_PROP(Visible)
 	LResourceHandle<LModelMaterial> ModelMaterial;
 
 	CModelComponent() = default;
 	CModelComponent(const std::string& i_Model, const std::string& i_ModelMaterial);
+
+	REFL_GENERATED_BODY(CModelComponent)
 };
 
 class CModelComponentSystem : public LComponentSystem<CModelComponent>

@@ -306,6 +306,11 @@
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ECSComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ModelComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\TransformComponentGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EntityGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EditorSettingsGen.cpp" />
