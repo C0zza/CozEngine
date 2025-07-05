@@ -6,7 +6,6 @@
 #include <stb/stb_image.h>
 
 #include "Misc/Logging.h"
-#include "Transform.h"
 
 void LModel::Load()
 {
