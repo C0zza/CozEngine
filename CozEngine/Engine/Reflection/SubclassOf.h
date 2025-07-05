@@ -7,12 +7,15 @@ template<typename TBaseClass>
 class TSubclassOf
 {
 public:
+	TSubclassOf<TBaseClass>() = default;
+	TSubclassOf<TBaseClass>(LClass* InClass);
+
 	LClass* GetBaseClass()
 	{
 		return TBaseClass::StaticClass();
 	}
 
-	const LClass* Get() const { return CurrentClass; }
+	LClass* Get() const { return CurrentClass; }
 	LClass* Get() { return CurrentClass; }
 	bool IsValid() const { return CurrentClass; }
 
@@ -52,3 +55,8 @@ private:
 	LClass* CurrentClass = nullptr;
 };
 
+template<typename TBaseClass>
+inline TSubclassOf<TBaseClass>::TSubclassOf(LClass* InClass)
+{
+	this->CurrentClass = InClass;
+}
