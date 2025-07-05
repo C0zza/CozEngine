@@ -16,6 +16,8 @@ public:
 	void GetResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class);
 	void SaveResource(const FAssetPath& Asset, LResourceHandle<LResource>& OutResourceHandle, LClass* Class);
 
+	bool IsAssetPathType(const FAssetPath& Asset, LClass* Class) const;
+
 	template<typename T>
 	void GetResource(const FAssetPath& Asset, LResourceHandle<T>& OutResourceHandle)
 	{

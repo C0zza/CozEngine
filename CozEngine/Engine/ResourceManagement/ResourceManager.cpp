@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 
 #include "Reflection/Class.h"
+#include "Reflection/ClassRegister.h"
 
 LResourceManager::~LResourceManager()
 {
@@ -85,6 +86,33 @@ void LResourceManager::SaveResource(const FAssetPath& Asset, LResourceHandle<LRe
 	}
 
 	LSavable::SaveAssetToDisk(Asset.string(), Class, OutResourceHandle.Get());
+}
+
+bool LResourceManager::IsAssetPathType(const FAssetPath& Asset, LClass* Class) const
+{
+	std::ifstream File(Asset);
+
+	if (!File.is_open())
+	{
+		return false;
+	}
+
+	nlohmann::json J;
+	File >> J;
+
+	if (!J.contains("Type"))
+	{
+		return false;
+	}
+
+	LClass* ResourceClass = LClassRegister::Get(J["Type"]);
+
+	if (!ResourceClass)
+	{
+		return false;
+	}
+
+	return ResourceClass == Class;
 }
 
 void LResourceManager::OnAssetPathUpdated(const std::filesystem::path& OldPath, const std::filesystem::path& NewPath)
