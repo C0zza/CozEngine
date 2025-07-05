@@ -278,7 +278,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Rendering\Shader.cpp" />
     <ClCompile Include="Engine\Rendering\Texture.cpp" />
-    <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Engine\System.cpp" />
     <ClCompile Include="Engine\Rendering\Window.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
@@ -378,7 +377,6 @@
     <ClInclude Include="Engine\ECS\ECSDefinitions.h" />
     <ClInclude Include="Engine\Rendering\Shader.h" />
     <ClInclude Include="Engine\Rendering\Texture.h" />
-    <ClInclude Include="Engine\Transform.h" />
     <ClInclude Include="Engine\System.h" />
     <ClInclude Include="Engine\Rendering\Renderer.h" />
     <ClInclude Include="Engine\Rendering\Window.h" />
