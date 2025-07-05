@@ -1,0 +1,11 @@
+{
+  "ComponentSet": [
+    {
+      "Type": "CCameraComponent"
+    },
+    {
+      "Type": "CTransformComponent"
+    }
+  ],
+  "Type": "LArchetypeConfig"
+}

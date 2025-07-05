@@ -19,13 +19,17 @@ LClass* LEditorSettings::StaticClass()
 
         std::vector<LProperty> Properties
         {
-            {"EditorStartupLevel", "LSoftResourceHandle<LEntityContainerAsset>", MEMBER_OFFSET(LEditorSettings, EditorStartupLevel)}
+            {"EditorStartupLevel", "LSoftResourceHandle<LEntityContainerAsset>", MEMBER_OFFSET(LEditorSettings, EditorStartupLevel)},
+            {"EditorCameraArchetypeConfig", "LSoftResourceHandle<LArchetypeConfig>", MEMBER_OFFSET(LEditorSettings, EditorCameraArchetypeConfig)}
         };
 
         std::function<void(uint8_t*)> DrawEditorFunc = [](uint8_t* Address)
             {
                 LSoftResourceHandle<LEntityContainerAsset>* EditorStartupLevelPtr = reinterpret_cast<LSoftResourceHandle<LEntityContainerAsset>*>(Address + offsetof(LEditorSettings, EditorStartupLevel));
                 LImGuiPropertyDrawHelpers::DrawProperty("EditorStartupLevel", *EditorStartupLevelPtr);
+
+                LSoftResourceHandle<LArchetypeConfig>* EditorCameraArchetypeConfigPtr = reinterpret_cast<LSoftResourceHandle<LArchetypeConfig>*>(Address + offsetof(LEditorSettings, EditorCameraArchetypeConfig));
+                LImGuiPropertyDrawHelpers::DrawProperty("EditorCameraArchetypeConfig", *EditorCameraArchetypeConfigPtr);
             };
 
         
@@ -79,6 +83,7 @@ void from_json(const nlohmann::json& Json, LEditorSettings& Object)
     LSettings& Parent = Object;
     from_json(Json, Parent);
     if(Json.contains("EditorStartupLevel")) Object.EditorStartupLevel = Json["EditorStartupLevel"];
+    if(Json.contains("EditorCameraArchetypeConfig")) Object.EditorCameraArchetypeConfig = Json["EditorCameraArchetypeConfig"];
 
 }
 
@@ -88,5 +93,6 @@ void to_json(nlohmann::json& Json, const LEditorSettings& Object)
     to_json(Json, Parent);
     Json["Type"] = "LEditorSettings";
     Json["EditorStartupLevel"] = Object.EditorStartupLevel;
+    Json["EditorCameraArchetypeConfig"] = Object.EditorCameraArchetypeConfig;
 
 }

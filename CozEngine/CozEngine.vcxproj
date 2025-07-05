@@ -302,7 +302,6 @@
     <ClCompile Include="Engine\Rendering\RendererInfo.cpp" />
     <ClCompile Include="Engine\Settings\SettingsManager.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\SettingsWindow.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\SoftResourceHandle.cpp" />
     <ClCompile Include="Engine\WorldManager.cpp" />
     <ClCompile Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\Model\ModelProcessor.cpp" />
