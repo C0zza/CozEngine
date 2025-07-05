@@ -36,7 +36,7 @@ public:
 	}
 
 #if defined(COZ_EDITOR)
-	virtual const char* GetTypeName() const = 0;
+	virtual const char* GetTypeName() const { return "Entity"; }
 #endif
 
 protected:
