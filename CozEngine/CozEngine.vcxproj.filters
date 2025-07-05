@@ -204,6 +204,12 @@
     <ClCompile Include="Engine\ECS\ECS2\ArchetypeConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ECS\ECS2\Archetype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECS2\ArchetypeManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -238,6 +244,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECS2\EntityArchetypeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECS2\ArchetypeSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Misc\CoordSpaceConversion.cpp">
@@ -280,6 +295,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GeneratedFiles\PlayerEntityGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\ECS2\ArchetypeProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -533,6 +551,13 @@
     <ClInclude Include="Engine\Reflection\ClassUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\ArchetypeConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\Archetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\ArchetypeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Misc\ObjRegister.h">
@@ -548,6 +573,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\AssetPath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\EntityArchetypeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\ArchetypeSignature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Misc\CoordSpaceConversion.h">
@@ -581,6 +612,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ECS2\ArchetypeProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
