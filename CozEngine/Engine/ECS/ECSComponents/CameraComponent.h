@@ -5,11 +5,15 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
+#include "Reflection/Reflection.h"
 
 class LECS;
 
+REFL_CLASS()
 struct CCameraComponent : public LECSComponent
 {
+	REFL_GENERATED_BODY(CCameraComponent)
+public:
 	glm::mat4 CachedViewMatrix;
 };
 

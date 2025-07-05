@@ -218,6 +218,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\CameraManager.cpp" />
     <ClCompile Include="Engine\Editor\ContentNodeHandle.cpp" />
     <ClCompile Include="Engine\ECS\ECS2\ArchetypeSignature.cpp" />
     <ClCompile Include="Engine\Editor\AssetRegistry.cpp" />
@@ -310,8 +311,31 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
-    <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EntityProcessorGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\CameraComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ECSComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelProcessorGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\TransformComponentGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EntityGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\EditorSettingsGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\LandscapeMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelMaterialGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ModelGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ShaderGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SettingsGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\PlayerEntityGen.cpp" /><ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp" /></ItemGroup>
+    <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\EntityProcessorGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\CameraComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ECSComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ModelProcessorGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ModelComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\SpotLightComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\TransformComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\EntityGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\EntityContainerAssetGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\EditorSettingsGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\MaterialGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\LandscapeMaterialGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ModelMaterialGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ModelGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ShaderGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\SettingsGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\PlayerEntityGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp" />
+  </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\CameraManager.h" />
     <ClInclude Include="Engine\ECS\ECS2\EntityProcessor.h" />
     <ClInclude Include="Engine\ECS\ECS2\EntityProcessorType.h" />
     <ClInclude Include="Engine\Reflection\SubclassOf.h" />
