@@ -45,6 +45,16 @@ LClass* LModelMaterial::StaticClass()
                 return new LModelMaterial();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) LModelMaterial();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<LModelMaterial*>(Add)->~LModelMaterial();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const LModelMaterial* Object = reinterpret_cast<const LModelMaterial*>(Address);
@@ -66,7 +76,9 @@ LClass* LModelMaterial::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("LModelMaterial", LModelMaterial::Class);
     }

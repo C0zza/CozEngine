@@ -58,6 +58,16 @@ LClass* CPointLightComponent::StaticClass()
                 return new CPointLightComponent();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) CPointLightComponent();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<CPointLightComponent*>(Add)->~CPointLightComponent();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const CPointLightComponent* Object = reinterpret_cast<const CPointLightComponent*>(Address);
@@ -79,7 +89,9 @@ LClass* CPointLightComponent::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("CPointLightComponent", CPointLightComponent::Class);
     }

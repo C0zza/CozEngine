@@ -22,7 +22,9 @@ public:
 												std::function<void(uint8_t*)> DrawEditorFunc,
 												std::function<void*()> CreateObjectFunc,
 												std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc,
-												std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc);
+												std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc,
+												std::function<void(uint8_t*)> ConstructAddressFunc,
+												std::function<void(uint8_t*)> DestructAddressFunc);
 
 private:
 	static std::unordered_map<std::string, std::unordered_set<std::string>> ParentToChildClassesMap;

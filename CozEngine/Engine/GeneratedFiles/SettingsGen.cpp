@@ -32,6 +32,16 @@ LClass* LSettings::StaticClass()
                 return new LSettings();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) LSettings();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<LSettings*>(Add)->~LSettings();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const LSettings* Object = reinterpret_cast<const LSettings*>(Address);
@@ -53,7 +63,9 @@ LClass* LSettings::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("LSettings", LSettings::Class);
     }

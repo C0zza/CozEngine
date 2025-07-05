@@ -41,6 +41,16 @@ LClass* LTexture::StaticClass()
                 return new LTexture();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) LTexture();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<LTexture*>(Add)->~LTexture();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const LTexture* Object = reinterpret_cast<const LTexture*>(Address);
@@ -62,7 +72,9 @@ LClass* LTexture::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("LTexture", LTexture::Class);
     }

@@ -49,3 +49,13 @@ bool LClass::IsChildOf(const LClass* Class) const
 
 	return Class == ParentClass ? true : ParentClass->IsChildOf(Class);
 }
+
+void LClass::RunConstructor(uint8_t* Add)
+{
+	ConstructAddressFunc(Add);
+}
+
+void LClass::RunDestructor(uint8_t* Add)
+{
+	DestructAddressFunc(Add);
+}

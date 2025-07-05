@@ -32,6 +32,16 @@ LClass* LEntityContainerAsset::StaticClass()
                 return new LEntityContainerAsset();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) LEntityContainerAsset();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<LEntityContainerAsset*>(Add)->~LEntityContainerAsset();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const LEntityContainerAsset* Object = reinterpret_cast<const LEntityContainerAsset*>(Address);
@@ -53,7 +63,9 @@ LClass* LEntityContainerAsset::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("LEntityContainerAsset", LEntityContainerAsset::Class);
     }

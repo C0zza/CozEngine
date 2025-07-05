@@ -28,6 +28,9 @@ public:
 
 	template<typename T>
 	T* CreateObject();
+	
+	void RunConstructor(uint8_t* Add);
+	void RunDestructor(uint8_t* Add);
 
 	const std::vector<LClass*>& GetChildClasses() const { return ChildClasses; }
 	LClass* GetParentClass() const { return ParentClass; }
@@ -49,6 +52,8 @@ private:
 
 	std::string ClassName = "";
 
+	std::function<void(uint8_t*)> ConstructAddressFunc;
+	std::function<void(uint8_t*)> DestructAddressFunc;
 	std::function<void*()> CreateObjectFunc;
 	std::function<void(uint8_t*)> DrawEditorFunc;
 	std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc;

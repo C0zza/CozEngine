@@ -250,10 +250,14 @@ for GenFile in GeneratedFiles:
                 FromJson = "    " + ParentName + "& Parent = Object;\n    from_json(Json, Parent);"
 
             CreateObjectFuncBody = ""
+            ConstructAddressFuncBody = ""
+            DestructAddressFuncBody = ""
             if "Abstract" in Class.Tags:
                 CreateObjectFuncBody = "return nullptr;"
             else:
                 CreateObjectFuncBody = f"return new {Class.Name}();"
+                ConstructAddressFuncBody = f"new (Add) {Class.Name}();"
+                DestructAddressFuncBody = f"reinterpret_cast<{Class.Name}*>(Add)->~{Class.Name}();"
 
             File.write(f"""\
 {ClassSpecificHeaders}
@@ -283,6 +287,16 @@ LClass* {Class.Name}::StaticClass()
                 {CreateObjectFuncBody}
             }};
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {{
+                {ConstructAddressFuncBody}
+            }};
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {{
+                {DestructAddressFuncBody}
+            }};
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {{
                 const {Class.Name}* Object = reinterpret_cast<const {Class.Name}*>(Address);
@@ -304,7 +318,9 @@ LClass* {Class.Name}::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj(\"{Class.Name}\", {Class.Name}::Class);
     }}

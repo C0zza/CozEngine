@@ -42,6 +42,16 @@ LClass* LLandscapeMaterial::StaticClass()
                 return new LLandscapeMaterial();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) LLandscapeMaterial();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<LLandscapeMaterial*>(Add)->~LLandscapeMaterial();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const LLandscapeMaterial* Object = reinterpret_cast<const LLandscapeMaterial*>(Address);
@@ -63,7 +73,9 @@ LClass* LLandscapeMaterial::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("LLandscapeMaterial", LLandscapeMaterial::Class);
     }

@@ -32,6 +32,16 @@ LClass* CPlayerEntity::StaticClass()
                 return new CPlayerEntity();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) CPlayerEntity();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<CPlayerEntity*>(Add)->~CPlayerEntity();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const CPlayerEntity* Object = reinterpret_cast<const CPlayerEntity*>(Address);
@@ -53,7 +63,9 @@ LClass* CPlayerEntity::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("CPlayerEntity", CPlayerEntity::Class);
     }

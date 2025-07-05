@@ -17,7 +17,9 @@ void LClassUtilities::RegisterStaticClassProperties(LClass* Class,
 													std::function<void(uint8_t*)> DrawEditorFunc,
 													std::function<void* ()> CreateObjectFunc,
 													std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc,
-													std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc)
+													std::function<void(uint8_t*, const nlohmann::json& Json)> DeserializeFunc,
+													std::function<void(uint8_t*)> ConstructAddressFunc,
+													std::function<void(uint8_t*)> DestructAddressFunc)
 {
 	if (!Class)
 	{
@@ -36,6 +38,8 @@ void LClassUtilities::RegisterStaticClassProperties(LClass* Class,
 	Class->CreateObjectFunc = CreateObjectFunc;
 	Class->SerializeFunc = SerializeFunc;
 	Class->DeserializeFunc = DeserializeFunc;
+	Class->ConstructAddressFunc = ConstructAddressFunc;
+	Class->DestructAddressFunc = DestructAddressFunc;
 
 	if (ParentToChildClassesMap.contains(Class->GetTypeName().data()))
 	{

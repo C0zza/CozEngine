@@ -32,6 +32,16 @@ LClass* CSpotLightEntity::StaticClass()
                 return new CSpotLightEntity();
             };
 
+        std::function<void(uint8_t*)> ConstructAddressFunc = [](uint8_t* Add)
+            {
+                new (Add) CSpotLightEntity();
+            };
+
+        std::function<void(uint8_t*)> DestructAddressFunc = [](uint8_t* Add)
+            {
+                reinterpret_cast<CSpotLightEntity*>(Add)->~CSpotLightEntity();
+            };
+
         std::function<void(const uint8_t*, nlohmann::json& Json)> SerializeFunc = [](const uint8_t* Address, nlohmann::json& Json)
             {
                 const CSpotLightEntity* Object = reinterpret_cast<const CSpotLightEntity*>(Address);
@@ -53,7 +63,9 @@ LClass* CSpotLightEntity::StaticClass()
                                                         DrawEditorFunc,
                                                         CreateObjectFunc,
                                                         SerializeFunc,
-                                                        DeserializeFunc);
+                                                        DeserializeFunc,
+                                                        ConstructAddressFunc,
+                                                        DestructAddressFunc);
         
         LClassRegister::RegisterObj("CSpotLightEntity", CSpotLightEntity::Class);
     }
