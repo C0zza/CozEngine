@@ -2,14 +2,19 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
+#include "Reflection/Reflection.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Materials/LandscapeMaterial.h"
 #include "ResourceManagement/ResourceHandle.h"
 
 class LMesh;
 
+REFL_CLASS()
 struct CLandscapeComponent : public LECSComponent
 {
+	REFL_GENERATED_BODY(CLandscapeComponent)
+public:
+	REFL_PROP(Visible)
 	LResourceHandle<LLandscapeMaterial> LandscapeMaterial;
 
 	CLandscapeComponent() = default;
