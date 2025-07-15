@@ -2,35 +2,28 @@
 
 #include "SceneOutlinerWindow.h"
 
-#include "ECS/ECS.h"
+#include "ECS/ECS2/ArchetypeManager.h"
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
-#include "WorldManager.h"
 
 LSceneOutlinerWindow::LSceneOutlinerWindow(const char* WindowName)
 	: LEditorWindow(WindowName)
 {
-	WorldManager = CSystem.GetSubsystems().GetSubsystem<LWorldManager>();
-	assert(WorldManager);
-
-	ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-	assert(ECS);
-
 	SelectedEntitySubsystem = CSystem.GetSubsystems().GetSubsystem<LSelectedEntitySubsystem>();
 	assert(SelectedEntitySubsystem);
+
+	ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+	assert(ArchetypeManager);
 }
 
 void LSceneOutlinerWindow::DrawWindow()
 {
-	const std::map<LEntityID, std::unique_ptr<LEntity>>& Entities = WorldManager->GetActiveWorld()->EntityContainer.GetEntities();
+	std::vector<LEntityID> EntityIDs = ArchetypeManager->GetAllEntityIDs();
 
 	const LEntityID SelectedID = SelectedEntitySubsystem->GetSelectedEntityID();
 
-	for (const std::pair<const LEntityID, std::unique_ptr<LEntity>>& Pair : Entities)
+	for (const LEntityID EntityID : EntityIDs)
 	{
-		const LEntityID EntityID = Pair.first;
-		LEntity* Entity = Pair.second.get();
-
 		if (ImGui::Selectable(std::to_string(EntityID).c_str(), EntityID == SelectedID))
 		{
 			SelectedEntitySubsystem->SetSelectedEntityID(EntityID);

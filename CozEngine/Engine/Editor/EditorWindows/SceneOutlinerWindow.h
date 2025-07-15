@@ -2,8 +2,7 @@
 
 #include "Editor/EditorWindow.h"
 
-class LECS;
-class LWorldManager;
+class LArchetypeManager;
 class LSelectedEntitySubsystem;
 
 class LSceneOutlinerWindow : public LEditorWindow
@@ -15,8 +14,7 @@ protected:
 	virtual void DrawWindow() override;
 
 private:
-	LECS* ECS = nullptr;
-	LWorldManager* WorldManager = nullptr;
+	LArchetypeManager* ArchetypeManager = nullptr;
 	LSelectedEntitySubsystem* SelectedEntitySubsystem = nullptr;
 };
 

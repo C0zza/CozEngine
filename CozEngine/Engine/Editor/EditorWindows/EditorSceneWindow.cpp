@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 
+#include "ECS/ECS2/ArchetypeManager.h"
 #include "ECS/Entity.h"
 #include "ECS/ECSComponents/TransformComponent.h"
 #include "Editor/AssetRegistry.h"
@@ -16,6 +17,7 @@
 #include "Reflection/ClassRegister.h"
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/RendererInfo.h"
+#include "ResourceManagement/ResourceManager.h"
 #include "WorldManager.h"
 
 // TEMP: While testing drag/ drop assets
@@ -36,6 +38,8 @@ LEditorSceneWindow::LEditorSceneWindow(LFrameBuffer* iSceneFrameBuffer, LFrameBu
 	InputManager->RegisterActionEvent(this, KeyAction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE), &LEditorSceneWindow::OnMouseClicked, MouseClickedEventHandle);
 
 	SelectedEntitySubsystem = CSystem.GetSubsystems().AddSubsystem<LSelectedEntitySubsystem>();
+
+	ResourceManager = CSystem.GetSubsystems().AddSubsystem<LResourceManager>();
 }
 
 void LEditorSceneWindow::DrawWindow()
@@ -82,49 +86,52 @@ void LEditorSceneWindow::DrawWindow()
 
 		if (ImGui::AcceptDragDropPayload("ASSET_DRAG"))
 		{
-			HeldEntity = nullptr;
+			HeldEntity = 0;
 		}
 		else if (Payload && Payload->IsDataType("ASSET_DRAG")) 
 		{
 			// TODO: Separate into method
 			if (!HeldEntity)
 			{
-				LWorldManager* WorldManager = CSystem.GetSubsystems().GetSubsystem<LWorldManager>();
-				assert(WorldManager);
+				const FContentNode* ContentNode = reinterpret_cast<FContentNode*>(Payload->Data);
 
-				LWorld* ActiveWorld = WorldManager->GetActiveWorld();
-				if (ActiveWorld)
+				assert(ContentNode);
+				assert(!ContentNode->IsDirectory());
+
+				// TODO: Figuring out what asset type this is shouldn't be handled here
+				const std::filesystem::path& Path = ContentNode->GetPath();
+
+				if (ResourceManager->IsAssetPathType(Path, LArchetypeConfig::StaticClass()))
 				{
-					//const FContentNode* ContentNode = reinterpret_cast<FContentNode*>(Payload->Data);
-
-					//assert(ContentNode);
-					//assert(!ContentNode->IsDirectory());
-
-					// TODO: Figuring out what asset type this is shouldn't be handled here
-					//const std::filesystem::path& Path = ContentNode->GetPath();
-
 					const glm::vec3 ScreenToWorldRayVec = LCoordSpaceConversion::ScreenToWorldPos(LocalMouseScreenCoords, WindowWidth, WindowHeight, 10.f);
 
-					// TEMP: While testing drag/ drop assets
-					HeldEntity = ActiveWorld->AddEntityByClass(CSpotLightEntity::StaticClass());
-					// ~TEMP
+					LResourceHandle<LResource> ArchetypeConfigHandle;
+					ResourceManager->GetResource(Path.string(), ArchetypeConfigHandle, LArchetypeConfig::StaticClass());
 
-					if (HeldEntity)
+					LArchetypeConfig* ArchetypeConfig = dynamic_cast<LArchetypeConfig*>(ArchetypeConfigHandle.Get());
+
+					if (ArchetypeConfig)
 					{
-						CTransformComponent* TransformComponent = HeldEntity->GetComponent<CTransformComponent>();
+						LArchetypeManager* ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+						HeldEntity = ArchetypeManager->AddEntity(*ArchetypeConfig);
+
+						SelectedEntitySubsystem->SetSelectedEntityID(HeldEntity);
+
+						CTransformComponent* TransformComponent = ArchetypeManager->GetEntityComponent<CTransformComponent>(HeldEntity);
+
 						if (TransformComponent)
 						{
 							TransformComponent->SetPosition(ScreenToWorldRayVec);
 						}
-
-						SelectedEntitySubsystem->SetSelectedEntityID(HeldEntity->GetID());
 					}
 				}
 			}
 			else
 			{
 				const glm::vec3 ScreenToWorldRayVec = LCoordSpaceConversion::ScreenToWorldPos(LocalMouseScreenCoords, WindowWidth, WindowHeight, 10.f);
-				CTransformComponent* TransformComponent = HeldEntity->GetComponent<CTransformComponent>();
+
+				LArchetypeManager* ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+				CTransformComponent* TransformComponent = ArchetypeManager->GetEntityComponent<CTransformComponent>(HeldEntity);
 				if (TransformComponent)
 				{
 					TransformComponent->SetPosition(ScreenToWorldRayVec);
@@ -134,16 +141,14 @@ void LEditorSceneWindow::DrawWindow()
 
 		ImGui::EndDragDropTarget();
 	}
-	else if (HeldEntity)
+	else if (HeldEntity > 0)
 	{
 		SelectedEntitySubsystem->SetSelectedEntityID(0);
 
-		LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-		assert(ECS);
+		LArchetypeManager* ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+		ArchetypeManager->RemoveEntity(HeldEntity);
 
-		ECS->RemoveEntity(HeldEntity->GetID());
-
-		HeldEntity = nullptr;
+		HeldEntity = 0;
 	}
 }
 

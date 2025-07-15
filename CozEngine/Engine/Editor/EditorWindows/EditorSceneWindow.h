@@ -6,6 +6,7 @@
 class LClass;
 class LEntity;
 class LFrameBuffer;
+class LResourceManager;
 class LSelectedEntitySubsystem;
 
 class LEditorSceneWindow : public LEditorWindow
@@ -25,6 +26,7 @@ private:
 	LFrameBuffer* EntityFrameBuffer = nullptr;
 
 	LInputManager* InputManager = nullptr;
+	LResourceManager* ResourceManager = nullptr;
 	LSelectedEntitySubsystem* SelectedEntitySubsystem = nullptr;
 
 	LInputEventHandle ToggleFocusEventHandle;
@@ -43,6 +45,6 @@ private:
 	float WindowWidth;
 	float WindowHeight;
 
-	LEntity* HeldEntity = nullptr;
+	LEntityID HeldEntity = 0;
 };
 

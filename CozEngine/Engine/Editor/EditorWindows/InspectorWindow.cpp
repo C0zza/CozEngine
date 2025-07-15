@@ -4,9 +4,11 @@
 #include <string>
 
 #include "ECS/ECS.h"
+#include "ECS/ECS2/ArchetypeManager.h"
 #include "Editor/SelectedEntitySubsystem.h"
 #include "Globes.h"
 #include "json.hpp"
+#include "Reflection/Class.h"
 
 void LInspectorWindow::DrawWindow()
 {
@@ -22,10 +24,10 @@ void LInspectorWindow::DrawWindow()
 		return;
 	}
 
-	LECS* ECS = ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-	if (!ECS)
+	LArchetypeManager* ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+	if (!ArchetypeManager)
 	{
-		Log(LLogLevel::ERROR, "LInspectorWindow::Draw - Invalid ECS.");
+		Log(LLogLevel::ERROR, "LInspectorWindow::Draw - Invalid ArchetypeManager");
 		return;
 	}
 
@@ -33,27 +35,15 @@ void LInspectorWindow::DrawWindow()
 	{
 		const LEntityID SelectedEntityID = SelectedEntitySubsystem->GetSelectedEntityID();
 
-		nlohmann::json EntityJson;
-		ECS->GetEntityComponentData(SelectedEntityID, EntityJson);
-		for (const auto & [Key, Value] : EntityJson.items())
-		{
-			LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemByName(Key);
-			if (!ComponentSystem)
+		ArchetypeManager->ForEachEntityComponent(SelectedEntityID, [SelectedEntityID](char* ComponentAddress, LClass* ComponentClass)
 			{
-				// TODO: Add 1 time log macro for cases where they may spam.
-				continue;
-			}
-
-			if (ImGui::TreeNode(Key.c_str()))
-			{
-// TODO: If editor code was in it's own module we wouldn't need this
-#if defined(COZ_EDITOR)
-				ComponentSystem->DrawImGuiComponent(SelectedEntityID);
-#endif
-				ImGui::TreePop();
-			}
-			ImGui::Spacing();
-		}
+				if (ImGui::TreeNode(ComponentClass->GetTypeName().data()))
+				{
+					ComponentClass->DrawEditorDetails(static_cast<void*>(ComponentAddress));
+					
+					ImGui::TreePop();
+				}
+			});
 
 		ImGui::EndChild();
 	}
