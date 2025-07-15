@@ -15,7 +15,7 @@ class LModelProcessor : public LEntityProcessor
 	REFL_GENERATED_BODY(LModelProcessor)
 public:
 	virtual void Initialize() override;
-	virtual void ForEachEntityChunk(FEntityChunkHandle& EntityChunk) override;
+	virtual void Execute(FEntityQueryResult& EntityQueryResult) override;
 
 private:
 	void DrawModel(CModelComponent& ModelComponent, CTransformComponent& TransformComponent, const LShader* Shader);

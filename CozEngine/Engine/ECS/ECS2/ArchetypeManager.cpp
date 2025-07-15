@@ -75,11 +75,7 @@ void LArchetypeManager::RunProcessors(const EEntityProcessorType Type)
 
         const LArchetypeConfig& ProcessorConfig = Processor->GetConfig();
 
-        // TODO: Doesn't seem right
-        auto ForEachEntityChunkFunc = [&Processor](FEntityChunkHandle& ChunkHandle) 
-            {
-                Processor->ForEachEntityChunk(ChunkHandle);
-            };
+        std::vector<LArchetype*> MatchingArchetypes;
 
         for (auto& [Key, Value] : Archetypes)
         {
@@ -87,11 +83,15 @@ void LArchetypeManager::RunProcessors(const EEntityProcessorType Type)
             LArchetype& Archetype = Value;
 
             // TODO: Should have config queries which are cached and can be dirtied when updates are needed.
-            if (ProcessorConfig.Includes(ArchetypeConfig))
+            if (ArchetypeConfig.Includes(ProcessorConfig))
             {
-                Archetype.ForEachEntityChunk(ForEachEntityChunkFunc);
+                MatchingArchetypes.emplace_back(&Archetype);
             }
         }
+
+        FEntityQueryResult QueryResult(MatchingArchetypes);
+
+        Processor->Execute(QueryResult);
     }
 }
 

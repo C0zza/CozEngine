@@ -35,73 +35,76 @@ void LModelProcessor::Initialize()
 	Type = EEntityProcessorType::Render;
 }
 
-void LModelProcessor::ForEachEntityChunk(FEntityChunkHandle& EntityChunk)
+void LModelProcessor::Execute(FEntityQueryResult& EntityQueryResult)
 {
-	std::span<const LEntityID> IDs = EntityChunk.GetEntityIDs();
-	std::span<CModelComponent> Models = EntityChunk.GetComponentSpan<CModelComponent>();
-	std::span<CTransformComponent> Transforms = EntityChunk.GetComponentSpan<CTransformComponent>();
-
-	const int EntityCount = EntityChunk.GetEntityCount();
-
-	for (int i = 0; i < EntityCount; ++i)
-	{
-		const LEntityID& ID = IDs[i];
-		CModelComponent& ModelComponent = Models[i];
-		CTransformComponent& TransformComponent = Transforms[i];
-
-		if (!ModelComponent.Model.Get() || !ModelComponent.ModelMaterial.Get())
+	EntityQueryResult.ForEachEntityChunk([this](FEntityChunkHandle& EntityChunk)
 		{
-			continue;
-		}
+			std::span<const LEntityID> IDs = EntityChunk.GetEntityIDs();
+			std::span<CModelComponent> Models = EntityChunk.GetComponentSpan<CModelComponent>();
+			std::span<CTransformComponent> Transforms = EntityChunk.GetComponentSpan<CTransformComponent>();
 
-#if defined(COZ_EDITOR)
-		ModelComponent.ModelMaterial->EntityID = ID;
+			const int EntityCount = EntityChunk.GetEntityCount();
 
-		const bool bDrawOutline = SelectedEntitySubsystem ? SelectedEntitySubsystem->GetSelectedEntityID() == ID : false
-			&& ModelComponent.ModelMaterial->HasShaderForDrawMode(EDrawMode::Outline)
-			&& DrawModeSubsystem ? DrawModeSubsystem->GetActiveDrawMode() == EDrawMode::Default : false;
-
-		if (bDrawOutline)
-		{
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-			glStencilMask(0xFF);
-		}
-#endif
-
-		// TODO: Move to method
-		auto DrawFunc = [this, &TransformComponent, &ModelComponent](const LShader* Shader)
+			for (int i = 0; i < EntityCount; ++i)
 			{
-				if (Shader)
-				{
-					ModelComponent.Model->Draw(*Shader, TransformComponent.GetUpdatedTransformationMatrix());
-				}
-			};
+				const LEntityID& ID = IDs[i];
+				CModelComponent& ModelComponent = Models[i];
+				CTransformComponent& TransformComponent = Transforms[i];
 
-		DrawFunc(ModelComponent.ModelMaterial->Use());
+				if (!ModelComponent.Model.Get() || !ModelComponent.ModelMaterial.Get())
+				{
+					continue;
+				}
 
 #if defined(COZ_EDITOR)
-		if (bDrawOutline)
-		{
-			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-			glStencilMask(0x00);
+				ModelComponent.ModelMaterial->EntityID = ID;
 
-			const glm::vec3 TempScale = TransformComponent.GetScale();
-			TransformComponent.ScaleByFloat(1.05f);
+				const bool bDrawOutline = SelectedEntitySubsystem ? SelectedEntitySubsystem->GetSelectedEntityID() == ID : false
+					&& ModelComponent.ModelMaterial->HasShaderForDrawMode(EDrawMode::Outline)
+					&& DrawModeSubsystem ? DrawModeSubsystem->GetActiveDrawMode() == EDrawMode::Default : false;
 
-			const EDrawMode CachedDrawMode = DrawModeSubsystem->GetActiveDrawMode();
-
-			DrawModeSubsystem->SetActiveDrawMode(EDrawMode::Outline);
-			DrawFunc(ModelComponent.ModelMaterial->Use());
-			DrawModeSubsystem->SetActiveDrawMode(CachedDrawMode);
-
-			TransformComponent.SetScale(TempScale);
-
-			glStencilMask(0xFF);
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		}
+				if (bDrawOutline)
+				{
+					glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+					glStencilFunc(GL_ALWAYS, 1, 0xFF);
+					glStencilMask(0xFF);
+				}
 #endif
-	}
+
+				// TODO: Move to method
+				auto DrawFunc = [this, &TransformComponent, &ModelComponent](const LShader* Shader)
+					{
+						if (Shader)
+						{
+							ModelComponent.Model->Draw(*Shader, TransformComponent.GetUpdatedTransformationMatrix());
+						}
+					};
+
+				DrawFunc(ModelComponent.ModelMaterial->Use());
+
+#if defined(COZ_EDITOR)
+				if (bDrawOutline)
+				{
+					glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+					glStencilMask(0x00);
+
+					const glm::vec3 TempScale = TransformComponent.GetScale();
+					TransformComponent.ScaleByFloat(1.05f);
+
+					const EDrawMode CachedDrawMode = DrawModeSubsystem->GetActiveDrawMode();
+
+					DrawModeSubsystem->SetActiveDrawMode(EDrawMode::Outline);
+					DrawFunc(ModelComponent.ModelMaterial->Use());
+					DrawModeSubsystem->SetActiveDrawMode(CachedDrawMode);
+
+					TransformComponent.SetScale(TempScale);
+
+					glStencilMask(0xFF);
+					glStencilFunc(GL_ALWAYS, 1, 0xFF);
+				}
+#endif
+			}
+		});
 }
 
 void LModelProcessor::DrawModel(CModelComponent& ModelComponent, CTransformComponent& TransformComponent, const LShader* Shader)

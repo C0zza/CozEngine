@@ -1,9 +1,22 @@
 #pragma once
 
+#include <functional>
+
 #include "ECS/ECS2/Archetype.h"
 #include "ECS/ECS2/ArchetypeConfig.h"
 #include "ECS/ECS2/EntityProcessorType.h"
 #include "Reflection/Reflection.h"
+
+struct FEntityQueryResult
+{
+public:
+	FEntityQueryResult(std::vector<LArchetype*> InArchetypes);
+
+	void ForEachEntityChunk(std::function<void(FEntityChunkHandle& ChunkHandle)>);
+
+private:
+	std::vector<LArchetype*> Archetypes;
+};
 
 // TODO: Rename class. We're not technically processing archetypes.
 // Just specified combinations of components, which could include
@@ -21,7 +34,7 @@ public:
 	const LArchetypeConfig& GetConfig() const { return Config; }
 	EEntityProcessorType GetType() const { return Type; }
 
-	virtual void ForEachEntityChunk(FEntityChunkHandle& EntityChunkHandle) = 0;
+	virtual void Execute(FEntityQueryResult& EntityQueryResult) = 0;
 
 protected:
 	LArchetypeConfig Config;
