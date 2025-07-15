@@ -5,6 +5,7 @@
 #include "Editor/AssetEditorWindowSubsystem.h"
 #include "Globes.h"
 #include "Reflection/Class.h"
+#include "ResourceManagement/ResourceManager.h"
 
 void LAssetEditorWindow::DrawWindow()
 {
@@ -31,6 +32,12 @@ void LAssetEditorWindow::DrawWindow()
 			{
 				if (AssetInfo.Class)
 				{
+					if (ImGui::Button("Save") && AssetInfo.Resource.Get())
+					{
+						LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+						ResourceManager->SaveResource(AssetInfo.Resource.Get()->GetAssetPath(), AssetInfo.Resource, AssetInfo.Class);
+					}
+
 					AssetInfo.Class->DrawEditorDetails(AssetInfo.Resource.Get());
 				}
 				ImGui::EndTabItem();
