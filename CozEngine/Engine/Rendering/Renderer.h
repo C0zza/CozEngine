@@ -32,7 +32,7 @@ public:
 	void ReigsterLightingUBOToShader(const unsigned int ShaderID);
 
 	template<typename T>
-	void UpdateLightingUBOData(GLintptr Offset, GLsizeiptr Size, T& Value)
+	void UpdateLightingUBOData(GLintptr Offset, GLsizeiptr Size, const T& Value)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, LightingUBO);
 		glBufferSubData(GL_UNIFORM_BUFFER, Offset, Size, &Value);

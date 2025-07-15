@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "DirectionalLightSubsystem.h"
 #include "Editor/DrawModeSubsystem.h"
 #include "ECS/ECS.h"
 #include "ECS/ECSComponents/CameraComponent.h"
@@ -106,23 +107,10 @@ void LRenderer::Update()
 		return;
 	}
 
-	LComponentSystemBase* ComponentSystem = ECS->GetComponentSystemFor<CPointLightComponent>();
-	if (CPointLightComponentSystem* PointLightCS = dynamic_cast<CPointLightComponentSystem*>(ComponentSystem))
-	{
-		PointLightCS->UpdatePointLights();
-	}
-
-	ComponentSystem = ECS->GetComponentSystemFor<CSpotLightComponent>();
-	if (CSpotLightComponentSystem* SpotLightCS = dynamic_cast<CSpotLightComponentSystem*>(ComponentSystem))
-	{
-		SpotLightCS->UpdateSpotLights();
-	}
-
-	ComponentSystem = ECS->GetComponentSystemFor<CDirectionalLightComponent>();
-	if (CDirectionalLightComponentSystem* DirectionalLightCS = dynamic_cast<CDirectionalLightComponentSystem*>(ComponentSystem))
-	{
-		DirectionalLightCS->UpdateDirectionalLight();
-	}
+	LDirectionalLightSubsystem* DirectionalLightSubsystem = CSystem.GetSubsystems().GetSubsystem<LDirectionalLightSubsystem>();
+	DirectionalLightSubsystem->UpdatePointLightData();
+	DirectionalLightSubsystem->UpdateSpotLightData();
+	DirectionalLightSubsystem->UpdateDirectionalLightData();
 	
 	glBindBuffer(GL_UNIFORM_BUFFER, MatricesUBO);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &RendererInfo->GetProjectionMatrix());

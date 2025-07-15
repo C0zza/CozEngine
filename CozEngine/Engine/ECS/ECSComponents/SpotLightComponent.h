@@ -42,33 +42,33 @@ public:
 	float Quadratic;
 };
 
-class CSpotLightComponentSystem : public LComponentSystem<CSpotLightComponent>
-{
-public:
-	void UpdateSpotLights();
-
-	virtual const char* GetComponentName() const final { return "SpotLightComponentSystem"; }
-
-#if defined(COZ_EDITOR)
-	virtual void DrawImGuiComponent(CSpotLightComponent& Component) final;
-#endif
-
-protected:
-	virtual void OnComponentAdded(CSpotLightComponent& Component) override;
-	virtual void OnComponentRemoved(CSpotLightComponent& Component) override;
-
-	virtual void GetSerializedComponent(const CSpotLightComponent& Component, nlohmann::json& J) const final;
-	virtual void DeserializeComponent(CSpotLightComponent& Component, const nlohmann::json& J) final;
-
-private:
-	void UpdateSpotLight(CSpotLightComponent* Component, int Index);
-
-	std::vector<LEntityID> SpotLights;
-
-	CSpotLightComponent SpotLightCache[MAX_NUM_SPOT_LIGHT];
-
-	int SpotLightCount = 0;
-	bool IsCountDirty = true;
-
-};
+//class CSpotLightComponentSystem : public LComponentSystem<CSpotLightComponent>
+//{
+//public:
+//	void UpdateSpotLights();
+//
+//	virtual const char* GetComponentName() const final { return "SpotLightComponentSystem"; }
+//
+//#if defined(COZ_EDITOR)
+//	virtual void DrawImGuiComponent(CSpotLightComponent& Component) final;
+//#endif
+//
+//protected:
+//	virtual void OnComponentAdded(CSpotLightComponent& Component) override;
+//	virtual void OnComponentRemoved(CSpotLightComponent& Component) override;
+//
+//	virtual void GetSerializedComponent(const CSpotLightComponent& Component, nlohmann::json& J) const final;
+//	virtual void DeserializeComponent(CSpotLightComponent& Component, const nlohmann::json& J) final;
+//
+//private:
+//	void UpdateSpotLight(CSpotLightComponent* Component, int Index);
+//
+//	std::vector<LEntityID> SpotLights;
+//
+//	CSpotLightComponent SpotLightCache[MAX_NUM_SPOT_LIGHT];
+//
+//	int SpotLightCount = 0;
+//	bool IsCountDirty = true;
+//
+//};
 
