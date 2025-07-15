@@ -310,6 +310,7 @@
     <ClCompile Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\Model\ModelProcessor.cpp" />
     <ClCompile Include="Engine\ECS\ECSComponents\Lighting\SpotLightProcessor.cpp" />
+    <ClCompile Include="Game\Components\MovementProcessor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug Editor|x64'">Create</PrecompiledHeader>
@@ -341,6 +342,8 @@
     <ClCompile Include="Engine\GeneratedFiles\TextureGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ResourceGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\SettingsGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\MovementComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\MovementProcessorGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\PlayerEntityGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp" />
   </ItemGroup>
@@ -455,6 +458,7 @@
     <ClInclude Include="Engine\Editor\EditorWindows\SceneOutlinerWindow.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\Model\ModelProcessor.h" />
     <ClInclude Include="Engine\ECS\ECSComponents\Lighting\SpotLightProcessor.h" />
+    <ClInclude Include="Game\Components\MovementProcessor.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Engine\ECS\EntityManagement\World.h" />
   </ItemGroup>
