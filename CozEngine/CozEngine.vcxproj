@@ -218,6 +218,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\DirectionalLightSubsystem.cpp" />
+    <ClCompile Include="Engine\ECS\ECS2\EntityProcessor.cpp" />
+    <ClCompile Include="Engine\ECS\ECSComponents\Lighting\DirectionalLightProcessor.cpp" />
     <ClCompile Include="Engine\CameraManager.cpp" />
     <ClCompile Include="Engine\Editor\ContentNodeHandle.cpp" />
     <ClCompile Include="Engine\ECS\ECS2\ArchetypeSignature.cpp" />
@@ -313,8 +316,11 @@
     <ClCompile Include="Engine\ECS\EntityManagement\World.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ArchetypeConfigGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\EntityProcessorGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\ActiveTagComponentGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\CameraComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\DirectionalLightComponentGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ECSComponentGen.cpp" />
+    <ClCompile Include="Engine\GeneratedFiles\DirectionalLightProcessorGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ModelProcessorGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\ModelComponentGen.cpp" />
     <ClCompile Include="Engine\GeneratedFiles\PointLightComponentGen.cpp" />
@@ -335,6 +341,9 @@
     <ClCompile Include="Engine\GeneratedFiles\SpotLightEntityGen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DirectionalLightSubsystem.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\Lighting\DirectionalLightProcessor.h" />
+    <ClInclude Include="Engine\ECS\ECSComponents\ActiveTagComponent.h" />
     <ClInclude Include="Engine\CameraManager.h" />
     <ClInclude Include="Engine\ECS\ECS2\EntityProcessor.h" />
     <ClInclude Include="Engine\ECS\ECS2\EntityProcessorType.h" />

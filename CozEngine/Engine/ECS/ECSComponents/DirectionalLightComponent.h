@@ -4,14 +4,22 @@
 
 #include "ECS/ComponentSystem.h"
 #include "ECS/ECSComponents/ECSComponent.h"
+#include "Reflection/Reflection.h"
 
+REFL_CLASS()
 struct CDirectionalLightComponent : public LECSComponent
 {
+	REFL_GENERATED_BODY(CDirectionalLightComponent)
+public:
 	CDirectionalLightComponent();
 
+	REFL_PROP(Visible)
 	glm::vec3 Direction;
+	REFL_PROP(Visible)
 	glm::vec3 Ambient;
+	REFL_PROP(Visible)
 	glm::vec3 Diffuse;
+	REFL_PROP(Visible)
 	glm::vec3 Specular;
 };
 
