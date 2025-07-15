@@ -3,6 +3,8 @@
 #include "WorldManager.h"
 
 #if defined(COZ_EDITOR)
+#include "CameraManager.h"
+#include "ECS/ECS2/ArchetypeManager.h"
 #include "ECS/EntityManagement/World.h"
 #include "Editor/EditorSettings.h"
 #include "Globes.h"
@@ -24,10 +26,25 @@ void LWorldManager::Initialize()
 
 	if (EditorSettings->EditorStartupLevel.ResourcePath.empty())
 	{
-		ActiveWorld = std::make_unique<LWorld>();
-		// TODO - Add default engine entity/ archetype to be utilised in editor.
-		ActiveWorld->AddEntityByClass(CPlayerEntity::StaticClass());
-		// ~ TODO
+		if (!EditorSettings->EditorCameraArchetypeConfig.ResourcePath.empty())
+		{
+			LResourceManager* ResourceManager = CSystem.GetSubsystems().GetSubsystem<LResourceManager>();
+
+			LResourceHandle<LArchetypeConfig> EditorCameraArchetypeConfig;
+
+			ResourceManager->GetResource<LArchetypeConfig>(EditorSettings->EditorCameraArchetypeConfig.ResourcePath, EditorCameraArchetypeConfig);
+
+			if (EditorCameraArchetypeConfig.Get())
+			{
+				LArchetypeManager* ArchetypeManager = CSystem.GetSubsystems().GetSubsystem<LArchetypeManager>();
+				
+				LEntityID EditorCameraEntityID = ArchetypeManager->AddEntity(*EditorCameraArchetypeConfig.Get());
+
+				LCameraManager* CameraManager = CSystem.GetSubsystems().GetSubsystem<LCameraManager>(true);
+
+				CameraManager->ActivateCamera(EditorCameraEntityID);
+			}
+		}
 		return;
 	}
 

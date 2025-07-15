@@ -4,7 +4,7 @@
 
 #include "Subsystem.h"
 
-class CCameraComponentSystem;
+class LCameraManager;
 class LRenderer;
 
 class LRendererInfo : public LSubsystem
@@ -22,11 +22,11 @@ public:
 	bool CanRender();
 
 private:
-	CCameraComponentSystem* GetCameraComponentSystem();
+	LCameraManager* GetCameraManager();
 
 	glm::mat4 ProjectionMatrix = glm::mat4(0);
 
-	CCameraComponentSystem* CameraComponentSystem = nullptr;
+	LCameraManager* CameraManager = nullptr;
 	LRenderer* Renderer = nullptr;
 };
 

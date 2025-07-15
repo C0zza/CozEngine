@@ -2,8 +2,8 @@
 
 #include "RendererInfo.h"
 
+#include "CameraManager.h"
 #include "ECS/ECS.h"
-#include "ECS/ECSComponents/CameraComponent.h"
 #include "Globes.h"
 #include "Rendering/Renderer.h"
 
@@ -16,7 +16,7 @@ void LRendererInfo::Initialize()
 void LRendererInfo::Deinitialize()
 {
 	Renderer = nullptr;
-	CameraComponentSystem = nullptr;
+	CameraManager = nullptr;
 }
 
 void LRendererInfo::UpdateProjectionMatrix(const int Width, const int Height)
@@ -26,19 +26,19 @@ void LRendererInfo::UpdateProjectionMatrix(const int Width, const int Height)
 
 const glm::mat4& LRendererInfo::GetViewMatrix() const
 {
-	return CameraComponentSystem->GetViewMatrix();
+	return CameraManager->GetViewMatrix();
 }
 
 const glm::vec3& LRendererInfo::GetViewPos()
 {
-	return CameraComponentSystem->GetViewPos();
+	return CameraManager->GetViewPos();
 }
 
 bool LRendererInfo::CanRender()
 {
-	if (CCameraComponentSystem* CameraComponentSystem = GetCameraComponentSystem())
+	if (LCameraManager* Manager = GetCameraManager())
 	{
-		return CameraComponentSystem->GetActiveCameraEntityID() >= 0;
+		return CameraManager->GetActiveCameraEntityID() >= 0;
 	}
 	else
 	{
@@ -46,13 +46,12 @@ bool LRendererInfo::CanRender()
 	}
 }
 
-CCameraComponentSystem* LRendererInfo::GetCameraComponentSystem()
+LCameraManager* LRendererInfo::GetCameraManager()
 {
-	if (!CameraComponentSystem)
+	if (!CameraManager)
 	{
-		LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-		CameraComponentSystem = dynamic_cast<CCameraComponentSystem*>(ECS->GetComponentSystemFor<CCameraComponent>());
+		CameraManager = CSystem.GetSubsystems().GetSubsystem<LCameraManager>();
 	}
 
-	return CameraComponentSystem;
+	return CameraManager;
 }

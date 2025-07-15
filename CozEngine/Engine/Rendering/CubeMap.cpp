@@ -2,9 +2,8 @@
 
 #include "CubeMap.h"
 
+#include "CameraManager.h"
 #include "CubeMapTexture.h"
-#include "ECS/ECS.h"
-#include "ECS/ECSComponents/CameraComponent.h"
 #include "Globes.h"
 #include "Rendering/Model.h"
 // TEMP while LCubeMap hasn't been setup as an entity/ component properly
@@ -59,12 +58,12 @@ void LCubeMap::Draw()
 
 	glDepthMask(GL_FALSE);
 	CubeMapShader.Get()->Use();
+	
+	LCameraManager* CameraManager = CSystem.GetSubsystems().GetSubsystem<LCameraManager>();
 
-	LECS* ECS = CSystem.GetSubsystems().GetSubsystem<LECS>();
-	CCameraComponentSystem* CameraCS = dynamic_cast<CCameraComponentSystem*>(ECS->GetComponentSystemFor<CCameraComponent>());
 	// Casting to mat3 removes the translation data of the view matrix so the cube map position
 	// is static relative to the camera.
-	glm::mat4 ViewMatrix = glm::mat4(glm::mat3(CameraCS->GetViewMatrix()));
+	glm::mat4 ViewMatrix = glm::mat4(glm::mat3(CameraManager->GetViewMatrix()));
 	CubeMapShader.Get()->SetMat4("CubeMapView", ViewMatrix);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapTexture->GetTextureID());
