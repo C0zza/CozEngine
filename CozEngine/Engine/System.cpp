@@ -4,6 +4,7 @@
 
 #include "Development/LImGuiSubsystem.h"
 #include "ECS/ECS.h"
+#include "ECS/ECS2/ArchetypeManager.h"
 #include "Rendering/FrameBufferSubsystem.h"
 #include "Rendering/Renderer.h"
 
@@ -14,6 +15,7 @@
 
 #include "Rendering/CubeMap.h"
 
+#include "ECS/ECS2/ArchetypeConfig.h"
 
 #include "ECS/ECSComponents/ECSComponentHeaders.h"
 #include "Game/Components/MovementComponent.h"
@@ -24,6 +26,21 @@ void LSystem::Run()
 	LResourceManager* ResourceManager = Subsystems.GetSubsystem<LResourceManager>(true);
 	LRenderer* Renderer = Subsystems.GetSubsystem<LRenderer>(true);
 
+	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
+	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
+	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
+	ECS->AddComponentSystem<CTransformComponentSystem, CTransformComponent>();
+	ECS->AddComponentSystem<CCameraComponentSystem, CCameraComponent>();
+	// ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
+	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
+	// ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
+	ECS->AddComponentSystem<CMovementSystem, CMovementComponent>();
+	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
+
+	LArchetypeManager* ArchetypeManager = Subsystems.AddSubsystem<LArchetypeManager>();
+	assert(ArchetypeManager);
+	LWorldManager* WorldManager = Subsystems.GetSubsystem<LWorldManager>(true);
+
 #if defined(COZ_EDITOR)
 	LImGuiSubsystem* ImGuiSubsystem = Subsystems.GetSubsystem<LImGuiSubsystem>(true);
 	LFrameBufferSubsystem* FrameBufferSubsystem = Subsystems.GetSubsystem<LFrameBufferSubsystem>(true);
@@ -33,20 +50,9 @@ void LSystem::Run()
 	glEnable(GL_STENCIL_TEST);
 #endif
 
-	// TODO: Must be a better way than registering everything here. Maybe check if it needs adding when the corresponding component is added?
-	LECS* ECS = Subsystems.GetSubsystem<LECS>(true);
-	ECS->AddComponentSystem<CModelComponentSystem, CModelComponent>();
-	ECS->AddComponentSystem<CTransformComponentSystem, CTransformComponent>();
-	ECS->AddComponentSystem<CCameraComponentSystem, CCameraComponent>();
-	ECS->AddComponentSystem<CSpotLightComponentSystem, CSpotLightComponent>();
-	ECS->AddComponentSystem<CPointLightComponentSystem, CPointLightComponent>();
-	ECS->AddComponentSystem<CDirectionalLightComponentSystem, CDirectionalLightComponent>();
-	ECS->AddComponentSystem<CMovementSystem, CMovementComponent>();
-	ECS->AddComponentSystem<CLandscapeComponentSystem, CLandscapeComponent>();
+	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game\\Content\\Skybox.casset", "Game\\Content\\Models\\MOD_Cube.casset");
 
-	std::unique_ptr<LCubeMap> TestCubeMap = std::make_unique<LCubeMap>("Game/Content/Skybox.casset", "Game/Content/Models/MOD_Cube.casset");
-	LWorldManager* WorldManager = Subsystems.GetSubsystem<LWorldManager>(true);
-
+	ArchetypeManager->InitializeProcessors();
 
 	assert(Renderer);
 	bool bShouldWindowClose = true;
@@ -71,8 +77,11 @@ void LSystem::Run()
 		glEnable(GL_DEPTH_TEST);
 
 		TestCubeMap->Draw();
-		ECS->UpdateComponentSystemTypes(EComponentSystemType::Ticker);
-		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
+		//ECS->UpdateComponentSystemTypes(EComponentSystemType::Ticker);
+		//ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
+
+		ArchetypeManager->RunProcessors(EEntityProcessorType::Logic);
+		ArchetypeManager->RunProcessors(EEntityProcessorType::Render);
 
 #if defined(COZ_EDITOR)
 		// TODO: This editor side frame buffer management feels like it should be abstraced into Editor->Draw somehow
@@ -82,7 +91,8 @@ void LSystem::Run()
 		Renderer->ClearFrameBuffer(.0f, .0f, .0f, 0.f, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		DrawModeSubsystem->SetActiveDrawMode(EDrawMode::EntityFrameBuffer);
-		ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
+		//ECS->UpdateComponentSystemTypes(EComponentSystemType::Renderer);
+		ArchetypeManager->RunProcessors(EEntityProcessorType::Render);
 		DrawModeSubsystem->SetActiveDrawMode(EDrawMode::Default);
 
 		Renderer->BindDefaultFrameBuffer();
